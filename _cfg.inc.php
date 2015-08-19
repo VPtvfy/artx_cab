@@ -4,23 +4,23 @@ $_CFG['XSL_PATH']='_xsl\\';
 
 $_CFG['SQL']['login']=<<<ENDSQL
 update users
-   SET status_id=status_id+1     
- where login=:login; 
+   SET status_id=status_id+1
+ where login=:login;
 update users
    set status=0,
        lastlogin=now()
- where login=:login 
+ where login=:login
    and password=md5(concat(:login,:passwd));
-select * 
+select *
   from users
- where login=:login 
+ where login=:login
    and password=md5(concat(:login,:passwd))
    and ifnull(expired,now()<=now());
 ENDSQL;
 
 $_CFG['SQL']['get_town']=<<<ENDSQL
-select * 
-  from town 
+select *
+  from town
  order by 2;
 ENDSQL;
 
@@ -49,7 +49,7 @@ ENDSQL;
 $_CFG['SQL']['get_catalog_by_pid']=<<<ENDSQL
 select distinct c.item_id,c.item_pid,if (char_length(c.item_name)>3,concat(substr(c.item_name,1,1),lower(substr(c.item_name,2,64))),c.item_name) item_name,c.`count`,c.`stat`
   from catalog_tree c1
- inner join catalog_tree c2 on c2.id=c1.pid and c1.id=:item 
+ inner join catalog_tree c2 on c2.id=c1.pid and c1.id=:item
  inner join catalog_tree c3 on c3.id=c2.pid
  inner join catalog_tree c4 on c4.id=c3.pid
  inner join vcatalog c on c.item_pid=c1.id or c.item_id=c1.id or c.item_id=c2.id or c.item_id=c3.id or c.item_id=c4.id
@@ -74,21 +74,21 @@ select `id`,0 pid,if (char_length(data)>3,concat(substr(data,1,1),lower(substr(d
 ENDSQL;
 
 $_CFG['SQL']['find_firm']=<<<ENDSQL
-select f.*  
+select f.*
   from fresult r
  inner join firm f on f.firm_id=r.firm_id
 order by r.relevance desc;
 ENDSQL;
 
 $_CFG['SQL']['find_item']=<<<ENDSQL
-select r.firm_id,c.*  
+select r.firm_id,c.*
   from fresult r
  inner join firm_div d on d.firm_id=r.firm_id
  inner join catalog_item c on c.item_id=d.item_id
 ENDSQL;
 
 $_CFG['SQL']['find_address']=<<<ENDSQL
-SELECT r.firm_id,t.town_name, s.street_name, CONCAT (a.building,bletter) building,  CONCAT (a.office,oletter) office  
+SELECT r.firm_id,t.town_name, s.street_name, CONCAT (a.building,bletter) building,  CONCAT (a.office,oletter) office
   FROM fresult r
  INNER JOIN firm_address a ON a.firm_id=r.firm_id
  INNER JOIN street s ON a.street_id=s.street_id
@@ -96,17 +96,17 @@ SELECT r.firm_id,t.town_name, s.street_name, CONCAT (a.building,bletter) buildin
 ENDSQL;
 
 $_CFG['SQL']['find_phone']=<<<ENDSQL
-select p.*  
+select p.*
   from fresult r
  inner join firm_phone p on p.firm_id=r.firm_id;
 ENDSQL;
 
-# Firm 
+# Firm
 
 $_CFG['SQL']['create_firm']=<<<ENDSQL
 insert into firm (`firm_name`,`firm_descr`)
 values (upper(trim(:firm_name)),:firm_descr);
-select * 
+select *
   from firm
  where `firm_name`=upper(trim(:firm_name));
 ENDSQL;
@@ -118,34 +118,34 @@ update firm
 ENDSQL;
 
 $_CFG['SQL']['delete_firm']=<<<ENDSQL
-delete 
-  from firm 
+delete
+  from firm
  where id =:firm_id;
 ENDSQL;
 
-# Firm div 
+# Firm div
 
 $_CFG['SQL']['get_firm_div']=<<<ENDSQL
-select d.firm_id,d.firm_div_id,c.*,d.firm_div_name 
-  from firm_div d 
+select d.firm_id,d.firm_div_id,c.*,d.firm_div_name
+  from firm_div d
  inner join catalog_item c on c.item_id=d.item_id
  where `firm_id`=:firm_id;
 ENDSQL;
-       	
+
 $_CFG['SQL']['create_firm_div']=<<<ENDSQL
 insert into firm_div (`firm_id`,`item_id`,`firm_div_name`)
 values (:firm_id,:firm_item_id,trim(:firm_div_name));
-select * 
+select *
   from firm_div
  where `firm_id`=:firm_id;
 ENDSQL;
-       	
+
 $_CFG['SQL']['update_firm_div']=<<<ENDSQL
 update firm_div
    set `item_id`=:firm_item_id,
        `firm_div_name`=trim(:firm_div_name)
  where `firm_div_id`=:firm_div_id;
-select * 
+select *
   from firm_div
  where `firm_id`=:firm_id;
 ENDSQL;
@@ -154,7 +154,7 @@ $_CFG['SQL']['delete_firm_div']=<<<ENDSQL
 delete
   from firm_div
  where `firm_div_id`=abs(:firm_div_id);
-select * 
+select *
   from firm_div
  where `firm_id`=:firm_id;
 ENDSQL;
@@ -162,8 +162,8 @@ ENDSQL;
 # Firm address
 
 $_CFG['SQL']['get_firm_address']=<<<ENDSQL
-select * 
-  from firm_address 
+select *
+  from firm_address
  where `firm_id`=:firm_id;
 ENDSQL;
 
@@ -188,7 +188,7 @@ $_CFG['SQL']['delete_firm_address']=<<<ENDSQL
 delete
   from firm_address
  where `address_id`=:firm_address_id;
-select * 
+select *
   from firm_address
  where `firm_id`=:firm_id;
 ENDSQL;
@@ -196,28 +196,28 @@ ENDSQL;
 # Firm phone
 
 $_CFG['SQL']['get_firm_phone']=<<<ENDSQL
-select * 
-  from firm_phone 
+select *
+  from firm_phone
  where `firm_id`=:firm_id;
 ENDSQL;
 
 $_CFG['SQL']['create_firm_phone']=<<<ENDSQL
 insert into firm_phone (`firm_id`,`phone_type`,`phone_code`,`phone_number`,`phone_description`)
 values (:firm_id,:phone_type,:phone_code,:phone_number,:phone_description);
-select * 
-  from firm_phone 
+select *
+  from firm_phone
  where `firm_id`=:firm_id;
 ENDSQL;
 
 $_CFG['SQL']['update_firm_phone']=<<<ENDSQL
 update firm_phone
-   set `phone_type`=:phone_type,      
-       `phone_code`=:phone_code,      
-       `phone_number`=:phone_number,    
+   set `phone_type`=:phone_type,
+       `phone_code`=:phone_code,
+       `phone_number`=:phone_number,
        `phone_description`= :phone_description
  where `phone_id`=:firm_phone_id;
-select * 
-  from firm_phone 
+select *
+  from firm_phone
  where `firm_id`=:firm_id;
 ENDSQL;
 
@@ -225,12 +225,12 @@ $_CFG['SQL']['delete_firm_phone']=<<<ENDSQL
 delete
   from firm_phone
  where `phone_id`=:firm_phone_id;
-select * 
-  from firm_phone 
+select *
+  from firm_phone
  where `firm_id`=:firm_id;
 ENDSQL;
 
-# Items 
+# Items
 
 $_CFG['SQL']['create_item']=<<<ENDSQL
 insert into catalog_item(`item_name`);
@@ -271,9 +271,9 @@ drop temporary table if exists _fresult;
 set @keylist = ucase(:query_str);
 set @key='';
 create temporary table _keywords
-select @key:=substr(@keylist,1,instr(concat(@keylist,'|'),'|')-1) keyword, 
-       @keylist:=substr(@keylist,instr(concat(@keylist,'|'),'|')+1,255) dummy 
-from  firm 
+select @key:=substr(@keylist,1,instr(concat(@keylist,'|'),'|')-1) keyword,
+       @keylist:=substr(@keylist,instr(concat(@keylist,'|'),'|')+1,255) dummy
+from  firm
 where @keylist!='';
 create temporary table _fresult
 as
@@ -314,14 +314,14 @@ DROP TEMPORARY TABLE IF exists _keywords;
 SET @keylist = UCASE(:query_str);
 SET @key='';
 CREATE TEMPORARY TABLE _keywords
-SELECT @key:=SUBSTR(@keylist,1,INSTR(CONCAT(@keylist,'|'),'|')-1) keyword, 
-       @keylist:=SUBSTR(@keylist,INSTR(CONCAT(@keylist,'|'),'|')+1,255) dummy 
-FROM  firm 
+SELECT @key:=SUBSTR(@keylist,1,INSTR(CONCAT(@keylist,'|'),'|')-1) keyword,
+       @keylist:=SUBSTR(@keylist,INSTR(CONCAT(@keylist,'|'),'|')+1,255) dummy
+FROM  firm
 WHERE @keylist!='';
-SELECT f.firm_name `value`       
+SELECT f.firm_name `value`
   FROM firm f
  INNER JOIN  _keywords k ON f.firm_name LIKE CONCAT('%',k.keyword,'%')
- GROUP BY firm_id 
+ GROUP BY firm_id
  ORDER BY relevance(UCASE(GROUP_CONCAT(k.keyword SEPARATOR '|')),firm_name) DESC
  LIMIT 15
 ENDSQL;
@@ -331,11 +331,11 @@ DROP TEMPORARY TABLE IF exists _keywords;
 SET @keylist = UCASE(:query_str);
 SET @key='';
 CREATE TEMPORARY TABLE _keywords
-SELECT @key:=SUBSTR(@keylist,1,INSTR(CONCAT(@keylist,'|'),'|')-1) keyword, 
-       @keylist:=SUBSTR(@keylist,INSTR(CONCAT(@keylist,'|'),'|')+1,255) dummy 
-FROM  firm 
+SELECT @key:=SUBSTR(@keylist,1,INSTR(CONCAT(@keylist,'|'),'|')-1) keyword,
+       @keylist:=SUBSTR(@keylist,INSTR(CONCAT(@keylist,'|'),'|')+1,255) dummy
+FROM  firm
 WHERE @keylist!='';
-SELECT i.item_name `value`       
+SELECT i.item_name `value`
   FROM catalog_item i
  INNER JOIN  _keywords k ON i.item_name LIKE CONCAT('%',k.keyword,'%')
  GROUP BY i.item_name

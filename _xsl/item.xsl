@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <xsl:stylesheet version="1.0"
-     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"> 
+     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
  <xsl:key name="idx_item_id"    match="/nodes/catalog/item" use="./item_id" />
  <xsl:key name="idx_item_pid"   match="/nodes/catalog/item" use="./item_pid" />
@@ -15,7 +15,7 @@
              </a></span>
      </xsl:for-each>
  </xsl:template>
-<!-- Item parent 
+<!-- Item parent
 -->
  <xsl:template name="item_path">
      <xsl:param name="item_id"/>

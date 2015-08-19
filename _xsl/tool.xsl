@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"> 
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:output method="html" encoding="utf-8" indent="no"/>
 
@@ -26,8 +26,8 @@
               <xsl:attribute name="target">#login_status</xsl:attribute>
                <label for="login">Login</label>
                <input>
-                  <xsl:attribute name="id">login</xsl:attribute> 
-                  <xsl:attribute name="name">login</xsl:attribute> 
+                  <xsl:attribute name="id">login</xsl:attribute>
+                  <xsl:attribute name="name">login</xsl:attribute>
                   <xsl:attribute name="type">text</xsl:attribute>
                   <xsl:attribute name="value"><xsl:value-of select="/state/user_id"/></xsl:attribute>
                   <xsl:attribute name="class">text</xsl:attribute>
@@ -36,8 +36,8 @@
                </input>
                <label for="password">Password</label>
                <input>
-                  <xsl:attribute name="id">passwd</xsl:attribute> 
-                  <xsl:attribute name="name">passwd</xsl:attribute> 
+                  <xsl:attribute name="id">passwd</xsl:attribute>
+                  <xsl:attribute name="name">passwd</xsl:attribute>
                   <xsl:attribute name="type">password</xsl:attribute>
                   <xsl:attribute name="class">text</xsl:attribute>
                   <xsl:attribute name="class">ui-widget-content</xsl:attribute>
@@ -81,13 +81,13 @@
                   <input><xsl:attribute name="name">new_firm</xsl:attribute>
                          <xsl:attribute name="type">hidden</xsl:attribute></input>
                   <input>
-                      <xsl:attribute name="id">new_firm_name</xsl:attribute> 
-                      <xsl:attribute name="name">new_firm_name</xsl:attribute> 
+                      <xsl:attribute name="id">new_firm_name</xsl:attribute>
+                      <xsl:attribute name="name">new_firm_name</xsl:attribute>
                       <xsl:attribute name="type">text</xsl:attribute>
                       <xsl:attribute name="placeholder">Создать фирму</xsl:attribute>
                   </input>
                   <input>
-                      <xsl:attribute name="id">new_firm_btn</xsl:attribute> 
+                      <xsl:attribute name="id">new_firm_btn</xsl:attribute>
                       <xsl:attribute name="type">submit</xsl:attribute>
                       <xsl:attribute name="value">Создать</xsl:attribute>
                   </input>
@@ -119,14 +119,14 @@
                   </input>
 
                   <input>
-                      <xsl:attribute name="id">new_firm_item_name</xsl:attribute> 
-                      <xsl:attribute name="name">new_firm_item_name</xsl:attribute> 
+                      <xsl:attribute name="id">new_firm_item_name</xsl:attribute>
+                      <xsl:attribute name="name">new_firm_item_name</xsl:attribute>
                       <xsl:attribute name="type">text</xsl:attribute>
                       <xsl:attribute name="placeholder">Рубрика</xsl:attribute>
                   </input>
                   <input>
-                      <xsl:attribute name="id">new_firm_item_descr</xsl:attribute> 
-                      <xsl:attribute name="name">new_firm_item_descr</xsl:attribute> 
+                      <xsl:attribute name="id">new_firm_item_descr</xsl:attribute>
+                      <xsl:attribute name="name">new_firm_item_descr</xsl:attribute>
                       <xsl:attribute name="type">text</xsl:attribute>
                       <xsl:attribute name="placeholder">Дополнение</xsl:attribute>
                   </input>

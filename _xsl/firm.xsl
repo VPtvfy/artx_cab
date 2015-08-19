@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"> 
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:output method="html" encoding="utf-8" indent="no" />
 
@@ -9,7 +9,7 @@
  <xsl:key name="idx_firm_phone"    match="/nodes/firms/phone" use="./firm_id" />
 
  <xsl:template name="firm_items">
-     <xsl:param name="firm_id"/>     
+     <xsl:param name="firm_id"/>
      <div><xsl:attribute name="class">firm_items</xsl:attribute>
      <xsl:for-each select="key('idx_firm_item',$firm_id)">
        <div><xsl:attribute name="class">firm_item</xsl:attribute>
@@ -19,7 +19,7 @@
  </xsl:template>
 
  <xsl:template name="firm_phones">
-     <xsl:param name="firm_id"/>     
+     <xsl:param name="firm_id"/>
      <div><xsl:attribute name="class">firm_phones</xsl:attribute>
           <xsl:for-each select="key('idx_firm_phone',$firm_id)">
               <div><xsl:attribute name="class">firm_phone</xsl:attribute>
@@ -31,7 +31,7 @@
  </xsl:template>
 
  <xsl:template name="firm_address">
-     <xsl:param name="firm_id"/>     
+     <xsl:param name="firm_id"/>
      <div><xsl:attribute name="class">address</xsl:attribute>
           <xsl:for-each select="key('idx_firm_address',$firm_id)">
               <div><xsl:attribute name="class">firm_address</xsl:attribute>

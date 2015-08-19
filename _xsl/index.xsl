@@ -2,7 +2,7 @@
 
 <xsl:stylesheet version="1.0"
      xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"> 
+     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:import href="item.xsl"/>
 <xsl:import href="find.xsl"/>
@@ -61,7 +61,7 @@
         <div><img><xsl:attribute name="src">_img/copyright.png</xsl:attribute>
                   <xsl:attribute name="alt">Все права защищены © Телефонный справочник "Прииртышье".
                   Все логотипы и торговые марки на сайте являются собственностью их владельцев.</xsl:attribute></img>
-                  Все права защищены © Телефонный справочник "Прииртышье". 
+                  Все права защищены © Телефонный справочник "Прииртышье".
                   Все логотипы и торговые марки на сайте являются собственностью их владельцев.</div></div>
     <div><xsl:call-template name="login_form"/></div>
     <div><xsl:call-template name="new_firm_form"/></div>
@@ -91,7 +91,7 @@
       <link rel="stylesheet" href="_js/jquery/jquery-ui/jquery-ui.css"/>
       <script src="_js/jquery/jquery.js"></script>
       <script src="_js/jquery/jquery-ui/jquery-ui.js"></script>
-  
+
       <link rel="stylesheet" type="text/css" media="all" href="_css/style.css"/>
       <script src="_js/index.js"></script>
     </head>

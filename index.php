@@ -79,12 +79,12 @@ $hDB1= new sqlLink("localhost","root","root","artex_all");
       case 'new_firm_address':
            if(isset($_FRONT_END['new_firm_id']) and isset($_FRONT_END['new_firm_address'])){
                $hDB1->query($_CFG['SQL']['create_firm_address'],$_FRONT_END);
-               $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firm','address'));} 
+               $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firm','address'));}
             break;
       case 'new_firm_phone':
             if(isset($_FRONT_END['new_firm_id']) and isset($_FRONT_END['new_firm_phone'])){
                $hDB1->query($_CFG['SQL']['create_firm_phone'],$_FRONT_END);
-               $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firm','phone'));} 
+               $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firm','phone'));}
             break;
       default:
              $_FRONT_END['event']='index';
