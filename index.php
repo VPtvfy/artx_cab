@@ -14,7 +14,6 @@ $_FRONT_END=array(); //$_ client state
 $_FRONT_END['event']='index';
 $_FRONT_END['town']=0;
 $_FRONT_END['item']=0;
-$_FRONT_END['firm']='';
 $_FRONT_END['user']='guest';
 $_FRONT_END['keyword']='';
 
@@ -29,6 +28,8 @@ if (isset($_REQUEST) and is_array($_REQUEST)){
 $hDB1= new sqlLink("localhost","root","root","artex_all");
 
     switch ($_FRONT_END['event']){
+      case 'town':
+            break;
       case 'login':
             $_FRONT_END['login_status']='failed';
             if(isset($_REQUEST['login']) and isset($_REQUEST['passwd'])){
@@ -47,7 +48,8 @@ $hDB1= new sqlLink("localhost","root","root","artex_all");
             $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('catalog','item'));
             break;
       case 'find':
-            if($_FRONT_END['item']>0 or $_FRONT_END['keyword']!=""){
+            if($_FRONT_END['item']>0 or mb_strlen($_FRONT_END['keyword'])>3){
+               $_FRONT_END['keyword']=trim(preg_replace('/[^A-ZА-Я0-9]/i',' ',$_FRONT_END['keyword']));
                $_FRONT_END['keyword']=trim(preg_replace('/( +)+/',' ',$_FRONT_END['keyword']));
                $_FRONT_END['query_str']=substr(join('|',explode(' ',' '.$_FRONT_END['keyword'])),1);
                $hDB1->query($_CFG['SQL']['find'],$_FRONT_END);
@@ -113,6 +115,6 @@ echo $XSLT->Process($_CFG['XSL_PATH'].$_PAGE.'.xsl',$PageData);
 //var_dump('<pre>_FRONT_END<hr>',$_FRONT_END,'</pre>');
 echo '<hr><pre>';
 print_r($hDB1->querylog);
-print_r($PageData{'nodes'});
+print_r($PageData{'state'});
 echo '</pre>';
 ?>

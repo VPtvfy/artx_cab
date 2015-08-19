@@ -48,6 +48,7 @@
      <xsl:for-each select="/nodes/firms/firm">
          <div><xsl:attribute name="class">firms</xsl:attribute>
               <div><xsl:attribute name="class">firm_caption</xsl:attribute>
+                  <xsl:value-of select="./firm_id"/>
                   <xsl:value-of select="./firm_name"/></div>
               <xsl:call-template name="firm_phones">
                   <xsl:with-param name="firm_id" select="./firm_id"/>

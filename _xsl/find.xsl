@@ -28,7 +28,7 @@
                         <xsl:attribute name="name">town</xsl:attribute>
                         <xsl:attribute name="value">2</xsl:attribute>
                         <xsl:attribute name="type">radio</xsl:attribute>
-                        <xsl:if test="/state/town=2">
+                        <xsl:if test="/state/town=3">
                              <xsl:attribute name="checked"/>
                         </xsl:if>
                  </input>
@@ -50,7 +50,7 @@
                         <xsl:attribute name="name">town</xsl:attribute>
                         <xsl:attribute name="value">3</xsl:attribute>
                         <xsl:attribute name="type">radio</xsl:attribute>
-                        <xsl:if test="/state/town=3">
+                        <xsl:if test="/state/town=2">
                              <xsl:attribute name="checked"/>
                         </xsl:if>
                   </input>
