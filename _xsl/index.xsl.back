@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?><!-- DWXMLSource="../catalog.xml" -->
+<!DOCTYPE xsl:stylesheet  [
+	<!ENTITY nbsp   "&#160;">
+	<!ENTITY copy   "&#169;">
+	<!ENTITY reg    "&#174;">
+	<!ENTITY trade  "&#8482;">
+	<!ENTITY mdash  "&#8212;">
+	<!ENTITY ldquo  "&#8220;">
+	<!ENTITY rdquo  "&#8221;"> 
+	<!ENTITY pound  "&#163;">
+	<!ENTITY yen    "&#165;">
+	<!ENTITY euro   "&#8364;">]>
+  <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+  <xsl:import href="town.xsl" />
+  <xsl:import href="blocs.xsl" />
+  <xsl:import href="subdiv.xsl" />
+  <xsl:import href="find.xsl" />
+  <xsl:output method="html" encoding="utf-8" indent="no" />
+  <xsl:template match="pageroot">
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <link href="_css/style.css" rel="stylesheet" type="text/css" />
+  <meta name="viewport"    content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Справочник Прииртышье - фирмы г. Семей г. Семипалатинск г. Усть-Каменогорск г. Павлодар"/>
+</head>
+<body>
+<table width="100%" border="0" cellspacing="0" cellpadding="0"> 
+  <tr>
+    <td height="128" colspan="3" align="center"><br />
+          <!--banner top-->
+          <script>
+		p=3*Math.random();
+		d=parseInt(p);
+		document.write ("&lt;IMG border='0' id='topbanner' src='_ads/"+d+".gif'&gt;");
+           </script><br />
+            <img border="0" src="_img\s620.gif" /></td>
+  </tr>
+  <tr>
+    <td width="185" height="205" rowspan="2" class="va_bottom"><img src="_img/llogo.jpg"/></td>
+    <td height="163" align="center"> 
+    <xsl:call-template name="find_form">
+        <xsl:with-param name="pid" select="/pageroot/var/class_id" />
+   </xsl:call-template>
+   </td>
+    <td width="185"></td>
+  </tr>
+  <tr>
+    <td class="va_middle" align="center" height="42" background="_img/bggray.jpg"><xsl:call-template name="alphaindex"/></td>
+    <td height="42" background="_img/bggray.jpg"></td>
+  </tr>
+  <tr>
+    <td align="center"><br/>
+           <table><xsl:attribute name="width">185</xsl:attribute><xsl:attribute name="cellpadding">0</xsl:attribute>
+              <tr><td><a href="#"><img border="0" src="_img/btn1.gif" /></a></td></tr>
+              <tr><td><a href="#"><img border="0" src="_img/btn2.gif" /></a></td></tr>
+              <tr><td><a href="#"><img border="0" src="_img/btn3.gif" /></a></td></tr>
+              <tr><td><a href="#"><img border="0" src="_img/btn4.gif" /></a></td></tr>
+              <tr><td><a href="#"><img border="0" src="_img/btn5.gif" /></a></td></tr>
+              <tr><td><a href="#"><img border="0" src="_img/btn6.gif" /></a></td></tr>
+              <tr><td><a href="#"><img border="0" src="_img/btn7.gif" /></a></td></tr>
+              <tr><td><a href="#"><img border="0" src="_img/btn8.gif" /></a></td></tr>
+          </table>
+
+    </td>
+    <td><br/>
+          <xsl:call-template name="blocs">
+			<xsl:with-param name="pid" select="/pageroot/var/class_id" />
+			<xsl:with-param name="count-columns" select="3" />
+			<xsl:with-param name="count-item"    select="3" />
+                        </xsl:call-template>
+          <xsl:call-template name="firm">
+                        <xsl:with-param name="pid" select="/pageroot/var/class_id" />
+			</xsl:call-template>
+<hr/>
+
+   </td>
+    <td align="center"><br/>
+          <!--banner left-->
+          <img src="_ads/rbn_01.jpg" alt=""/><br />
+          <img src="_ads/rbn_02.jpg" alt=""/><br />
+          <img src="_ads/rbn_03.jpg" alt=""/>
+
+  </td>
+  </tr>
+</table>
+</body>
+</html>
+  </xsl:template>
+</xsl:stylesheet>
