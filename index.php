@@ -7,7 +7,7 @@ require_once ('_cfg.inc.php');
 require_once ('lib/rdbms/mysqli_lib.inc.php');
 //require_once ('lib/xml/serialize.inc.php');
 require_once ('lib/xml/xslt.inc.php');
-require_once ('lib/session/index.inc.php');
+require_once ('lib/session/frontend.inc.php');
 //require_once ('lib/session/sqlite.inc.php');
 
 $_FRONT_END=array(); //$_ client state
@@ -20,10 +20,6 @@ $_FRONT_END['keyword']='';
 $_PAGE='index';
 $PageElement=array();
 session::start();
-
-// First key of REQUEST is
-if (isset($_REQUEST) and is_array($_REQUEST)){
-          $_FRONT_END['event']=key($_REQUEST);}
 
 $hDB1= new sqlLink("localhost","root","root","artex_all");
 

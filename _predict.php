@@ -5,7 +5,7 @@ ini_set('display_errors',true);
 
 require_once ('_cfg.inc.php');
 require_once ('lib/rdbms/mysqli_lib.inc.php');
-require_once ('lib/session/index.inc.php');
+require_once ('lib/session/frontend.inc.php');
 
 //$_FRONT_END=array(); //$_ client state
 $PageElement=array();
