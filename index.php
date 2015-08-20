@@ -109,8 +109,8 @@ $XSLT = new XSLT();
 echo $XSLT->Process($_CFG['XSL_PATH'].$_PAGE.'.xsl',$PageData);
 
 //var_dump('<pre>_FRONT_END<hr>',$_FRONT_END,'</pre>');
-echo '<hr><pre>';
-print_r($hDB1->querylog);
-print_r($PageData{'state'});
-echo '</pre>';
+//echo '<hr><pre>';
+//print_r($hDB1->querylog);
+//print_r($PageData{'state'});
+//echo '</pre>';
 ?>
