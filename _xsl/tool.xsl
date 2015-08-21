@@ -104,8 +104,9 @@
     <div>
          <div><xsl:attribute name="id">new_firm_items</xsl:attribute>
             <xsl:for-each select='/nodes/firm/item'>
-                 <div><a>
-                         <xsl:value-of select="item_name"/></a></div>
+                <xsl:call-template name="firm_items">
+                     <xsl:with-param name="firm_id" select="./firm_id"/>
+                </xsl:call-template>
             </xsl:for-each></div>
          <div>
             <form><xsl:attribute name="method">get</xsl:attribute>
@@ -136,7 +137,6 @@
                      <xsl:attribute name="value">+</xsl:attribute>
                      <xsl:attribute name="class">ui-widget</xsl:attribute>
                   </input>
-
             </form>
          </div>
     </div>

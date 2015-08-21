@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <xsl:stylesheet version="1.0"
-     xmlns="http://www.w3.org/1999/xhtml"
      xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:import href="item.xsl"/>
@@ -51,7 +50,7 @@
 <xsl:template name="result">
     <div><xsl:attribute name="id">result_cat</xsl:attribute>
          <xsl:call-template name="items"><xsl:with-param name="item_id" select="/state/item" /></xsl:call-template></div>
-    <div><xsl:attribute name="id">result_firm</xsl:attribute>result_firm
+    <div><xsl:attribute name="id">result_firm</xsl:attribute>
          <!--xsl:call-template name="result_firm"/--></div>
 </xsl:template>
 <!--
@@ -146,7 +145,7 @@
         <xsl:call-template name='new_firm_addreses'/>
     </xsl:if>
     <xsl:if test="/state/event='new_firm_phone'">
-        <xsl:call-template name='new_firm_phoness'/>
+        <xsl:call-template name='new_firm_phones'/>
     </xsl:if>
 </xsl:template>
 </xsl:stylesheet>

@@ -45,7 +45,7 @@ $hDB1= new sqlLink("localhost","root","root","artex_all");
             break;
       case 'find':
             if($_FRONT_END['item']>0 or mb_strlen($_FRONT_END['keyword'])>3){
-               $_FRONT_END['keyword']=trim(preg_replace('/[^A-ZА-Я0-9]/i',' ',$_FRONT_END['keyword']));
+//               $_FRONT_END['keyword']=trim(preg_replace('/[^qwertyuiopasdfghjklzxcvbnmйцукенгшщзхъфывапролджэячсмитьбю0123456789]/i',' ',$_FRONT_END['keyword']));
                $_FRONT_END['keyword']=trim(preg_replace('/( +)+/',' ',$_FRONT_END['keyword']));
                $_FRONT_END['query_str']=substr(join('|',explode(' ',' '.$_FRONT_END['keyword'])),1);
                $hDB1->query($_CFG['SQL']['find'],$_FRONT_END);
@@ -109,8 +109,8 @@ $XSLT = new XSLT();
 echo $XSLT->Process($_CFG['XSL_PATH'].$_PAGE.'.xsl',$PageData);
 
 //var_dump('<pre>_FRONT_END<hr>',$_FRONT_END,'</pre>');
-//echo '<hr><pre>';
-//print_r($hDB1->querylog);
+echo '<hr><pre>';
+print_r($hDB1->querylog);
 //print_r($PageData{'state'});
-//echo '</pre>';
+echo '</pre>';
 ?>

@@ -89,7 +89,7 @@ ENDSQL;
 
 $_CFG['SQL']['find_address']=<<<ENDSQL
 SELECT r.firm_id,t.town_name, s.street_name, CONCAT (a.building,bletter) building,  CONCAT (a.office,oletter) office
-  FROM fresult r
+  from fresult r
  INNER JOIN firm_address a ON a.firm_id=r.firm_id
  INNER JOIN street s ON a.street_id=s.street_id
  INNER JOIN town t ON s.town_id=t.town_id
@@ -266,32 +266,6 @@ select firm_id, firm_name, email, url, vip, subdiv_id, subdiv, town_id, town, st
 ENDSQL;
 
 $_CFG['SQL']['find']=<<<ENDSQL
-drop temporary table if exists _keywords;
-drop temporary table if exists _fresult;
-set @keylist = ucase(:query_str);
-set @key='';
-create temporary table _keywords
-select @key:=substr(@keylist,1,instr(concat(@keylist,'|'),'|')-1) keyword,
-       @keylist:=substr(@keylist,instr(concat(@keylist,'|'),'|')+1,255) dummy
-from  firm
-where @keylist!='';
-create temporary table _fresult
-as
-select distinct ,f.firm_id
-  from (select firm_id,if(length(:query_str)>3,1,relevance(upper(:query_str),concat_ws(' ',f.firm_name,f.item_name,f.address,f.phone))) as relevance
-               item_name,
-               address,
-               phone,
-               firm_name
-          from vfirm
-         inner join _keywords k on concat_ws(' ',f.firm_name,f.item_name,f.address,f.phone)) like concat('%',k.keyword,'%')
-         where (town_id=:town or :town=0)
-           and (item_id=:item or :item=0)) f
- where :query_str='' or relevance(upper(:query_str),concat_ws(' ',f.firm_name,f.item_name,f.address,f.phone))>0
- order by 1 desc,f.firm_name
-ENDSQL;
-
-$_CFG['SQL']['find']=<<<ENDSQL
 drop temporary table if exists fresult;
 create temporary table fresult
 as
@@ -305,39 +279,91 @@ select distinct if(length(:query_str)<3,1,relevance(upper(:query_str),concat_ws(
          where (town_id=:town or :town=0)
            and (item_id=:item or :item=0)) f
  where if(length(:query_str)<3,1,relevance(upper(:query_str),concat_ws(' ',f.firm_name,f.item_name,f.address,f.phone)))>0
- order by 1 desc
- limit 1,10;
+ limit 100;
+ENDSQL;
+
+$_CFG['SQL']['find']=<<<ENDSQL
+drop temporary table if exists keywords;
+drop temporary table if exists fresult;
+set @keylist = ucase(:query_str);
+set @key='';
+create temporary table keywords
+select @key:=substr(@keylist,1,instr(concat(@keylist,'|'),'|')-1) keyword,
+       @keylist:=substr(@keylist,instr(concat(@keylist,'|'),'|')+1,255) dummy
+from  firm
+where @keylist!='';
+delete from keywords where LENGTH(keyword)<3;
+select * from keywords;
+select :query_str from keywords;
+
+create temporary table fresult
+as
+SELECT relevance,firm_id
+  FROM (SELECT IF(LENGTH(:query_str)<3,1,relevance(UPPER(:query_str),CONCAT_WS(' ',firm_name,item_name,address,phone))) AS relevance,               
+               firm_id
+          FROM vfirm
+         INNER JOIN keywords k ON CONCAT_WS(' ',firm_name,item_name,address,phone) LIKE CONCAT('%',k.keyword,'%')
+         WHERE (town_id=:town OR :town=0)
+           AND (item_id=:item OR :item=0)) f
+ ORDER BY 1 DESC
+ LIMIT 100;
+ENDSQL;
+
+$_CFG['SQL']['find']=<<<ENDSQL
+set @keylist = ucase(:query_str);
+set @key='';
+create temporary table keywords
+select @key:=substr(@keylist,1,instr(concat(@keylist,'|'),'|')-1) keyword,
+       @keylist:=substr(@keylist,instr(concat(@keylist,'|'),'|')+1,255) dummy
+from  firm
+where @keylist!='';
+delete from keywords where LENGTH(keyword)<3;
+select * from keywords;
+select relevance(keyword,keyword) 
+  from keywords;
+
+create temporary table fresult
+as
+SELECT sum(IF(LENGTH(:query_str)<3,1,relevance(UPPER(:query_str),CONCAT_WS(' ',firm_name,item_name,address,phone)))) AS relevance,               
+               firm_id
+          FROM vfirm
+         INNER JOIN keywords k ON CONCAT_WS(' ',firm_name,item_name,address,phone) LIKE CONCAT('%',k.keyword,'%')
+         WHERE (town_id=:town OR :town=0)
+           AND (item_id=:item OR :item=0)
+group by firm_id
+order by 1 desc
+limit 100; 
 ENDSQL;
 
 $_CFG['SQL']['autocomplete_firm']=<<<ENDSQL
-DROP TEMPORARY TABLE IF exists _keywords;
+DROP TEMPORARY TABLE IF exists keywords;
 SET @keylist = UCASE(:query_str);
 SET @key='';
-CREATE TEMPORARY TABLE _keywords
+CREATE TEMPORARY TABLE keywords
 SELECT @key:=SUBSTR(@keylist,1,INSTR(CONCAT(@keylist,'|'),'|')-1) keyword,
        @keylist:=SUBSTR(@keylist,INSTR(CONCAT(@keylist,'|'),'|')+1,255) dummy
 FROM  firm
 WHERE @keylist!='';
 SELECT f.firm_name `value`
   FROM firm f
- INNER JOIN  _keywords k ON f.firm_name LIKE CONCAT('%',k.keyword,'%')
+ INNER JOIN  keywords k ON f.firm_name LIKE CONCAT('%',k.keyword,'%')
  GROUP BY firm_id
  ORDER BY relevance(UCASE(GROUP_CONCAT(k.keyword SEPARATOR '|')),firm_name) DESC
  LIMIT 15
 ENDSQL;
 
 $_CFG['SQL']['autocomplete_item']=<<<ENDSQL
-DROP TEMPORARY TABLE IF exists _keywords;
+DROP TEMPORARY TABLE IF exists keywords;
 SET @keylist = UCASE(:query_str);
 SET @key='';
-CREATE TEMPORARY TABLE _keywords
+CREATE TEMPORARY TABLE keywords
 SELECT @key:=SUBSTR(@keylist,1,INSTR(CONCAT(@keylist,'|'),'|')-1) keyword,
        @keylist:=SUBSTR(@keylist,INSTR(CONCAT(@keylist,'|'),'|')+1,255) dummy
 FROM  firm
 WHERE @keylist!='';
 SELECT i.item_name `value`
   FROM catalog_item i
- INNER JOIN  _keywords k ON i.item_name LIKE CONCAT('%',k.keyword,'%')
+ INNER JOIN  keywords k ON i.item_name LIKE CONCAT('%',k.keyword,'%')
  GROUP BY i.item_name
  ORDER BY relevance(UCASE(GROUP_CONCAT(k.keyword SEPARATOR '|')),item_name) DESC
  LIMIT 15

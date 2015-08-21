@@ -5,9 +5,10 @@ public  $querylog=array();
 private function logError($error='',$detail=''){
         $this->querylog[]=array('error'=>$error,'detail'=>$detail);}
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
-private function logQuery($query,$detail='',$execution_time='',$transfer_time=''){
+private function logQuery($query,$values,$detail='',$execution_time='',$transfer_time=''){
         $_=array();
         $_['query']=$query;
+        $_['values']=$values;
         if (isset($detail->affected_rows)){$_['affected_rows'] = $detail->affected_rows;}
         if (isset($detail->insert_id)){$_['insert_id'] = $detail->insert_id;}
         if (isset($detail->num_rows)){$_['num_rows'] = $detail->num_rows;}
@@ -50,17 +51,17 @@ private function getParameterType($parameters){
         return(array_merge(array(&$type),$parameters));}
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 private function exec($query,$_=''){
+        $parameters=array();
         if ($_!=''){
             preg_match_all('/:[_a-zA-Z][_a-zA-Z0-9]+/is',$query,$names);
             if (is_array($names[0]) and $names[0]!=array()){
                 $query=preg_replace('/:[_a-zA-Z][_a-zA-Z0-9]+/is','?',$query);
-                $parameters=array();
                 foreach ($names[0] as $vname){
                         if (!isset($_[substr($vname,1)])){$_[substr($vname,1)]='';}
                         $parameters[]=&$_[substr($vname,1)];}}}
          $this->timeStat();
          if($hCursor=parent::prepare($query)){
-            if (isset($parameters)){
+            if (isset($parameters) and $parameters!=array()){
                $parameters=$this->getParameterType($parameters);
                call_user_func_array(array(&$hCursor,'bind_param'),$parameters);}
             $hCursor->execute();
@@ -68,7 +69,7 @@ private function exec($query,$_=''){
             $hResult=$hCursor->get_result();
             $hCursor->store_result();
             $transfer_time=$this->timeStat();
-            $this->logQuery($query,$hCursor,$execution_time,$transfer_time);
+            $this->logQuery($query,$parameters,$hCursor,$execution_time,$transfer_time);
             return($hResult);}
          else{
            $this->logError($query,$this->error);}}
