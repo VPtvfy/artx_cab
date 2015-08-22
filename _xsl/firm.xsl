@@ -13,7 +13,8 @@
      <div><xsl:attribute name="class">firm_items</xsl:attribute>
      <xsl:for-each select="key('idx_firm_item',$firm_id)">
        <div><xsl:attribute name="class">firm_item</xsl:attribute>
-            <xsl:value-of select="./item_name"/></div>
+            <a><xsl:attribute name="id">item_<xsl:value-of select="./item_id"/></xsl:attribute>
+               <xsl:value-of select="./item_name"/></a></div>
      </xsl:for-each>
      </div>
  </xsl:template>

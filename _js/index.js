@@ -39,7 +39,8 @@ function(){
          $('body').on('keyup.autocomplete','input[type="text"]',
                        function(event){
                                 data=$(this).attr("name");
-                                $(this).autocomplete({source: "_predict.php?"+data});
+                                $(this).autocomplete({source: "_predict.php?"+data,
+                                              deferRequestBy:500});
                                       });
 
          $('body').on('click',"#logo_tools_login a",
@@ -63,7 +64,7 @@ function(){
                          });
           $("#new_firm_form").dialog({autoOpen: false,
                                      height: 600,
-                                      width: 600,
+                                      width: 900,
                                        show: {effect: "slide", duration: 500},
                                        hide: {effect: "slide", duration: 500},
                                    position:({my:"center top", at:"center top",  of:window}),

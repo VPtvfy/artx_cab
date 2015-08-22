@@ -100,14 +100,15 @@
 -->
 <xsl:template name="new_firm_item">
 </xsl:template>
+<!--
+-->
 <xsl:template name="new_firm_items">
-    <div>
-         <div><xsl:attribute name="id">new_firm_items</xsl:attribute>
-            <xsl:for-each select='/nodes/firm/item'>
-                <xsl:call-template name="firm_items">
-                     <xsl:with-param name="firm_id" select="./firm_id"/>
-                </xsl:call-template>
-            </xsl:for-each></div>
+    <div><xsl:attribute name="id">new_firm_items</xsl:attribute>
+         <div>
+              <xsl:call-template name="firm_items">
+                  <xsl:with-param name="firm_id" select="./state/new_firm_id"/>
+              </xsl:call-template>
+         </div>
          <div>
             <form><xsl:attribute name="method">get</xsl:attribute>
                   <xsl:attribute name="target">#new_firm_items</xsl:attribute>
@@ -116,7 +117,7 @@
                   </input>
                   <input><xsl:attribute name="name">new_firm_id</xsl:attribute>
                          <xsl:attribute name="type">hidden</xsl:attribute>
-                         <xsl:attribute name="value"><xsl:value-of select="/state/firm_id"/></xsl:attribute>
+                         <xsl:attribute name="value"><xsl:value-of select="/state/new_firm_id"/></xsl:attribute>
                   </input>
 
                   <input>

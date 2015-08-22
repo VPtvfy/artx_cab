@@ -27,12 +27,12 @@ $hDB1= new sqlLink("localhost","root","root","artex_all");
                $hDB1->query($_CFG['SQL']['autocomplete_firm'],$_);
                $PageElement=$hDB1->fetch_field('value');}
             break;
-      case 'new_firm_item':
+      case 'new_firm_item_name':
             if(isset($_REQUEST['term']) or $_REQUEST['term']!=""){
                $_['keyword']=trim(preg_replace('/( +)+|\+/',' ',$_REQUEST['term']));
                $_['query_str']=substr(join('|',explode(' ',' '.$_['keyword'])),1);
                $hDB1->query($_CFG['SQL']['autocomplete_item'],$_);
-               $PageElement=$hDB1->fetch_field('value');}
+               $PageElement=$hDB1->fetch_field('label');}
             break;
            }
 session::close();

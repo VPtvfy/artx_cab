@@ -105,16 +105,16 @@ ENDSQL;
 
 $_CFG['SQL']['create_firm']=<<<ENDSQL
 insert into firm (`firm_name`,`firm_descr`)
-values (upper(trim(:firm_name)),:firm_descr);
+values (upper(trim(:new_firm_name)),:new_firm_descr);
 select *
   from firm
- where `firm_name`=upper(trim(:firm_name));
+ where `firm_name`=upper(trim(:new_firm_name));
 ENDSQL;
 
 $_CFG['SQL']['update_firm']=<<<ENDSQL
 update firm
-   set `name`=upper(trim(:firm_name)),`firm_description`=:firm_description
-  where id =:firm_id;
+   set `name`=upper(trim(:new_firm_name)),`firm_description`=:new_firm_description
+  where id =:new_firm_id;
 ENDSQL;
 
 $_CFG['SQL']['delete_firm']=<<<ENDSQL
@@ -125,29 +125,45 @@ ENDSQL;
 
 # Firm div
 
+$_CFG['SQL']['autocomplete_item']=<<<ENDSQL
+drop temporary table if exists keywords;
+set @keylist = ucase(:query_str);
+set @key='';
+create temporary table keywords
+select @key:=substr(@keylist,1,instr(concat(@keylist,'|'),'|')-1) keyword,
+       @keylist:=substr(@keylist,instr(concat(@keylist,'|'),'|')+1,255) dummy
+from  firm
+where @keylist!='';
+select i.item_id `value`, i.item_name `label`
+  from vcatalog i
+ inner join  keywords k on i.item_name like concat('%',k.keyword,'%') and i.count=0
+ group by i.item_name
+ order by relevance(ucase(group_concat(k.keyword separator '|')),item_name) desc
+ limit 15
+ENDSQL;
+
 $_CFG['SQL']['get_firm_div']=<<<ENDSQL
 select d.firm_id,d.firm_div_id,c.*,d.firm_div_name
   from firm_div d
  inner join catalog_item c on c.item_id=d.item_id
- where `firm_id`=:firm_id;
+ where `firm_id`=:new_firm_id;
 ENDSQL;
 
 $_CFG['SQL']['create_firm_div']=<<<ENDSQL
 insert into firm_div (`firm_id`,`item_id`,`firm_div_name`)
-values (:firm_id,:firm_item_id,trim(:firm_div_name));
-select *
-  from firm_div
- where `firm_id`=:firm_id;
+select :new_firm_id,i.item_id,:new_firm_item_descr
+  from catalog_item i
+ where `item_name`=:new_firm_item_name;
 ENDSQL;
 
 $_CFG['SQL']['update_firm_div']=<<<ENDSQL
 update firm_div
    set `item_id`=:firm_item_id,
        `firm_div_name`=trim(:firm_div_name)
- where `firm_div_id`=:firm_div_id;
+ where `firm_div_id`=:new_firm_div_id;
 select *
   from firm_div
- where `firm_id`=:firm_id;
+ where `firm_id`=:new_firm_id;
 ENDSQL;
 
 $_CFG['SQL']['delete_firm_div']=<<<ENDSQL
@@ -164,7 +180,7 @@ ENDSQL;
 $_CFG['SQL']['get_firm_address']=<<<ENDSQL
 select *
   from firm_address
- where `firm_id`=:firm_id;
+ where `firm_id`=:new_firm_id;
 ENDSQL;
 
 $_CFG['SQL']['create_firm_address']=<<<ENDSQL
@@ -198,7 +214,7 @@ ENDSQL;
 $_CFG['SQL']['get_firm_phone']=<<<ENDSQL
 select *
   from firm_phone
- where `firm_id`=:firm_id;
+ where `firm_id`=:new_firm_id;
 ENDSQL;
 
 $_CFG['SQL']['create_firm_phone']=<<<ENDSQL
@@ -350,21 +366,5 @@ SELECT f.firm_name `value`
  LIMIT 15
 ENDSQL;
 
-$_CFG['SQL']['autocomplete_item']=<<<ENDSQL
-DROP TEMPORARY TABLE IF exists keywords;
-SET @keylist = UCASE(:query_str);
-SET @key='';
-CREATE TEMPORARY TABLE keywords
-SELECT @key:=SUBSTR(@keylist,1,INSTR(CONCAT(@keylist,'|'),'|')-1) keyword,
-       @keylist:=SUBSTR(@keylist,INSTR(CONCAT(@keylist,'|'),'|')+1,255) dummy
-FROM  firm
-WHERE @keylist!='';
-SELECT i.item_name `value`
-  FROM catalog_item i
- INNER JOIN  keywords k ON i.item_name LIKE CONCAT('%',k.keyword,'%')
- GROUP BY i.item_name
- ORDER BY relevance(UCASE(GROUP_CONCAT(k.keyword SEPARATOR '|')),item_name) DESC
- LIMIT 15
-ENDSQL;
 
 ?>

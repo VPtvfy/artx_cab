@@ -16,6 +16,10 @@ $_FRONT_END['town']=0;
 $_FRONT_END['item']=0;
 $_FRONT_END['user']='guest';
 $_FRONT_END['keyword']='';
+$_FRONT_END['new_firm_id']=0;
+$_FRONT_END['new_firm_name']='';
+$_FRONT_END['new_firm_item_name']='';
+$_FRONT_END['new_firm_item_name']='';
 
 $_PAGE='index';
 $PageElement=array();
@@ -61,28 +65,31 @@ $hDB1= new sqlLink("localhost","root","root","artex_all");
       case 'new_firm':
             if(isset($_FRONT_END['new_firm_name'])){
                $hDB1->query($_CFG['SQL']['create_firm'],$_FRONT_END);
-               $_FRONT_END['new_firm_id']=$hDB1->fetch_first()['new_firm_id'];
+               $_FRONT_END['new_firm_id']=$hDB1->fetch_first()['firm_id'];
                $hDB1->query($_CFG['SQL']['get_firm_div'],$_FRONT_END);
-               $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firm','item'));
+               $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','item'));
                $hDB1->query($_CFG['SQL']['get_firm_address'],$_FRONT_END);
-               $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firm','address'));
+               $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','address'));
                $hDB1->query($_CFG['SQL']['get_firm_phone'],$_FRONT_END);
-               $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firm','phone'));}
+               $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','phone'));}
             break;
       case 'new_firm_item':
-            if(isset($_FRONT_END['new_firm_id']) and isset($_FRONT_END['new_firm_item'])){
+            if(isset($_FRONT_END['new_firm_id']) and isset($_FRONT_END['new_firm_item_name'])){
                $hDB1->query($_CFG['SQL']['create_firm_div'],$_FRONT_END);
-               $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firm','item'));}
+               $hDB1->query($_CFG['SQL']['get_firm_div'],$_FRONT_END);
+               $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','item'));}
             break;
       case 'new_firm_address':
            if(isset($_FRONT_END['new_firm_id']) and isset($_FRONT_END['new_firm_address'])){
                $hDB1->query($_CFG['SQL']['create_firm_address'],$_FRONT_END);
-               $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firm','address'));}
+               $hDB1->query($_CFG['SQL']['get_firm_address'],$_FRONT_END);
+               $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','address'));}
             break;
       case 'new_firm_phone':
             if(isset($_FRONT_END['new_firm_id']) and isset($_FRONT_END['new_firm_phone'])){
                $hDB1->query($_CFG['SQL']['create_firm_phone'],$_FRONT_END);
-               $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firm','phone'));}
+               $hDB1->query($_CFG['SQL']['get_firm_phone'],$_FRONT_END);
+               $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','phone'));}
             break;
       default:
              $_FRONT_END['event']='index';
@@ -107,10 +114,6 @@ $PageData{'nodes'}=$PageElement;
 
 $XSLT = new XSLT();
 echo $XSLT->Process($_CFG['XSL_PATH'].$_PAGE.'.xsl',$PageData);
-
-//var_dump('<pre>_FRONT_END<hr>',$_FRONT_END,'</pre>');
-echo '<hr><pre>';
-print_r($hDB1->querylog);
-//print_r($PageData{'state'});
-echo '</pre>';
+echo '<hr><pre>';var_dump($_FRONT_END,$hDB1->querylog);echo '</pre>';
+//echo '<hr><pre>';var_dump($PageData);echo '</pre>';
 ?>
