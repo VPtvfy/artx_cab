@@ -5,6 +5,15 @@
  *
  * Date: 2015-07-28
  */
+function router(response){
+         parser=new DOMParser();
+         xmlDoc=parser.parseFromString('<response>'+response+'</response>',"text/xml");
+         xmlDoc=xmlDoc.getElementsByTagName('response')[0];
+         for (i=0;i<xmlDoc.childNodes.length;i++){
+              target=xmlDoc.childNodes[i].id;
+              if (typeof(target) !== 'undefined'){
+                  document.getElementById(target).innerHTML=xmlDoc.childNodes[i].innerHTML;}}
+         }
 $(
 function(){
          $('body').on('submit',"form",
@@ -12,7 +21,8 @@ function(){
                                        url=$(this).serialize();
                                        target=$(this).attr("target");
                                        if (target.substr(0,1)=='#'){
-                                           $.ajax({data: url, success: function(html){$(target).html(html);}});
+                                           $.ajax({data: url, 
+                                                success: function(html){router(html);}});
                                            event.preventDefault();}
                                      });
 
@@ -21,7 +31,8 @@ function(){
                                        url=$(this).attr("href");
                                        target=$(this).attr("target");
                                        if (target.substr(0,1)=='#'){
-                                           $.ajax({data: url, success: function(html){$(target).html(html);}});
+                                           $.ajax({data: url, 
+                                                success: function(html){router(html);}});
                                            event.preventDefault();}
                                       });
 
@@ -33,7 +44,8 @@ function(){
          $('body').on('change','input[type="radio"]',
                       function(event){
                                        url=$(this).attr("name")+'='+$(this).attr("value");
-                                       $.ajax({data: url});
+                                       $.ajax({data: url, 
+                                            success: function(html){router(html);}});
                                       });
 
          $('body').on('keyup.autocomplete','input[type="text"]',

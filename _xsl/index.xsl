@@ -48,8 +48,9 @@
 <!--
 -->
 <xsl:template name="result">
-    <div><xsl:attribute name="id">result_cat</xsl:attribute>
-         <xsl:call-template name="items"><xsl:with-param name="item_id" select="/state/item" /></xsl:call-template></div>
+    <xsl:call-template name="items">
+        <xsl:with-param name="item_id" select="/state/item" />
+    </xsl:call-template>
     <div><xsl:attribute name="id">result_firm</xsl:attribute>
          <!--xsl:call-template name="result_firm"/--></div>
 </xsl:template>

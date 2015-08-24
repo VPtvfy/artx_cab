@@ -93,12 +93,14 @@ SELECT r.firm_id,t.town_name, s.street_name, CONCAT (a.building,bletter) buildin
  INNER JOIN firm_address a ON a.firm_id=r.firm_id
  INNER JOIN street s ON a.street_id=s.street_id
  INNER JOIN town t ON s.town_id=t.town_id
+order by 2,3,4,5
 ENDSQL;
 
 $_CFG['SQL']['find_phone']=<<<ENDSQL
 select p.*
   from fresult r
- inner join firm_phone p on p.firm_id=r.firm_id;
+ inner join firm_phone p on p.firm_id=r.firm_id
+order by phone_code,phone_number;
 ENDSQL;
 
 # Firm

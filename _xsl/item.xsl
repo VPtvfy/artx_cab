@@ -43,15 +43,17 @@
 
  <xsl:template name="items" match="/nodes/catalog/item">
      <xsl:param name='item_id'/>
-     <div><xsl:call-template name="item_path">
-              <xsl:with-param name="item_id" select="$item_id" />
-         </xsl:call-template></div>
-     <ul>
-     <xsl:for-each select="key('idx_item_pid',$item_id)">
-         <xsl:if test="./item_id != ./item_pid">
-             <li><xsl:call-template name="item"/></li>
-         </xsl:if>
-     </xsl:for-each>
-     </ul>
+     <div><xsl:attribute name="id">result_cat</xsl:attribute>
+          <div><xsl:call-template name="item_path">
+                   <xsl:with-param name="item_id" select="$item_id" />
+              </xsl:call-template></div>
+          <ul>
+             <xsl:for-each select="key('idx_item_pid',$item_id)">
+                 <xsl:if test="./item_id != ./item_pid">
+                     <li><xsl:call-template name="item"/></li>
+                 </xsl:if>
+             </xsl:for-each>
+          </ul>
+     </div>
   </xsl:template>
 </xsl:stylesheet>

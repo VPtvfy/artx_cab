@@ -114,6 +114,6 @@ $PageData{'nodes'}=$PageElement;
 
 $XSLT = new XSLT();
 echo $XSLT->Process($_CFG['XSL_PATH'].$_PAGE.'.xsl',$PageData);
-echo '<hr><pre>';var_dump($_FRONT_END,$hDB1->querylog);echo '</pre>';
+//echo '<hr><pre>';var_dump($_FRONT_END,$hDB1->querylog);echo '</pre>';
 //echo '<hr><pre>';var_dump($PageData);echo '</pre>';
 ?>

@@ -13,8 +13,7 @@
      <div><xsl:attribute name="class">firm_items</xsl:attribute>
      <xsl:for-each select="key('idx_firm_item',$firm_id)">
        <div><xsl:attribute name="class">firm_item</xsl:attribute>
-            <a><xsl:attribute name="id">item_<xsl:value-of select="./item_id"/></xsl:attribute>
-               <xsl:value-of select="./item_name"/></a></div>
+            <a><xsl:value-of select="./item_name"/></a></div>
      </xsl:for-each>
      </div>
  </xsl:template>
@@ -50,22 +49,24 @@
  </xsl:template>
 
  <xsl:template name='firms'>
-     <xsl:for-each select="/nodes/firms/firm">
-         <div><xsl:attribute name="class">firms</xsl:attribute>
-              <div><xsl:attribute name="class">firm_caption</xsl:attribute>
-                    <a><xsl:attribute name="title"><xsl:value-of select="./firm_id"/>&#160;<xsl:value-of select="./firm_descr"/></xsl:attribute>
-                     <xsl:value-of select="./firm_name"/></a></div>
-              <xsl:call-template name="firm_phones">
-                  <xsl:with-param name="firm_id" select="./firm_id"/>
-              </xsl:call-template>
-              <xsl:call-template name="firm_address">
-                  <xsl:with-param name="firm_id" select="./firm_id"/>
-              </xsl:call-template>
-              <xsl:call-template name="firm_items">
-                  <xsl:with-param name="firm_id" select="./firm_id"/>
-              </xsl:call-template>
-         </div>
-     </xsl:for-each>
+     <div><xsl:attribute name="id">result_firm</xsl:attribute>
+          <xsl:for-each select="/nodes/firms/firm">
+              <div><xsl:attribute name="class">firms</xsl:attribute>
+                   <div><xsl:attribute name="class">firm_caption</xsl:attribute>
+                         <a><xsl:attribute name="title"><xsl:value-of select="./firm_id"/>&#160;<xsl:value-of select="./firm_descr"/></xsl:attribute>
+                          <xsl:value-of select="./firm_name"/></a></div>
+                   <xsl:call-template name="firm_phones">
+                       <xsl:with-param name="firm_id" select="./firm_id"/>
+                   </xsl:call-template>
+                   <xsl:call-template name="firm_address">
+                       <xsl:with-param name="firm_id" select="./firm_id"/>
+                   </xsl:call-template>
+                   <xsl:call-template name="firm_items">
+                       <xsl:with-param name="firm_id" select="./firm_id"/>
+                   </xsl:call-template>
+              </div>
+          </xsl:for-each>
+     </div>
  </xsl:template>
 
 </xsl:stylesheet>
