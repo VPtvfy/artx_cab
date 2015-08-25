@@ -37,7 +37,7 @@ a		{font-size: 1em; color: #1A1A1A; text-decoration: none; }
 #logo_tools_firm	{background: url(../_img/icon_pen.png) left top no-repeat; background-size: contain; }
 
 /* Search form */
-#quick_search	 {overflow: hidden; height: 125px; margin-bottom: 10px; background: #3f9ed2 url(../_img/bg-search.png) top left no-repeat; background-position: 20px 12px; color: #fff; border-radius: 12px; text-shadow: 1px 1px 2px black}
+#quick_search	 {overflow: hidden; height: 125px; margin-bottom: 10px; background: #3f9ed2; background-position: 20px 12px; color: #fff; border-radius: 12px; text-shadow: 1px 1px 2px black}
 #quick_search a  {color: #8c0029; font-weight: bold; }
 #quick_search hr {color: #d4dee9; border: 0; background-color: #d4dee9; height: 1px; margin: 5px 0 5px 0; }
 #quick_search ul {margin-left: 0px; width: 100%; font-size: 24px; }

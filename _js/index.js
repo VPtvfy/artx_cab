@@ -12,6 +12,7 @@ function router(response){
          for (i=0;i<xmlDoc.childNodes.length;i++){
               target=xmlDoc.childNodes[i].id;
               if (typeof(target) !== 'undefined'){
+                  document.getElementById(target).innerHTML='Loading';
                   document.getElementById(target).innerHTML=xmlDoc.childNodes[i].innerHTML;}}
          }
 $(
@@ -20,20 +21,18 @@ function(){
                       function(event){
                                        url=$(this).serialize();
                                        target=$(this).attr("target");
-                                       if (target.substr(0,1)=='#'){
-                                           $.ajax({data: url, 
-                                                success: function(html){router(html);}});
-                                           event.preventDefault();}
+                                       $.ajax({data: url, 
+                                            success: function(html){router(html);}});
+                                       event.preventDefault();
                                      });
 
          $('body').on('click',"a[href!='#']",
                       function(event){
                                        url=$(this).attr("href");
-                                       target=$(this).attr("target");
-                                       if (target.substr(0,1)=='#'){
-                                           $.ajax({data: url, 
-                                                success: function(html){router(html);}});
-                                           event.preventDefault();}
+//                                       target=$(this).attr("target");
+                                       $.ajax({data: url, 
+                                            success: function(html){router(html);}});
+                                       event.preventDefault();
                                       });
 
          $('body').on('click',"a[href='#']",

@@ -54,21 +54,21 @@
                   <xsl:attribute name="class">ui-button-text-only</xsl:attribute>
                 </input>
               </div>
-              <div>
-                  <xsl:attribute name="id">login_status</xsl:attribute>
-              </div>
+              <xsl:call-template name='login_status'/>
         </form>
       </div>
 </xsl:template>
 <!--
 -->
 <xsl:template name="login_status">
+    <div><xsl:attribute name="id">login_status</xsl:attribute>
     <xsl:if test="/state/login_status='success'">
-      <div>Login successful</div>
+      Login successful
     </xsl:if>
     <xsl:if test="/state/login_status!='success'">
-      <div>Login failed</div>
+      Login failed
     </xsl:if>
+    </div>
 </xsl:template>
 <!--
 -->

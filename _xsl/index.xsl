@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<xsl:stylesheet version="1.0"
-     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:import href="item.xsl"/>
 <xsl:import href="find.xsl"/>
@@ -12,7 +11,7 @@
 
 <xsl:template name="top_banner">
  <div><xsl:attribute name="id">topbanner</xsl:attribute>
- </div><img border="0" src="_img/s620.gif"/>
+ </div>
 </xsl:template>
 <!--
 -->
@@ -51,8 +50,7 @@
     <xsl:call-template name="items">
         <xsl:with-param name="item_id" select="/state/item" />
     </xsl:call-template>
-    <div><xsl:attribute name="id">result_firm</xsl:attribute>
-         <!--xsl:call-template name="result_firm"/--></div>
+    <xsl:call-template name='firms'/>
 </xsl:template>
 <!--
 -->
@@ -62,7 +60,8 @@
                   <xsl:attribute name="alt">Все права защищены © Телефонный справочник "Прииртышье".
                   Все логотипы и торговые марки на сайте являются собственностью их владельцев.</xsl:attribute></img>
                   Все права защищены © Телефонный справочник "Прииртышье".
-                  Все логотипы и торговые марки на сайте являются собственностью их владельцев.</div></div>
+                  Все логотипы и торговые марки на сайте являются собственностью их владельцев.</div>
+    </div>
     <div><xsl:call-template name="login_form"/></div>
     <div><xsl:call-template name="new_firm_form"/></div>
 </xsl:template>
@@ -120,32 +119,40 @@
 </xsl:template>
 
 <xsl:template match="/">
-    <xsl:if test="/state/event='index'">
+    <xsl:if test="/sync/index='true'">
         <xsl:call-template name='index'/>
     </xsl:if>
-    <xsl:if test="/state/event='alpha'">
-        <xsl:call-template name="items"><xsl:with-param name="item_id" select="0"/></xsl:call-template>
+
+    <xsl:if test="/sync/alpha='true'">
+        <xsl:call-template name="items">
+           <xsl:with-param name="item_id" select="0"/>
+        </xsl:call-template>
     </xsl:if>
-    <xsl:if test="/state/event='item'">
-        <xsl:call-template name="items"><xsl:with-param name="item_id" select="/state/item"/></xsl:call-template>
+
+    <xsl:if test="/sync/items='true'">
+        <xsl:call-template name="items">
+            <xsl:with-param name="item_id" select="/state/item"/>
+        </xsl:call-template>
     </xsl:if>
-    <xsl:if test="/state/event='find'">
+
+    <xsl:if test="/sync/firms='true'">
         <xsl:call-template name='firms'/>
     </xsl:if>
-    <xsl:if test="/state/event='login'">
+
+    <xsl:if test="/sync/login='true'">
         <xsl:call-template name='login_status'/>
     </xsl:if>
 
-    <xsl:if test="/state/event='new_firm'">
+    <xsl:if test="/sync/new_firm='true'">
         <xsl:call-template name='new_firm_details'/>
     </xsl:if>
-    <xsl:if test="/state/event='new_firm_item'">
+    <xsl:if test="/sync/new_firm_item='true'">
         <xsl:call-template name='new_firm_items'/>
     </xsl:if>
-    <xsl:if test="/state/event='new_firm_address'">
+    <xsl:if test="/sync/new_firm_address='true'">
         <xsl:call-template name='new_firm_addreses'/>
     </xsl:if>
-    <xsl:if test="/state/event='new_firm_phone'">
+    <xsl:if test="/sync/new_firm_phone='true'">
         <xsl:call-template name='new_firm_phones'/>
     </xsl:if>
 </xsl:template>
