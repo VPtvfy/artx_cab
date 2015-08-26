@@ -1,10 +1,3 @@
-<html>
-<body>
-<div>
-<form>
-<input type='text' name='keyword'></input>
-</form>
-</div>
 <?
 ob_start();
 error_reporting (E_ALL);
@@ -15,6 +8,8 @@ require_once ('_lib/rdbms/mysqli_lib.inc.php');
 require_once ('_lib/xml/xslt.inc.php');
 require_once ('_lib/session/frontend.inc.php');
 
+$_FRONT_END['alpha']='';
+$_FRONT_END['town']='';
 $_FRONT_END['keyword']='';
 
 $_PAGE='index';
@@ -30,9 +25,22 @@ echo '<br>';
 echo '<br>';
 echo '<hr>$_SESSION::diff()<br>';
 var_dump(session::diff());
-echo '<hr>$_SESSION::diff(keyword)<br>';
+echo '<hr>$_SESSION::diff(keyword,town)<br>';
+var_dump(session::diff('alpha'));
 var_dump(session::diff('keyword'));
+var_dump(session::diff('town'));
+echo '<hr>';
+var_dump(session::diff('alpha','keyword','town'));
 session::close();
 ?>
+<html>
+<body>
+<div>
+<form>
+<input type='text' name='keyword' value='<?echo $_FRONT_END['keyword'];?>'></input>
+<input type='text' name='town'    value='<?echo $_FRONT_END['town'];?>'></input>
+<input type='submit'></input>
+</form>
+</div>
 </body>
 </html>

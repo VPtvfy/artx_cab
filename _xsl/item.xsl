@@ -9,7 +9,6 @@
       <xsl:for-each select="/nodes/catalog/alpha">
            <span>
              <a><xsl:attribute name="href">alpha=<xsl:value-of select="./sym"/></xsl:attribute>
-                <xsl:attribute name="target">#result_cat</xsl:attribute>
                 <xsl:value-of select="./sym"/>
              </a></span>
      </xsl:for-each>
@@ -31,11 +30,9 @@
  <xsl:template name="item">
      <a><xsl:attribute name="title"><xsl:value-of  select="./item_name"/></xsl:attribute>
         <xsl:if test="./stat != 0">
-            <xsl:attribute name="target">#result_firm</xsl:attribute>
             <xsl:attribute name="href">find&amp;item=<xsl:value-of  select="./item_id"/></xsl:attribute>
         </xsl:if>
         <xsl:if test="./stat = 0">
-            <xsl:attribute name="target">#result_cat</xsl:attribute>
             <xsl:attribute name="href">item=<xsl:value-of  select="./item_id"/></xsl:attribute>
         </xsl:if>
         <xsl:value-of  select="./item_name"/></a>

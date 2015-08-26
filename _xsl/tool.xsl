@@ -23,7 +23,6 @@
          <xsl:attribute name="title">Login user</xsl:attribute>
         <form><xsl:attribute name="name">login</xsl:attribute>
               <xsl:attribute name="method">post</xsl:attribute>
-              <xsl:attribute name="target">#login_status</xsl:attribute>
                <label for="login">Login</label>
                <input>
                   <xsl:attribute name="id">login</xsl:attribute>
@@ -77,7 +76,6 @@
          <xsl:attribute name="title">Создать фирму</xsl:attribute>
          <div><xsl:attribute name="id">new_firm</xsl:attribute>
             <form><xsl:attribute name="method">get</xsl:attribute>
-                  <xsl:attribute name="target">#new_firm_details</xsl:attribute>
                   <input><xsl:attribute name="name">new_firm</xsl:attribute>
                          <xsl:attribute name="type">hidden</xsl:attribute></input>
                   <input>
@@ -111,7 +109,6 @@
          </div>
          <div>
             <form><xsl:attribute name="method">get</xsl:attribute>
-                  <xsl:attribute name="target">#new_firm_items</xsl:attribute>
                   <input><xsl:attribute name="name">new_firm_item</xsl:attribute>
                          <xsl:attribute name="type">hidden</xsl:attribute>
                   </input>

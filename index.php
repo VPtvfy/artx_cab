@@ -8,12 +8,12 @@ require_once ('_lib/rdbms/mysqli_lib.inc.php');
 require_once ('_lib/xml/xslt.inc.php');
 require_once ('_lib/session/frontend.inc.php');
 
-$_FRONT_END['event']='index';
-$_FRONT_END['alpha']='';
-$_FRONT_END['town']=0;
 $_FRONT_END['item']=0;
-$_FRONT_END['user']='guest';
+$_FRONT_END['town']=0;
 $_FRONT_END['keyword']='';
+
+$_FRONT_END['user']='guest';
+
 $_FRONT_END['new_firm_id']=0;
 $_FRONT_END['new_firm_name']='';
 $_FRONT_END['new_firm_item_name']='';
@@ -28,7 +28,7 @@ session::start();
 $hDB1= new sqlLink("localhost","root","root","artex_all");
  //Catalog
  if (session::diff('alpha','item')){
-    if (isset($_FRONT_END['alpha']) and $_FRONT_END['alpha']!=''){
+    if(isset($_FRONT_END['alpha']) and $_FRONT_END['alpha']!=''){
       $hDB1->query($_CFG['SQL']['get_catalog_by_alpha'],$_FRONT_END);
       $_SYNC[]=array('alpha'=>'true');}
     else{
@@ -48,8 +48,8 @@ $hDB1= new sqlLink("localhost","root","root","artex_all");
        $hDB1->query($_CFG['SQL']['find_address'],$_FRONT_END);
        $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','address'));
        $hDB1->query($_CFG['SQL']['find_phone'],$_FRONT_END);
-       $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','phone'));
-       $_SYNC[]=array('firms'=>'true');}}
+       $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','phone'));}
+       $_SYNC[]=array('firms'=>'true');}
 
  if (session::diff()){
  //Towns
@@ -58,7 +58,8 @@ $hDB1= new sqlLink("localhost","root","root","artex_all");
  //Alphaindex
     $hDB1->query($_CFG['SQL']['get_alpha'],$_FRONT_END);
     $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('catalog','alpha'));
-    $_SYNC=array('index'=>'true');}
+    $_SYNC=array('index'=>'true');
+}
 
 
 session::close();

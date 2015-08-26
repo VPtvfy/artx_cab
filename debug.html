@@ -1,52 +1,30 @@
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body><pre>array (
-  'event' => 'index',
-  'alpha' => 'Я',
-  'town' => '0',
-  'item' => '0',
+  'item' => '664',
+  'town' => '2',
+  'keyword' => '',
   'user' => 'guest',
-  'keyword' => 'артекс',
   'new_firm_id' => 0,
   'new_firm_name' => '',
   'new_firm_item_name' => '',
-  'query_str' => 'артекс',
+  'query_str' => false,
 )<hr>array (
   0 => 
-  array (
-    'query' => 'select item_id,0 item_pid,if (char_length(item_name)>3,concat(substr(item_name,1,1),lower(substr(item_name,2,64))),item_name) item_name,`count`,`stat`
-  from vcatalog
- where (if (upper(left(item_name,1))>=\'А\',upper(left(item_name,1)),\'*\') = upper(left(?,1)) and `stat`>0) or item_id=0
- group by item_name
- order by if(`item_id`=0,1,0),item_name;',
-    'values' => 
-    array (
-      0 => 's',
-      1 => 'Я',
-    ),
-    'affected_rows' => 2,
-    'insert_id' => 0,
-    'num_rows' => 0,
-    'param_count' => 1,
-    'field_count' => 5,
-    'Execution time' => 0.23799991607666015625,
-    'Transfer time' => 0,
-  ),
-  1 => 
   array (
     'query' => 'set @keylist = ucase(?)',
     'values' => 
     array (
       0 => 's',
-      1 => 'артекс',
+      1 => false,
     ),
     'affected_rows' => 0,
     'insert_id' => 0,
     'num_rows' => 0,
     'param_count' => 1,
     'field_count' => 0,
-    'Execution time' => 0,
+    'Execution time' => 0.00097584724426269531,
     'Transfer time' => 0,
   ),
-  2 => 
+  1 => 
   array (
     'query' => 'set @key=\'\'',
     'values' => 
@@ -57,30 +35,16 @@
     'num_rows' => 0,
     'param_count' => 0,
     'field_count' => 0,
-    'Execution time' => 0.0010001659393310546875,
+    'Execution time' => 0,
     'Transfer time' => 0,
   ),
-  3 => 
+  2 => 
   array (
     'query' => 'create temporary table keywords
 select @key:=substr(@keylist,1,instr(concat(@keylist,\'|\'),\'|\')-1) keyword,
        @keylist:=substr(@keylist,instr(concat(@keylist,\'|\'),\'|\')+1,255) dummy
-from  firm
-where @keylist!=\'\'',
-    'values' => 
-    array (
-    ),
-    'affected_rows' => 1,
-    'insert_id' => 0,
-    'num_rows' => 0,
-    'param_count' => 0,
-    'field_count' => 0,
-    'Execution time' => 0.132999897003173828125,
-    'Transfer time' => 0,
-  ),
-  4 => 
-  array (
-    'query' => 'delete from keywords where length(keyword)<3',
+  from  firm
+ where @keylist!=\'\'',
     'values' => 
     array (
     ),
@@ -89,46 +53,60 @@ where @keylist!=\'\'',
     'num_rows' => 0,
     'param_count' => 0,
     'field_count' => 0,
-    'Execution time' => 0,
+    'Execution time' => 0.097656965255737305,
     'Transfer time' => 0,
   ),
-  5 => 
+  3 => 
+  array (
+    'query' => 'delete from keywords where char_length(keyword)<3',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 0,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 0,
+    'Execution time' => 0.00097608566284179688,
+    'Transfer time' => 0,
+  ),
+  4 => 
   array (
     'query' => 'create temporary table fresult
 as
-select sum(if(length(?)<3,1,relevance(upper(?),concat_ws(\' \',firm_name,item_name,address,phone)))) as relevance,               
+select max(if(char_length(?)<3,1,relevance(upper(?),concat_ws(\' \',firm_name,item_name,address,phone)))) as relevance,               
                firm_id
           from vfirm
           left join keywords k on concat_ws(\' \',firm_name,item_name,address,phone) like concat(\'%\',k.keyword,\'%\')
          where (town_id=? or ?=0)
            and (item_id=? or ?=0)
-           and (length(?)<3 or k.keyword is not null)
-group by firm_id
-having sum(if(length(?)<3,1,relevance(upper(?),concat_ws(\' \',firm_name,item_name,address,phone))))>0
-order by 1 desc
-limit 100; ',
+           and (char_length(?)<3 or k.keyword is not null)
+ group by firm_id
+having max(if(char_length(?)<3,1,relevance(upper(?),concat_ws(\' \',firm_name,item_name,address,phone))))>0
+ order by 1 desc
+ limit 100; ',
     'values' => 
     array (
       0 => 'ssddddsss',
-      1 => 'артекс',
-      2 => 'артекс',
-      3 => '0',
-      4 => '0',
-      5 => '0',
-      6 => '0',
-      7 => 'артекс',
-      8 => 'артекс',
-      9 => 'артекс',
+      1 => false,
+      2 => false,
+      3 => '2',
+      4 => '2',
+      5 => '664',
+      6 => '664',
+      7 => false,
+      8 => false,
+      9 => false,
     ),
-    'affected_rows' => 1,
+    'affected_rows' => 5,
     'insert_id' => 0,
     'num_rows' => 0,
     'param_count' => 9,
     'field_count' => 0,
-    'Execution time' => 2.519999980926513671875,
+    'Execution time' => 1.0166020393371582,
     'Transfer time' => 0,
   ),
-  6 => 
+  5 => 
   array (
     'query' => 'select f.*
   from fresult r
@@ -137,15 +115,15 @@ order by r.relevance desc;',
     'values' => 
     array (
     ),
-    'affected_rows' => 1,
+    'affected_rows' => 5,
     'insert_id' => 0,
     'num_rows' => 0,
     'param_count' => 0,
     'field_count' => 3,
-    'Execution time' => 0.000999927520751953125,
+    'Execution time' => 0.00097608566284179688,
     'Transfer time' => 0,
   ),
-  7 => 
+  6 => 
   array (
     'query' => 'select r.firm_id,c.*
   from fresult r
@@ -154,15 +132,15 @@ order by r.relevance desc;',
     'values' => 
     array (
     ),
-    'affected_rows' => 13,
+    'affected_rows' => 36,
     'insert_id' => 0,
     'num_rows' => 0,
     'param_count' => 0,
     'field_count' => 3,
-    'Execution time' => 0.000999927520751953125,
+    'Execution time' => 0.00097703933715820312,
     'Transfer time' => 0,
   ),
-  8 => 
+  7 => 
   array (
     'query' => 'SELECT r.firm_id,t.town_name, s.street_name, CONCAT (a.building,bletter) building,  CONCAT (a.office,oletter) office
   from fresult r
@@ -173,15 +151,15 @@ order by 2,3,4,5',
     'values' => 
     array (
     ),
-    'affected_rows' => 2,
+    'affected_rows' => 6,
     'insert_id' => 0,
     'num_rows' => 0,
     'param_count' => 0,
     'field_count' => 5,
-    'Execution time' => 0.0020000934600830078125,
+    'Execution time' => 0.00097703933715820312,
     'Transfer time' => 0,
   ),
-  9 => 
+  8 => 
   array (
     'query' => 'select p.*
   from fresult r
@@ -190,501 +168,554 @@ order by phone_code,phone_number;',
     'values' => 
     array (
     ),
-    'affected_rows' => 3,
+    'affected_rows' => 7,
     'insert_id' => 0,
     'num_rows' => 0,
     'param_count' => 0,
     'field_count' => 6,
-    'Execution time' => 0.0010001659393310546875,
-    'Transfer time' => 0,
-  ),
-  10 => 
-  array (
-    'query' => 'select *
-  from town
- order by 2;',
-    'values' => 
-    array (
-    ),
-    'affected_rows' => 3,
-    'insert_id' => 0,
-    'num_rows' => 0,
-    'param_count' => 0,
-    'field_count' => 3,
-    'Execution time' => 0.000999927520751953125,
-    'Transfer time' => 0,
-  ),
-  11 => 
-  array (
-    'query' => 'select distinct if (upper(left(item_name,1))>=\'А\',upper(left(item_name,1)),\'*\') sym
-  from catalog_item
- order by upper(left(item_name,1));',
-    'values' => 
-    array (
-    ),
-    'affected_rows' => 28,
-    'insert_id' => 0,
-    'num_rows' => 0,
-    'param_count' => 0,
-    'field_count' => 1,
-    'Execution time' => 0.0039999485015869140625,
+    'Execution time' => 0.0019528865814208984,
     'Transfer time' => 0,
   ),
 )<hr>array (
   'sync' => 
   array (
-    'index' => 'true',
+    0 => 
+    array (
+      'firms' => 'true',
+    ),
   ),
   'state' => 
   array (
-    'event' => 'index',
-    'alpha' => 'Я',
-    'town' => '0',
-    'item' => '0',
+    'item' => '664',
+    'town' => '2',
+    'keyword' => '',
     'user' => 'guest',
-    'keyword' => 'артекс',
     'new_firm_id' => 0,
     'new_firm_name' => '',
     'new_firm_item_name' => '',
-    'query_str' => 'артекс',
+    'query_str' => false,
   ),
   'nodes' => 
   array (
-    'catalog' => 
-    array (
-      0 => 
-      array (
-        'item' => 
-        array (
-          'item_id' => 512,
-          'item_pid' => 0,
-          'item_name' => 'Яйцо куриное - производство, продажа',
-          'count' => 0,
-          'stat' => 4,
-        ),
-      ),
-      1 => 
-      array (
-        'item' => 
-        array (
-          'item_id' => 0,
-          'item_pid' => 0,
-          'item_name' => 'Рубрики',
-          'count' => 25,
-          'stat' => 0,
-        ),
-      ),
-      2 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => '*',
-        ),
-      ),
-      3 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'А',
-        ),
-      ),
-      4 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Б',
-        ),
-      ),
-      5 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'В',
-        ),
-      ),
-      6 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Г',
-        ),
-      ),
-      7 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Д',
-        ),
-      ),
-      8 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Ж',
-        ),
-      ),
-      9 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'З',
-        ),
-      ),
-      10 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'И',
-        ),
-      ),
-      11 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'К',
-        ),
-      ),
-      12 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Л',
-        ),
-      ),
-      13 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'М',
-        ),
-      ),
-      14 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Н',
-        ),
-      ),
-      15 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'О',
-        ),
-      ),
-      16 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'П',
-        ),
-      ),
-      17 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Р',
-        ),
-      ),
-      18 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'С',
-        ),
-      ),
-      19 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Т',
-        ),
-      ),
-      20 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'У',
-        ),
-      ),
-      21 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Ф',
-        ),
-      ),
-      22 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Х',
-        ),
-      ),
-      23 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Ц',
-        ),
-      ),
-      24 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Ч',
-        ),
-      ),
-      25 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Ш',
-        ),
-      ),
-      26 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Щ',
-        ),
-      ),
-      27 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Э',
-        ),
-      ),
-      28 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Ю',
-        ),
-      ),
-      29 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Я',
-        ),
-      ),
-    ),
     'firms' => 
     array (
       0 => 
       array (
         'firm' => 
         array (
-          'firm_id' => 2924,
-          'firm_name' => 'АРТЕКС, ИЗДАТЕЛЬСКО - ПОЛИГРАФИЧЕСКАЯ ФИРМА',
+          'firm_id' => 402,
+          'firm_name' => 'BIZCOM, ТОО',
           'firm_descr' => '',
         ),
       ),
       1 => 
       array (
-        'item' => 
+        'firm' => 
         array (
-          'firm_id' => 2924,
-          'item_id' => 147,
-          'item_name' => 'ДИЗАЙНЕРСКИЕ УСЛУГИ',
+          'firm_id' => 3700,
+          'firm_name' => 'ВК ПРЕДПРИЯТИЕ ВЫЧИСЛИТЕЛЬНОЙ ТЕХНИКИ И СИСТЕМ УПРАВЛЕНИЯ, ТОО',
+          'firm_descr' => '',
         ),
       ),
       2 => 
       array (
-        'item' => 
+        'firm' => 
         array (
-          'firm_id' => 2924,
-          'item_id' => 643,
-          'item_name' => 'ИЗДАТЕЛЬСТВА',
+          'firm_id' => 5762,
+          'firm_name' => 'КИП, АВТОРИЗОВАННЫЙ СЕРВИСНЫЙ ЦЕНТР',
+          'firm_descr' => '',
         ),
       ),
       3 => 
       array (
-        'item' => 
+        'firm' => 
         array (
-          'firm_id' => 2924,
-          'item_id' => 181,
-          'item_name' => 'ИНТЕРНЕТ - РЕКЛАМА',
+          'firm_id' => 7427,
+          'firm_name' => 'ОТКРЫТЫЕ ТЕХНОЛОГИИ ПЛЮС, ТОО',
+          'firm_descr' => '',
         ),
       ),
       4 => 
       array (
-        'item' => 
+        'firm' => 
         array (
-          'firm_id' => 2924,
-          'item_id' => 335,
-          'item_name' => 'ПОЛИГРАФИЧЕСКИЕ УСЛУГИ',
+          'firm_id' => 7851,
+          'firm_name' => 'ПРЕДПРИЯТИЕ КС, ТОО',
+          'firm_descr' => '',
         ),
       ),
       5 => 
       array (
         'item' => 
         array (
-          'firm_id' => 2924,
-          'item_id' => 759,
-          'item_name' => 'РЕКЛАМНО - СУВЕНИРНАЯ ПРОДУКЦИЯ - ИЗГОТОВЛЕНИЕ',
+          'firm_id' => 402,
+          'item_id' => 655,
+          'item_name' => 'КАРТРИДЖИ - ЗАПРАВКА',
         ),
       ),
       6 => 
       array (
         'item' => 
         array (
-          'firm_id' => 2924,
-          'item_id' => 366,
-          'item_name' => 'РЕКЛАМНЫЕ УСЛУГИ',
+          'firm_id' => 402,
+          'item_id' => 664,
+          'item_name' => 'КОМПЬЮТЕРНЫЕ СЕТИ',
         ),
       ),
       7 => 
       array (
         'item' => 
         array (
-          'firm_id' => 2924,
-          'item_id' => 807,
-          'item_name' => 'ТИПОГРАФИИ',
+          'firm_id' => 402,
+          'item_id' => 665,
+          'item_name' => 'КОМПЬЮТЕРЫ, ОРГТЕХНИКА - ПРОДАЖА',
         ),
       ),
       8 => 
       array (
         'item' => 
         array (
-          'firm_id' => 2924,
-          'item_id' => 809,
-          'item_name' => 'ТОРГОВЫЕ ЗНАКИ, ЛОГОТИПЫ - ИЗГОТОВЛЕНИЕ',
+          'firm_id' => 402,
+          'item_id' => 666,
+          'item_name' => 'КОМПЬЮТЕРЫ, ОРГТЕХНИКА - РЕМОНТ, СЕРВИС',
         ),
       ),
       9 => 
       array (
         'item' => 
         array (
-          'firm_id' => 2924,
-          'item_id' => 820,
-          'item_name' => 'УПАКОВКА - ДИЗАЙН',
+          'firm_id' => 402,
+          'item_id' => 671,
+          'item_name' => 'КОПИРОВАЛЬНАЯ ТЕХНИКА - ПРОДАЖА, РЕМОНТ',
         ),
       ),
       10 => 
       array (
         'item' => 
         array (
-          'firm_id' => 2924,
-          'item_id' => 823,
-          'item_name' => 'ФИРМЕННЫЙ СТИЛЬ - РАЗРАБОТКА',
+          'firm_id' => 402,
+          'item_id' => 333,
+          'item_name' => 'ПОЖАРНАЯ БЕЗОПАСНОСТЬ - ОБОРУДОВАНИЕ, СИГНАЛИЗАЦИЯ',
         ),
       ),
       11 => 
       array (
         'item' => 
         array (
-          'firm_id' => 2924,
-          'item_id' => 607,
-          'item_name' => 'ВЫВЕСКИ, УКАЗАТЕЛИ',
+          'firm_id' => 402,
+          'item_id' => 753,
+          'item_name' => 'ПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ',
         ),
       ),
       12 => 
       array (
         'item' => 
         array (
-          'firm_id' => 2924,
-          'item_id' => 810,
-          'item_name' => 'ТОРГОВЫЕ ЗНАКИ, ЛОГОТИПЫ - РАЗРАБОТКА',
+          'firm_id' => 402,
+          'item_id' => 402,
+          'item_name' => 'СИСТЕМЫ БЕЗОПАСНОСТИ, ВИДЕОНАБЛЮДЕНИЯ',
         ),
       ),
       13 => 
       array (
         'item' => 
         array (
-          'firm_id' => 2924,
-          'item_id' => 781,
-          'item_name' => 'СПРАВОЧНИКИ ТЕЛЕФОННЫЕ',
+          'firm_id' => 402,
+          'item_id' => 835,
+          'item_name' => 'ЦИФРОВАЯ ТЕХНИКА - ПРОДАЖА',
         ),
       ),
       14 => 
       array (
-        'address' => 
+        'item' => 
         array (
-          'firm_id' => 2924,
-          'town_name' => 'Павлодар',
-          'street_name' => 'Естая',
-          'building' => '40',
-          'office' => NULL,
+          'firm_id' => 402,
+          'item_id' => 836,
+          'item_name' => 'ЦИФРОВАЯ ТЕХНИКА - РЕМОНТ',
         ),
       ),
       15 => 
       array (
-        'address' => 
+        'item' => 
         array (
-          'firm_id' => 2924,
-          'town_name' => 'Усть-Каменогорск',
-          'street_name' => 'К. Либкнехта',
-          'building' => '40',
-          'office' => NULL,
+          'firm_id' => 3700,
+          'item_id' => 543,
+          'item_name' => '1С: БУХГАЛТЕРИЯ',
         ),
       ),
       16 => 
       array (
-        'phone' => 
+        'item' => 
         array (
-          'phone_id' => 3975,
-          'firm_id' => 2924,
-          'phone_type' => 1,
-          'phone_code' => '7182',
-          'phone_number' => '621348',
-          'phone_description' => '',
+          'firm_id' => 3700,
+          'item_id' => 81,
+          'item_name' => 'БУХГАЛТЕРСКИЕ УСЛУГИ',
         ),
       ),
       17 => 
       array (
-        'phone' => 
+        'item' => 
         array (
-          'phone_id' => 7859,
-          'firm_id' => 2924,
-          'phone_type' => 1,
-          'phone_code' => '7222',
-          'phone_number' => '564736',
-          'phone_description' => '',
+          'firm_id' => 3700,
+          'item_id' => 655,
+          'item_name' => 'КАРТРИДЖИ - ЗАПРАВКА',
         ),
       ),
       18 => 
       array (
+        'item' => 
+        array (
+          'firm_id' => 3700,
+          'item_id' => 664,
+          'item_name' => 'КОМПЬЮТЕРНЫЕ СЕТИ',
+        ),
+      ),
+      19 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 3700,
+          'item_id' => 666,
+          'item_name' => 'КОМПЬЮТЕРЫ, ОРГТЕХНИКА - РЕМОНТ, СЕРВИС',
+        ),
+      ),
+      20 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 3700,
+          'item_id' => 671,
+          'item_name' => 'КОПИРОВАЛЬНАЯ ТЕХНИКА - ПРОДАЖА, РЕМОНТ',
+        ),
+      ),
+      21 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5762,
+          'item_id' => 600,
+          'item_name' => 'БЫТОВАЯ ТЕХНИКА - РЕМОНТ',
+        ),
+      ),
+      22 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5762,
+          'item_id' => 655,
+          'item_name' => 'КАРТРИДЖИ - ЗАПРАВКА',
+        ),
+      ),
+      23 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5762,
+          'item_id' => 664,
+          'item_name' => 'КОМПЬЮТЕРНЫЕ СЕТИ',
+        ),
+      ),
+      24 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5762,
+          'item_id' => 666,
+          'item_name' => 'КОМПЬЮТЕРЫ, ОРГТЕХНИКА - РЕМОНТ, СЕРВИС',
+        ),
+      ),
+      25 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5762,
+          'item_id' => 668,
+          'item_name' => 'КОНДИЦИОНЕРЫ - ПРОДАЖА, РЕМОНТ, ОБСЛУЖИВАНИЕ',
+        ),
+      ),
+      26 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5762,
+          'item_id' => 671,
+          'item_name' => 'КОПИРОВАЛЬНАЯ ТЕХНИКА - ПРОДАЖА, РЕМОНТ',
+        ),
+      ),
+      27 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5762,
+          'item_id' => 263,
+          'item_name' => 'МОБИЛЬНЫЕ ТЕЛЕФОНЫ - РЕМОНТ',
+        ),
+      ),
+      28 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5762,
+          'item_id' => 446,
+          'item_name' => 'ТЕЛЕФОННЫЕ АППАРАТЫ - РЕМОНТ',
+        ),
+      ),
+      29 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5762,
+          'item_id' => 836,
+          'item_name' => 'ЦИФРОВАЯ ТЕХНИКА - РЕМОНТ',
+        ),
+      ),
+      30 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7427,
+          'item_id' => 655,
+          'item_name' => 'КАРТРИДЖИ - ЗАПРАВКА',
+        ),
+      ),
+      31 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7427,
+          'item_id' => 664,
+          'item_name' => 'КОМПЬЮТЕРНЫЕ СЕТИ',
+        ),
+      ),
+      32 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7427,
+          'item_id' => 665,
+          'item_name' => 'КОМПЬЮТЕРЫ, ОРГТЕХНИКА - ПРОДАЖА',
+        ),
+      ),
+      33 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7427,
+          'item_id' => 666,
+          'item_name' => 'КОМПЬЮТЕРЫ, ОРГТЕХНИКА - РЕМОНТ, СЕРВИС',
+        ),
+      ),
+      34 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7427,
+          'item_id' => 668,
+          'item_name' => 'КОНДИЦИОНЕРЫ - ПРОДАЖА, РЕМОНТ, ОБСЛУЖИВАНИЕ',
+        ),
+      ),
+      35 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7427,
+          'item_id' => 671,
+          'item_name' => 'КОПИРОВАЛЬНАЯ ТЕХНИКА - ПРОДАЖА, РЕМОНТ',
+        ),
+      ),
+      36 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7851,
+          'item_id' => 664,
+          'item_name' => 'КОМПЬЮТЕРНЫЕ СЕТИ',
+        ),
+      ),
+      37 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7851,
+          'item_id' => 665,
+          'item_name' => 'КОМПЬЮТЕРЫ, ОРГТЕХНИКА - ПРОДАЖА',
+        ),
+      ),
+      38 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7851,
+          'item_id' => 666,
+          'item_name' => 'КОМПЬЮТЕРЫ, ОРГТЕХНИКА - РЕМОНТ, СЕРВИС',
+        ),
+      ),
+      39 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7851,
+          'item_id' => 671,
+          'item_name' => 'КОПИРОВАЛЬНАЯ ТЕХНИКА - ПРОДАЖА, РЕМОНТ',
+        ),
+      ),
+      40 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7851,
+          'item_id' => 753,
+          'item_name' => 'ПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ',
+        ),
+      ),
+      41 => 
+      array (
+        'address' => 
+        array (
+          'firm_id' => 3700,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => '30-й Гвардейской дивизии',
+          'building' => '18',
+          'office' => NULL,
+        ),
+      ),
+      42 => 
+      array (
+        'address' => 
+        array (
+          'firm_id' => 7427,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Белинского',
+          'building' => '46',
+          'office' => NULL,
+        ),
+      ),
+      43 => 
+      array (
+        'address' => 
+        array (
+          'firm_id' => 5762,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Потанина',
+          'building' => '272',
+          'office' => NULL,
+        ),
+      ),
+      44 => 
+      array (
+        'address' => 
+        array (
+          'firm_id' => 5762,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Потанина',
+          'building' => '311',
+          'office' => NULL,
+        ),
+      ),
+      45 => 
+      array (
+        'address' => 
+        array (
+          'firm_id' => 7851,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'пр. Ауэзова',
+          'building' => '37',
+          'office' => NULL,
+        ),
+      ),
+      46 => 
+      array (
+        'address' => 
+        array (
+          'firm_id' => 402,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'пр. Независимости',
+          'building' => '74',
+          'office' => NULL,
+        ),
+      ),
+      47 => 
+      array (
         'phone' => 
         array (
-          'phone_id' => 9502,
-          'firm_id' => 2924,
+          'phone_id' => 8872,
+          'firm_id' => 3700,
           'phone_type' => 1,
           'phone_code' => '7232',
-          'phone_number' => '250466',
+          'phone_number' => '222222',
           'phone_description' => '',
         ),
       ),
-    ),
-    'towns' => 
-    array (
-      0 => 
+      48 => 
       array (
-        'town' => 
+        'phone' => 
         array (
-          'town_id' => 3,
-          'town_name' => 'Павлодар',
-          'town_code' => '7182',
+          'phone_id' => 9373,
+          'firm_id' => 402,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '245188',
+          'phone_description' => '',
         ),
       ),
-      1 => 
+      49 => 
       array (
-        'town' => 
+        'phone' => 
         array (
-          'town_id' => 1,
-          'town_name' => 'Семей',
-          'town_code' => '7222',
+          'phone_id' => 9530,
+          'firm_id' => 7851,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '250966',
+          'phone_description' => '',
         ),
       ),
-      2 => 
+      50 => 
       array (
-        'town' => 
+        'phone' => 
         array (
-          'town_id' => 2,
-          'town_name' => 'Усть-Каменогорск',
-          'town_code' => '7232',
+          'phone_id' => 11005,
+          'firm_id' => 7427,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '522727',
+          'phone_description' => '',
+        ),
+      ),
+      51 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 11032,
+          'firm_id' => 402,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '523255',
+          'phone_description' => '',
+        ),
+      ),
+      52 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 12728,
+          'firm_id' => 5762,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '766244',
+          'phone_description' => '',
+        ),
+      ),
+      53 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 12852,
+          'firm_id' => 5762,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '767951',
+          'phone_description' => '',
         ),
       ),
     ),

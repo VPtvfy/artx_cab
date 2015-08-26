@@ -13,9 +13,12 @@ $_FRONT_END['keyword']='';
 session::start();
 $hDB1= new sqlLink("localhost","root","root","artex_all");
 
+    if (isset($_REQUEST) and is_array($_REQUEST)){
+                 $_FRONT_END['event']=key($_REQUEST);}
+
     switch ($_FRONT_END['event']){
       case 'keyword':
-            if(isset($_REQUEST['term']) or $_REQUEST['term']!=""){
+            if(isset($_REQUEST['term']) and mb_strlen($_REQUEST['term'])>=3){
                $_['keyword']=trim(preg_replace('/( +)+|\+/',' ',$_REQUEST['term']));
                $_['query_str']=substr(join('|',explode(' ',' '.$_['keyword'])),1);
                $hDB1->query($_CFG['SQL']['autocomplete_firm'],$_);

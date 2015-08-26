@@ -125,7 +125,7 @@
 
     <xsl:if test="/sync/alpha='true'">
         <xsl:call-template name="items">
-           <xsl:with-param name="item_id" select="0"/>
+            <xsl:with-param name="item_id" select="0"/>
         </xsl:call-template>
     </xsl:if>
 
@@ -146,12 +146,15 @@
     <xsl:if test="/sync/new_firm='true'">
         <xsl:call-template name='new_firm_details'/>
     </xsl:if>
+
     <xsl:if test="/sync/new_firm_item='true'">
         <xsl:call-template name='new_firm_items'/>
     </xsl:if>
+
     <xsl:if test="/sync/new_firm_address='true'">
         <xsl:call-template name='new_firm_addreses'/>
     </xsl:if>
+
     <xsl:if test="/sync/new_firm_phone='true'">
         <xsl:call-template name='new_firm_phones'/>
     </xsl:if>

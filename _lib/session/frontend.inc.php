@@ -21,16 +21,20 @@ public static function start(){
 
 public static function diff(){
        global $_FRONT_END;
-       $vars=func_get_args();
+
+       if(!isset($_SERVER['HTTP_X_REQUESTED_WITH']) or strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest'){
+          return(true);}
+ 
+      $vars=func_get_args();
        foreach ($vars as $var){
                if (isset($_REQUEST[$var])){ 
                     if (!isset($_SESSION['FRONT_END'][$var]) or ($_REQUEST[$var]!=$_SESSION['FRONT_END'][$var])){
                         return(true);}}}
 
-       if(!isset($_SERVER['HTTP_REFERER']) or parse_url($_SERVER['HTTP_REFERER'])['path']!=parse_url($_SERVER["SCRIPT_NAME"])['path']){
-          return (true);} 
-       if(!isset($_SESSION['FRONT_END'])){
-          return (true);} 
+//      if(!isset($_SERVER['HTTP_REFERER']) or parse_url($_SERVER['HTTP_REFERER'])['path']!=parse_url($_SERVER["SCRIPT_NAME"])['path']){
+//          return (true);} 
+//       if(!isset($_SESSION['FRONT_END'])){
+//          return (true);}
 
         return(false);}
 

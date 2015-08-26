@@ -8,7 +8,6 @@
           <xsl:attribute name="id">qsearch</xsl:attribute>
           <xsl:attribute name="name">qsearch</xsl:attribute>
           <xsl:attribute name="method">post</xsl:attribute>
-          <xsl:attribute name="target">#result_firm</xsl:attribute>
           <input><xsl:attribute name="name">find</xsl:attribute>
                  <xsl:attribute name="type">hidden</xsl:attribute></input>
           <div><xsl:attribute name="id">location_div</xsl:attribute>

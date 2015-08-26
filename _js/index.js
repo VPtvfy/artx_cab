@@ -17,14 +17,13 @@ function router(response){
               target=xmlDoc.childNodes[i].id;
               if (typeof(target) !== 'undefined'){
                   document.getElementById(target).innerHTML='Loading';
-                  document.getElementById(target).innerHTML=xmlDoc.childNodes[i].innerHTML;}}
-         }
+                  document.getElementById(target).innerHTML=xmlDoc.childNodes[i].innerHTML;}}}
 $(
 function(){
          $('body').on('submit',"form",
                       function(event){
                                        url=$(this).serialize();
-                                       target=$(this).attr("target");
+//                                       target=$(this).attr("target");
                                        $.ajax({data: url, 
                                             success: function(html){router(html);}});
                                        event.preventDefault();
@@ -67,8 +66,8 @@ function(){
           $("#login_form").dialog({autoOpen: false,
                                      height: 200,
                                       width: 220,
-                                       show: {effect: "slide", duration: 500},
-                                       hide: {effect: "slide", duration: 500},
+                                       show: {effect: "slide", duration: 200},
+                                       hide: {effect: "slide", duration: 100},
                                    position:({my:"left top", at:"left top",  of:window}),
                                       modal: true});
 
@@ -80,8 +79,8 @@ function(){
           $("#new_firm_form").dialog({autoOpen: false,
                                      height: 600,
                                       width: 900,
-                                       show: {effect: "slide", duration: 500},
-                                       hide: {effect: "slide", duration: 500},
+                                       show: {effect: "slide", duration: 200},
+                                       hide: {effect: "slide", duration: 100},
                                    position:({my:"center top", at:"center top",  of:window}),
                                       modal: true});
 
