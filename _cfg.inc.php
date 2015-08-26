@@ -77,7 +77,7 @@ $_CFG['SQL']['find_firm']=<<<ENDSQL
 select f.*
   from fresult r
  inner join firm f on f.firm_id=r.firm_id
-order by r.relevance desc;
+order by r.relevance desc,f.firm_name;
 ENDSQL;
 
 $_CFG['SQL']['find_item']=<<<ENDSQL
