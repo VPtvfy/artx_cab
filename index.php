@@ -4,11 +4,10 @@ error_reporting (E_ALL);
 ini_set('display_errors',true);
 
 require_once ('_cfg.inc.php');
-require_once ('lib/rdbms/mysqli_lib.inc.php');
-require_once ('lib/xml/xslt.inc.php');
-require_once ('lib/session/frontend.inc.php');
+require_once ('_lib/rdbms/mysqli_lib.inc.php');
+require_once ('_lib/xml/xslt.inc.php');
+require_once ('_lib/session/frontend.inc.php');
 
-$_FRONT_END=array(); //$_ client state
 $_FRONT_END['event']='index';
 $_FRONT_END['alpha']='';
 $_FRONT_END['town']=0;
@@ -27,14 +26,6 @@ $PageElement=array();
 session::start();
 
 $hDB1= new sqlLink("localhost","root","root","artex_all");
- if (session::diff()){
- //Towns
-    $hDB1->query($_CFG['SQL']['get_town']);
-    $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('towns','town'));
- //Alphaindex
-    $hDB1->query($_CFG['SQL']['get_alpha'],$_FRONT_END);
-    $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('catalog','alpha'));
-    $_SYNC[]=array('index'=>'true');}
  //Catalog
  if (session::diff('alpha','item')){
     if (isset($_FRONT_END['alpha']) and $_FRONT_END['alpha']!=''){
@@ -60,6 +51,16 @@ $hDB1= new sqlLink("localhost","root","root","artex_all");
        $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','phone'));
        $_SYNC[]=array('firms'=>'true');}}
 
+ if (session::diff()){
+ //Towns
+    $hDB1->query($_CFG['SQL']['get_town']);
+    $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('towns','town'));
+ //Alphaindex
+    $hDB1->query($_CFG['SQL']['get_alpha'],$_FRONT_END);
+    $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('catalog','alpha'));
+    $_SYNC=array('index'=>'true');}
+
+
 session::close();
 
 $PageData=array();
@@ -68,6 +69,8 @@ $PageData{'state'}=$_FRONT_END;
 $PageData{'nodes'}=$PageElement;
 
 $XSLT = new XSLT();
+$_hdebug = fopen("debug.html", "w+");
 echo $XSLT->Process($_CFG['XSL_PATH'].$_PAGE.'.xsl',$PageData);
-echo '<pre>';var_dump($_FRONT_END,$hDB1->querylog);echo '</pre>';
+fwrite ($_hdebug,sprintf('<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body><pre>%s<hr>%s<hr>%s</pre></body><html>',var_export($_FRONT_END,true),var_export($hDB1->querylog,true),var_export($PageData,true)));
+fclose($_hdebug);
 ?>

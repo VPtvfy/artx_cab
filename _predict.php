@@ -9,6 +9,7 @@ require_once ('lib/session/frontend.inc.php');
 
 //$_FRONT_END=array(); //$_ client state
 $PageElement=array();
+$_FRONT_END['keyword']='';
 session::start();
 $hDB1= new sqlLink("localhost","root","root","artex_all");
 

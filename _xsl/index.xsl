@@ -69,7 +69,7 @@
 <!--Main template
 -->
 <xsl:template name="index">
-    <html xmlns="http://www.w3.org/1999/xhtml">
+    <html>
     <head>
       <meta>
        <xsl:attribute name="name">description</xsl:attribute>

@@ -1,0 +1,692 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body><pre>array (
+  'event' => 'index',
+  'alpha' => 'Я',
+  'town' => '0',
+  'item' => '0',
+  'user' => 'guest',
+  'keyword' => 'артекс',
+  'new_firm_id' => 0,
+  'new_firm_name' => '',
+  'new_firm_item_name' => '',
+  'query_str' => 'артекс',
+)<hr>array (
+  0 => 
+  array (
+    'query' => 'select item_id,0 item_pid,if (char_length(item_name)>3,concat(substr(item_name,1,1),lower(substr(item_name,2,64))),item_name) item_name,`count`,`stat`
+  from vcatalog
+ where (if (upper(left(item_name,1))>=\'А\',upper(left(item_name,1)),\'*\') = upper(left(?,1)) and `stat`>0) or item_id=0
+ group by item_name
+ order by if(`item_id`=0,1,0),item_name;',
+    'values' => 
+    array (
+      0 => 's',
+      1 => 'Я',
+    ),
+    'affected_rows' => 2,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 1,
+    'field_count' => 5,
+    'Execution time' => 0.23799991607666015625,
+    'Transfer time' => 0,
+  ),
+  1 => 
+  array (
+    'query' => 'set @keylist = ucase(?)',
+    'values' => 
+    array (
+      0 => 's',
+      1 => 'артекс',
+    ),
+    'affected_rows' => 0,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 1,
+    'field_count' => 0,
+    'Execution time' => 0,
+    'Transfer time' => 0,
+  ),
+  2 => 
+  array (
+    'query' => 'set @key=\'\'',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 0,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 0,
+    'Execution time' => 0.0010001659393310546875,
+    'Transfer time' => 0,
+  ),
+  3 => 
+  array (
+    'query' => 'create temporary table keywords
+select @key:=substr(@keylist,1,instr(concat(@keylist,\'|\'),\'|\')-1) keyword,
+       @keylist:=substr(@keylist,instr(concat(@keylist,\'|\'),\'|\')+1,255) dummy
+from  firm
+where @keylist!=\'\'',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 1,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 0,
+    'Execution time' => 0.132999897003173828125,
+    'Transfer time' => 0,
+  ),
+  4 => 
+  array (
+    'query' => 'delete from keywords where length(keyword)<3',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 0,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 0,
+    'Execution time' => 0,
+    'Transfer time' => 0,
+  ),
+  5 => 
+  array (
+    'query' => 'create temporary table fresult
+as
+select sum(if(length(?)<3,1,relevance(upper(?),concat_ws(\' \',firm_name,item_name,address,phone)))) as relevance,               
+               firm_id
+          from vfirm
+          left join keywords k on concat_ws(\' \',firm_name,item_name,address,phone) like concat(\'%\',k.keyword,\'%\')
+         where (town_id=? or ?=0)
+           and (item_id=? or ?=0)
+           and (length(?)<3 or k.keyword is not null)
+group by firm_id
+having sum(if(length(?)<3,1,relevance(upper(?),concat_ws(\' \',firm_name,item_name,address,phone))))>0
+order by 1 desc
+limit 100; ',
+    'values' => 
+    array (
+      0 => 'ssddddsss',
+      1 => 'артекс',
+      2 => 'артекс',
+      3 => '0',
+      4 => '0',
+      5 => '0',
+      6 => '0',
+      7 => 'артекс',
+      8 => 'артекс',
+      9 => 'артекс',
+    ),
+    'affected_rows' => 1,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 9,
+    'field_count' => 0,
+    'Execution time' => 2.519999980926513671875,
+    'Transfer time' => 0,
+  ),
+  6 => 
+  array (
+    'query' => 'select f.*
+  from fresult r
+ inner join firm f on f.firm_id=r.firm_id
+order by r.relevance desc;',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 1,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 3,
+    'Execution time' => 0.000999927520751953125,
+    'Transfer time' => 0,
+  ),
+  7 => 
+  array (
+    'query' => 'select r.firm_id,c.*
+  from fresult r
+ inner join firm_div d on d.firm_id=r.firm_id
+ inner join catalog_item c on c.item_id=d.item_id',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 13,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 3,
+    'Execution time' => 0.000999927520751953125,
+    'Transfer time' => 0,
+  ),
+  8 => 
+  array (
+    'query' => 'SELECT r.firm_id,t.town_name, s.street_name, CONCAT (a.building,bletter) building,  CONCAT (a.office,oletter) office
+  from fresult r
+ INNER JOIN firm_address a ON a.firm_id=r.firm_id
+ INNER JOIN street s ON a.street_id=s.street_id
+ INNER JOIN town t ON s.town_id=t.town_id
+order by 2,3,4,5',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 2,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 5,
+    'Execution time' => 0.0020000934600830078125,
+    'Transfer time' => 0,
+  ),
+  9 => 
+  array (
+    'query' => 'select p.*
+  from fresult r
+ inner join firm_phone p on p.firm_id=r.firm_id
+order by phone_code,phone_number;',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 3,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 6,
+    'Execution time' => 0.0010001659393310546875,
+    'Transfer time' => 0,
+  ),
+  10 => 
+  array (
+    'query' => 'select *
+  from town
+ order by 2;',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 3,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 3,
+    'Execution time' => 0.000999927520751953125,
+    'Transfer time' => 0,
+  ),
+  11 => 
+  array (
+    'query' => 'select distinct if (upper(left(item_name,1))>=\'А\',upper(left(item_name,1)),\'*\') sym
+  from catalog_item
+ order by upper(left(item_name,1));',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 28,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 1,
+    'Execution time' => 0.0039999485015869140625,
+    'Transfer time' => 0,
+  ),
+)<hr>array (
+  'sync' => 
+  array (
+    'index' => 'true',
+  ),
+  'state' => 
+  array (
+    'event' => 'index',
+    'alpha' => 'Я',
+    'town' => '0',
+    'item' => '0',
+    'user' => 'guest',
+    'keyword' => 'артекс',
+    'new_firm_id' => 0,
+    'new_firm_name' => '',
+    'new_firm_item_name' => '',
+    'query_str' => 'артекс',
+  ),
+  'nodes' => 
+  array (
+    'catalog' => 
+    array (
+      0 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 512,
+          'item_pid' => 0,
+          'item_name' => 'Яйцо куриное - производство, продажа',
+          'count' => 0,
+          'stat' => 4,
+        ),
+      ),
+      1 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 0,
+          'item_pid' => 0,
+          'item_name' => 'Рубрики',
+          'count' => 25,
+          'stat' => 0,
+        ),
+      ),
+      2 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => '*',
+        ),
+      ),
+      3 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'А',
+        ),
+      ),
+      4 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Б',
+        ),
+      ),
+      5 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'В',
+        ),
+      ),
+      6 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Г',
+        ),
+      ),
+      7 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Д',
+        ),
+      ),
+      8 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Ж',
+        ),
+      ),
+      9 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'З',
+        ),
+      ),
+      10 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'И',
+        ),
+      ),
+      11 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'К',
+        ),
+      ),
+      12 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Л',
+        ),
+      ),
+      13 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'М',
+        ),
+      ),
+      14 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Н',
+        ),
+      ),
+      15 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'О',
+        ),
+      ),
+      16 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'П',
+        ),
+      ),
+      17 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Р',
+        ),
+      ),
+      18 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'С',
+        ),
+      ),
+      19 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Т',
+        ),
+      ),
+      20 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'У',
+        ),
+      ),
+      21 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Ф',
+        ),
+      ),
+      22 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Х',
+        ),
+      ),
+      23 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Ц',
+        ),
+      ),
+      24 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Ч',
+        ),
+      ),
+      25 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Ш',
+        ),
+      ),
+      26 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Щ',
+        ),
+      ),
+      27 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Э',
+        ),
+      ),
+      28 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Ю',
+        ),
+      ),
+      29 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Я',
+        ),
+      ),
+    ),
+    'firms' => 
+    array (
+      0 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 2924,
+          'firm_name' => 'АРТЕКС, ИЗДАТЕЛЬСКО - ПОЛИГРАФИЧЕСКАЯ ФИРМА',
+          'firm_descr' => '',
+        ),
+      ),
+      1 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 2924,
+          'item_id' => 147,
+          'item_name' => 'ДИЗАЙНЕРСКИЕ УСЛУГИ',
+        ),
+      ),
+      2 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 2924,
+          'item_id' => 643,
+          'item_name' => 'ИЗДАТЕЛЬСТВА',
+        ),
+      ),
+      3 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 2924,
+          'item_id' => 181,
+          'item_name' => 'ИНТЕРНЕТ - РЕКЛАМА',
+        ),
+      ),
+      4 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 2924,
+          'item_id' => 335,
+          'item_name' => 'ПОЛИГРАФИЧЕСКИЕ УСЛУГИ',
+        ),
+      ),
+      5 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 2924,
+          'item_id' => 759,
+          'item_name' => 'РЕКЛАМНО - СУВЕНИРНАЯ ПРОДУКЦИЯ - ИЗГОТОВЛЕНИЕ',
+        ),
+      ),
+      6 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 2924,
+          'item_id' => 366,
+          'item_name' => 'РЕКЛАМНЫЕ УСЛУГИ',
+        ),
+      ),
+      7 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 2924,
+          'item_id' => 807,
+          'item_name' => 'ТИПОГРАФИИ',
+        ),
+      ),
+      8 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 2924,
+          'item_id' => 809,
+          'item_name' => 'ТОРГОВЫЕ ЗНАКИ, ЛОГОТИПЫ - ИЗГОТОВЛЕНИЕ',
+        ),
+      ),
+      9 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 2924,
+          'item_id' => 820,
+          'item_name' => 'УПАКОВКА - ДИЗАЙН',
+        ),
+      ),
+      10 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 2924,
+          'item_id' => 823,
+          'item_name' => 'ФИРМЕННЫЙ СТИЛЬ - РАЗРАБОТКА',
+        ),
+      ),
+      11 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 2924,
+          'item_id' => 607,
+          'item_name' => 'ВЫВЕСКИ, УКАЗАТЕЛИ',
+        ),
+      ),
+      12 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 2924,
+          'item_id' => 810,
+          'item_name' => 'ТОРГОВЫЕ ЗНАКИ, ЛОГОТИПЫ - РАЗРАБОТКА',
+        ),
+      ),
+      13 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 2924,
+          'item_id' => 781,
+          'item_name' => 'СПРАВОЧНИКИ ТЕЛЕФОННЫЕ',
+        ),
+      ),
+      14 => 
+      array (
+        'address' => 
+        array (
+          'firm_id' => 2924,
+          'town_name' => 'Павлодар',
+          'street_name' => 'Естая',
+          'building' => '40',
+          'office' => NULL,
+        ),
+      ),
+      15 => 
+      array (
+        'address' => 
+        array (
+          'firm_id' => 2924,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'К. Либкнехта',
+          'building' => '40',
+          'office' => NULL,
+        ),
+      ),
+      16 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 3975,
+          'firm_id' => 2924,
+          'phone_type' => 1,
+          'phone_code' => '7182',
+          'phone_number' => '621348',
+          'phone_description' => '',
+        ),
+      ),
+      17 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 7859,
+          'firm_id' => 2924,
+          'phone_type' => 1,
+          'phone_code' => '7222',
+          'phone_number' => '564736',
+          'phone_description' => '',
+        ),
+      ),
+      18 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 9502,
+          'firm_id' => 2924,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '250466',
+          'phone_description' => '',
+        ),
+      ),
+    ),
+    'towns' => 
+    array (
+      0 => 
+      array (
+        'town' => 
+        array (
+          'town_id' => 3,
+          'town_name' => 'Павлодар',
+          'town_code' => '7182',
+        ),
+      ),
+      1 => 
+      array (
+        'town' => 
+        array (
+          'town_id' => 1,
+          'town_name' => 'Семей',
+          'town_code' => '7222',
+        ),
+      ),
+      2 => 
+      array (
+        'town' => 
+        array (
+          'town_id' => 2,
+          'town_name' => 'Усть-Каменогорск',
+          'town_code' => '7232',
+        ),
+      ),
+    ),
+  ),
+)</pre></body><html>

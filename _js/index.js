@@ -5,6 +5,10 @@
  *
  * Date: 2015-07-28
  */
+
+if (document.location.search+document.location.hash!=''){
+    document.location.replace(document.location.protocol+'//'+document.location.host+document.location.pathname);}
+
 function router(response){
          parser=new DOMParser();
          xmlDoc=parser.parseFromString('<response>'+response+'</response>',"text/xml");
