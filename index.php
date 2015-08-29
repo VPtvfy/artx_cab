@@ -25,7 +25,11 @@ $PageElement=array();
 
 session::start();
 
-$hDB1= new sqlLink("localhost","root","root","artex_all");
+#$hDB1= new sqlLink("localhost","root","root","artex_all");
+#$hDB1= new sqlLink("95.59.26.103","moderator","9ab97e0958c6c98c44319b8d06b29c94","cabinet");
+
+$hDB1= new sqlLink("46.101.227.162","root","digitaloceandbpwd","cabinet");
+
  //Catalog
  if (session::diff('alpha','item')){
     if(isset($_FRONT_END['alpha']) and $_FRONT_END['alpha']!=''){

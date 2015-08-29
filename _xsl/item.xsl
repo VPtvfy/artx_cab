@@ -23,7 +23,9 @@
          </xsl:call-template> ->
      </xsl:if>
      <xsl:for-each select="key('idx_item_id',$item_id)">
-         <xsl:call-template name="item"/>
+         <xsl:if test="generate-id(.) = generate-id(key('idx_item_id',$item_id))">
+              <xsl:call-template name="item"/>
+         </xsl:if>
      </xsl:for-each>
  </xsl:template>
 
