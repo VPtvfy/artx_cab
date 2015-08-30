@@ -29,8 +29,10 @@ echo '<hr>$_SESSION::diff(keyword,town)<br>';
 var_dump(session::diff('alpha'));
 var_dump(session::diff('keyword'));
 var_dump(session::diff('town'));
-echo '<hr>';
+echo '<hr> d s e <br/>';
 var_dump(session::diff('alpha','keyword','town'));
+var_dump(session::set('alpha'));
+var_dump(session::exists('alpha'));
 session::close();
 ?>
 <html>

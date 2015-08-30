@@ -25,18 +25,28 @@ public static function diff(){
        if(!isset($_SERVER['HTTP_X_REQUESTED_WITH']) or strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest'){
           return(true);}
  
-      $vars=func_get_args();
+       $vars=func_get_args();
        foreach ($vars as $var){
                if (isset($_REQUEST[$var])){ 
                     if (!isset($_SESSION['FRONT_END'][$var]) or ($_REQUEST[$var]!=$_SESSION['FRONT_END'][$var])){
                         return(true);}}}
+       return(false);}
 
-//      if(!isset($_SERVER['HTTP_REFERER']) or parse_url($_SERVER['HTTP_REFERER'])['path']!=parse_url($_SERVER["SCRIPT_NAME"])['path']){
-//          return (true);} 
-//       if(!isset($_SESSION['FRONT_END'])){
-//          return (true);}
+public static function exists(){
+       $vars=func_get_args();
+       foreach ($vars as $var){
+               if (!array_key_exists($var,$_REQUEST)){
+                   return (false);}}
+       return(true);}
 
-        return(false);}
+public static function set(){
+       global $_FRONT_END;
+ 
+       $vars=func_get_args();
+       foreach ($vars as $var){
+               if (!isset($_REQUEST[$var]) or $_REQUEST[$var]==''){
+                   return (false);}}
+       return(true);}
 
 public static function close(){
        global $_FRONT_END;

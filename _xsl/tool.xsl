@@ -4,6 +4,14 @@
 
 <xsl:output method="html" encoding="utf-8" indent="no"/>
 
+<xsl:template name="tool_forms">
+    <div><xsl:attribute name="id">tool_forms</xsl:attribute>
+      <div><xsl:call-template name="login_form"/></div>
+      <div><xsl:call-template name="new_firm"/></div>
+    </div>
+</xsl:template>
+<!--
+-->
 <xsl:template name="logo_tools">
     <ul>
       <li><xsl:attribute name="id">logo_tools_login</xsl:attribute>
@@ -71,10 +79,55 @@
 </xsl:template>
 <!--
 -->
+<xsl:template name="new_firm_phone">
+    <div><xsl:attribute name="id">new_firm_phone</xsl:attribute></div>
+</xsl:template>
+<!--
+-->
+<xsl:template name="new_firm_address">
+    <div><xsl:attribute name="id">new_firm_address</xsl:attribute></div>
+</xsl:template>
+<!--
+-->
+<xsl:template name="new_firm_item">
+    <div><xsl:attribute name="id">new_firm_items</xsl:attribute>
+         <xsl:if test='/state/new_firm_id !=0'>
+              <div>
+                   <xsl:call-template name="firm_items">
+                       <xsl:with-param name="firm_id" select="/state/new_firm_id"/>
+                  </xsl:call-template>
+              </div>
+              <div>
+                 <form><xsl:attribute name="method">get</xsl:attribute>
+                       <input><xsl:attribute name="name">new_firm_item</xsl:attribute>
+                              <xsl:attribute name="type">hidden</xsl:attribute>
+                       </input>
+                       <input><xsl:attribute name="name">new_firm_id</xsl:attribute>
+                              <xsl:attribute name="type">hidden</xsl:attribute>
+                              <xsl:attribute name="value"><xsl:value-of select="/state/new_firm_id"/></xsl:attribute>
+                       </input>
+
+                       <input>
+                           <xsl:attribute name="id">new_firm_item_name</xsl:attribute>
+                           <xsl:attribute name="name">new_firm_item_name</xsl:attribute>
+                           <xsl:attribute name="type">text</xsl:attribute>
+                           <xsl:attribute name="placeholder">Рубрика : Описание</xsl:attribute>
+                       </input>
+                       <input>
+                          <xsl:attribute name="type">submit</xsl:attribute>
+                          <xsl:attribute name="value">+</xsl:attribute>
+                          <xsl:attribute name="class">ui-widget</xsl:attribute>
+                       </input>
+                 </form>
+              </div>
+         </xsl:if>
+    </div>
+</xsl:template>
+<!--
+-->
 <xsl:template name="new_firm_form">
     <div><xsl:attribute name="id">new_firm_form</xsl:attribute>
          <xsl:attribute name="title">Создать фирму</xsl:attribute>
-         <div><xsl:attribute name="id">new_firm</xsl:attribute>
             <form><xsl:attribute name="method">get</xsl:attribute>
                   <input><xsl:attribute name="name">new_firm</xsl:attribute>
                          <xsl:attribute name="type">hidden</xsl:attribute></input>
@@ -83,69 +136,29 @@
                       <xsl:attribute name="name">new_firm_name</xsl:attribute>
                       <xsl:attribute name="type">text</xsl:attribute>
                       <xsl:attribute name="placeholder">Создать фирму</xsl:attribute>
+                      <xsl:if test='/state/new_firm_id !=0'>
+                          <xsl:attribute name="value"><xsl:value-of select ="/state/new_firm_name"/></xsl:attribute></xsl:if>
                   </input>
                   <input>
                       <xsl:attribute name="id">new_firm_btn</xsl:attribute>
                       <xsl:attribute name="type">submit</xsl:attribute>
-                      <xsl:attribute name="value">Создать</xsl:attribute>
+                      <xsl:if test='/state/new_firm_id =0'>
+                          <xsl:attribute name="value">Создать</xsl:attribute></xsl:if>
+                      <xsl:if test='/state/new_firm_id !=0'>
+                          <xsl:attribute name="value">Переименовать</xsl:attribute></xsl:if>
+
                   </input>
             </form>
-         </div>
-         <div><xsl:attribute name="id">new_firm_details</xsl:attribute></div>
     </div>
 </xsl:template>
 <!--
 -->
-<xsl:template name="new_firm_item">
-</xsl:template>
-<!--
--->
-<xsl:template name="new_firm_items">
-    <div><xsl:attribute name="id">new_firm_items</xsl:attribute>
-         <div>
-              <xsl:call-template name="firm_items">
-                  <xsl:with-param name="firm_id" select="./state/new_firm_id"/>
-              </xsl:call-template>
-         </div>
-         <div>
-            <form><xsl:attribute name="method">get</xsl:attribute>
-                  <input><xsl:attribute name="name">new_firm_item</xsl:attribute>
-                         <xsl:attribute name="type">hidden</xsl:attribute>
-                  </input>
-                  <input><xsl:attribute name="name">new_firm_id</xsl:attribute>
-                         <xsl:attribute name="type">hidden</xsl:attribute>
-                         <xsl:attribute name="value"><xsl:value-of select="/state/new_firm_id"/></xsl:attribute>
-                  </input>
-
-                  <input>
-                      <xsl:attribute name="id">new_firm_item_name</xsl:attribute>
-                      <xsl:attribute name="name">new_firm_item_name</xsl:attribute>
-                      <xsl:attribute name="type">text</xsl:attribute>
-                      <xsl:attribute name="placeholder">Рубрика</xsl:attribute>
-                  </input>
-                  <input>
-                      <xsl:attribute name="id">new_firm_item_descr</xsl:attribute>
-                      <xsl:attribute name="name">new_firm_item_descr</xsl:attribute>
-                      <xsl:attribute name="type">text</xsl:attribute>
-                      <xsl:attribute name="placeholder">Дополнение</xsl:attribute>
-                  </input>
-
-                  <input>
-                     <xsl:attribute name="type">submit</xsl:attribute>
-                     <xsl:attribute name="value">+</xsl:attribute>
-                     <xsl:attribute name="class">ui-widget</xsl:attribute>
-                  </input>
-            </form>
-         </div>
+<xsl:template name="new_firm">
+    <div><xsl:attribute name="id">new_firm</xsl:attribute>
+         <xsl:call-template name="new_firm_form"/>
+         <xsl:call-template name="new_firm_item"/>
+         <xsl:call-template name="new_firm_address"/>
+         <xsl:call-template name="new_firm_phone"/>
     </div>
 </xsl:template>
-
-<xsl:template name="new_firm_details">
-     <div><xsl:attribute name="id">new_firm_details</xsl:attribute>
-          <xsl:call-template name="new_firm_items"/>
-          <!--xsl:call-template name="new_firm_addreses"/-->
-          <!--xsl:call-template name="new_firm_phones"/-->
-     </div>
-</xsl:template>
-
 </xsl:stylesheet>

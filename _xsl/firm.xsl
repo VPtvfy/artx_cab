@@ -4,9 +4,9 @@
 
 <xsl:output method="html" encoding="utf-8" indent="no" />
 
- <xsl:key name="idx_firm_item"     match="/nodes/firms/item" use="./firm_id" />
- <xsl:key name="idx_firm_address"  match="/nodes/firms/address" use="./firm_id" />
- <xsl:key name="idx_firm_phone"    match="/nodes/firms/phone" use="./firm_id" />
+<xsl:key name="idx_firm_phone"    match="/nodes/firms/phone"   use="./firm_id" />
+<xsl:key name="idx_firm_address"  match="/nodes/firms/address" use="./firm_id" />
+<xsl:key name="idx_firm_item"     match="/nodes/firms/item"    use="./firm_id" />
 
  <xsl:template name="firm_items">
      <xsl:param name="firm_id"/>
@@ -22,12 +22,11 @@
      <xsl:param name="firm_id"/>
      <div><xsl:attribute name="class">firm_phones</xsl:attribute>
           <xsl:for-each select="key('idx_firm_phone',$firm_id)">
-                <div><xsl:attribute name="class">firm_phone</xsl:attribute>
+              <div><xsl:attribute name="class">firm_phone</xsl:attribute>
                   (<xsl:value-of select="./phone_code"/>)
-              <a><xsl:attribute name="title"><xsl:value-of select="./phone_description"/></xsl:attribute>
-                  <xsl:value-of select="./phone_number"/>
-              </a>
-                </div>
+                  <a><xsl:attribute name="title"><xsl:value-of select="./phone_description"/></xsl:attribute>
+                     <xsl:value-of select="./phone_number"/></a>
+              </div>
           </xsl:for-each>
      </div>
  </xsl:template>

@@ -73,10 +73,11 @@ function(){
 
          $('body').on('click',"#logo_tools_firm a",
           function(event){
-                           $("#new_firm_form").dialog("open");
+                           $("#new_firm").dialog("open");
                            event.preventDefault();
                          });
-          $("#new_firm_form").dialog({autoOpen: false,
+
+          $("#new_firm").dialog({autoOpen: false,
                                      height: 600,
                                       width: 900,
                                        show: {effect: "slide", duration: 200},

@@ -62,8 +62,7 @@
                   Все права защищены © Телефонный справочник "Прииртышье".
                   Все логотипы и торговые марки на сайте являются собственностью их владельцев.</div>
     </div>
-    <div><xsl:call-template name="login_form"/></div>
-    <div><xsl:call-template name="new_firm_form"/></div>
+    <div><xsl:call-template name="tool_forms"/></div>
 </xsl:template>
 
 <!--Main template
@@ -144,19 +143,19 @@
     </xsl:if>
 
     <xsl:if test="/sync/new_firm='true'">
-        <xsl:call-template name='new_firm_details'/>
+        <xsl:call-template name='new_firm'/>
     </xsl:if>
 
     <xsl:if test="/sync/new_firm_item='true'">
-        <xsl:call-template name='new_firm_items'/>
+        <xsl:call-template name='new_firm_item'/>
     </xsl:if>
 
     <xsl:if test="/sync/new_firm_address='true'">
-        <xsl:call-template name='new_firm_addreses'/>
+        <xsl:call-template name='new_firm_address'/>
     </xsl:if>
 
     <xsl:if test="/sync/new_firm_phone='true'">
-        <xsl:call-template name='new_firm_phones'/>
+        <xsl:call-template name='new_firm_phone'/>
     </xsl:if>
 </xsl:template>
 </xsl:stylesheet>
