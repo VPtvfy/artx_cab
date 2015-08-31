@@ -2,8 +2,6 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-<xsl:output method="html" encoding="utf-8" indent="no" />
-
 <xsl:key name="idx_firm_phone"    match="/nodes/firms/phone"   use="./firm_id" />
 <xsl:key name="idx_firm_address"  match="/nodes/firms/address" use="./firm_id" />
 <xsl:key name="idx_firm_item"     match="/nodes/firms/item"    use="./firm_id" />

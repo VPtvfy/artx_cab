@@ -1,20 +1,25 @@
 <html>
+<head>
+      <link rel="stylesheet" href="jquery/jquery-ui/jquery-ui.css"/>
+      <script src="jquery/jquery.js"></script>
+      <script src="jquery/jquery-ui/jquery-ui.js"></script>
+</head>
 <body>
 <div id='div1'>div1</div>
 <div id='div2'>div2</div>
 <div id='div3'>div3</div>
+<div id='new_firm'>div3</div>
 <script>
 function router(response){
-         parser=new DOMParser();
-         xmlDoc=parser.parseFromString('<response>'+response+'</response>',"text/xml");
-         xmlDoc=xmlDoc.getElementsByTagName('response')[0];
+         xmlDoc = $.parseHTML('<response>'+response+'</response>',"text/xml");
+         xmlDoc = xmlDoc.getElementsByTagName('response')[0];
          for (i=0;i<xmlDoc.childNodes.length;i++){
               target=xmlDoc.childNodes[i].id;
               if (typeof(target) !== 'undefined'){
                   document.getElementById(target).innerHTML=xmlDoc.childNodes[i].innerHTML;
                   alert(target); }}
          }
-router ('<div id="div1"> routed div1</div><div id="div3"> routed div3</div>');
+router ('<result><div id="new_firm"><div id="new_firm_form" title="Создать фирму"><form method="get"><input name="new_firm" type="hidden"><input id="new_firm_name" name="new_firm_name" type="text" placeholder="Создать фирму" value="АРТ - ДЕКО, ФИРМА"><input id="new_firm_btn" type="submit" value="Переименовать"></form></div><div id="new_firm_items"><div><div class="firm_items"><div class="firm_item"><a>ДИЗАЙН ИНТЕРЬЕРА</a></div><div class="firm_item"><a>ПРАЗДНИКИ - ОРГАНИЗАЦИЯ, ОФОРМЛЕНИЕ</a></div><div class="firm_item"><a>СУВЕНИРЫ, ПОДАРКИ</a></div><div class="firm_item"><a>РЕКЛАМНО - СУВЕНИРНАЯ ПРОДУКЦИЯ - ИЗГОТОВЛЕНИЕ</a></div></div></div><div><form method="get"><input name="new_firm_item" type="hidden"><input name="new_firm_id" type="hidden" value="2910"><input id="new_firm_item_name" name="new_firm_item_name" type="text" placeholder="Рубрика : Описание"><input type="submit" value="+" class="ui-widget"></form></div></div><div id="new_firm_address"></div><div id="new_firm_phone"></div></div></result>');
 </script>
 </body>
 </html>

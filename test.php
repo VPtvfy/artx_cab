@@ -8,41 +8,33 @@ require_once ('_lib/rdbms/mysqli_lib.inc.php');
 require_once ('_lib/xml/xslt.inc.php');
 require_once ('_lib/session/frontend.inc.php');
 
-$_FRONT_END['alpha']='';
 $_FRONT_END['town']='';
 $_FRONT_END['keyword']='';
 
 $_PAGE='index';
 $PageElement=array();
 session::start();
-echo '<hr>$_REQUEST<br>';
-var_dump($_REQUEST);
+
+/*echo '<pre><hr>$_REQUEST<br>';
+print_r($_REQUEST);
+
 echo '<hr>$_SESSION<br>';
-var_dump($_SESSION['FRONT_END']);
+print_r($_SESSION['FRONT_END']);
+
 echo '<hr>$_FRONT_END<br>';
-var_dump($_FRONT_END);
-echo '<br>';
-echo '<br>';
-echo '<hr>$_SESSION::diff()<br>';
-var_dump(session::diff());
-echo '<hr>$_SESSION::diff(keyword,town)<br>';
-var_dump(session::diff('alpha'));
-var_dump(session::diff('keyword'));
-var_dump(session::diff('town'));
-echo '<hr> d s e <br/>';
-var_dump(session::diff('alpha','keyword','town'));
-var_dump(session::set('alpha'));
-var_dump(session::exists('alpha'));
-session::close();
+print_r($_FRONT_END);
+echo '<br></pre>';*/
 ?>
 <html>
 <body>
 <div>
 <form>
-<input type='text' name='keyword' value='<?echo $_FRONT_END['keyword'];?>'></input>
-<input type='text' name='town'    value='<?echo $_FRONT_END['town'];?>'></input>
+<input type='text' name='keyword' value='<?echo $_FRONT_END['keyword'];?>'></input><?if(session::exists('keyword')){echo "E";}if(session::set('keyword')){echo "S";}if(session::diff('keyword')){echo "D";}?>
+<input type='text' name='town'    value='<?echo $_FRONT_END['town'];?>'></input><?if(session::exists('town')){echo "E";}if(session::set('town')){echo "S";}if(session::diff('town')){echo "D";}?>
+<input type='text' name='alpha'   value='<?echo $_FRONT_END['alpha'];?>'></input><?if(session::exists('alpha')){echo "E";}if(session::set('alpha')){echo "S";}if(session::diff('alpha')){echo "D";}?>
 <input type='submit'></input>
 </form>
 </div>
 </body>
 </html>
+<?session::close();?>

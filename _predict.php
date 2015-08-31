@@ -4,46 +4,42 @@ error_reporting (E_ALL);
 ini_set('display_errors',true);
 
 require_once ('_cfg.inc.php');
-require_once ('lib/rdbms/mysqli_lib.inc.php');
-require_once ('lib/session/frontend.inc.php');
+require_once ('_lib/rdbms/mysqli_lib.inc.php');
+require_once ('_lib/session/frontend.inc.php');
 
-//$_FRONT_END=array(); //$_ client state
 $PageElement=array();
-$_FRONT_END['keyword']='';
 session::start();
 $hDB1= new sqlLink("localhost","root","root","artex_all");
 
-    if (isset($_REQUEST) and is_array($_REQUEST)){
-                 $_FRONT_END['event']=key($_REQUEST);}
+if (session::exists('find') and session::set('keyword')){
+   if(isset($_REQUEST['keyword']) and mb_strlen($_REQUEST['keyword'])>=3){
+     $_['query_str']=trim(preg_replace('/( +)+|\+/',' ',$_REQUEST['keyword']));
+     $_['query_str']=substr(join('|',explode(' ',' '.$_['query_str'])),1);
+     $hDB1->query($_CFG['SQL']['autocomplete_firm'],$_);
+     $PageElement=$hDB1->fetch_field('value');}} 
 
-    switch ($_FRONT_END['event']){
-      case 'keyword':
-            if(isset($_REQUEST['term']) and mb_strlen($_REQUEST['term'])>=3){
-               $_['keyword']=trim(preg_replace('/( +)+|\+/',' ',$_REQUEST['term']));
-               $_['query_str']=substr(join('|',explode(' ',' '.$_['keyword'])),1);
-               $hDB1->query($_CFG['SQL']['autocomplete_firm'],$_);
-               $PageElement=$hDB1->fetch_field('value');}
-            break;
-      case 'new_firm_name':
-            if(isset($_REQUEST['term']) or $_REQUEST['term']!=""){
-               $_['keyword']=trim(preg_replace('/( +)+|\+/',' ',$_REQUEST['term']));
-               $_['query_str']=substr(join('|',explode(' ',' '.$_['keyword'])),1);
-               $hDB1->query($_CFG['SQL']['autocomplete_firm'],$_);
-               $PageElement=$hDB1->fetch_field('value');}
-            break;
-      case 'new_firm_item_name':
-            if(isset($_REQUEST['term']) or $_REQUEST['term']!=""){
-               $_['keyword']=trim(preg_replace('/( +)+|\+/',' ',$_REQUEST['term']));
-               $_['query_str']=substr(join('|',explode(' ',' '.$_['keyword'])),1);
-               $hDB1->query($_CFG['SQL']['autocomplete_item'],$_);
-               $PageElement=$hDB1->fetch_field('label');}
-            break;
-           }
-session::close();
+if (session::exists('new_firm') and session::set('new_firm_name')){
+   if(isset($_REQUEST['new_firm_name']) and mb_strlen($_REQUEST['new_firm_name'])>=3){
+     $_['query_str']=trim(preg_replace('/( +)+|\+/',' ',$_REQUEST['new_firm_name']));
+     $_['query_str']=substr(join('|',explode(' ',' '.$_['query_str'])),1);
+     $hDB1->query($_CFG['SQL']['autocomplete_firm'],$_);
+     $PageElement=$hDB1->fetch_field('value');}}
 
-//var_dump($PageElement);
-//print_r($hDB1->querylog);
+if (session::exists('new_firm_item') and session::set('new_firm_item_name')){
+   if($_REQUEST['term']==$_REQUEST['new_firm_item_name'] and mb_strlen($_REQUEST['new_firm_item_name'])>=3){
+     $_['query_str']=trim(preg_replace('/( +)+|\+/',' ',$_REQUEST['new_firm_item_name']));
+     $_['query_str']=substr(join('|',explode(' ',' '.$_['query_str'])),1);
+     $hDB1->query($_CFG['SQL']['autocomplete_item'],$_);
+     $PageElement=$hDB1->fetch_field('label');}}
+
+if (session::exists('new_firm_street') and session::set('new_firm_town_id','new_firm_street_name')){
+   if($_REQUEST['term']==$_REQUEST['new_firm_street_name'] and mb_strlen($_REQUEST['new_firm_street_name'])>=2){
+     $_['town_id']=$_REQUEST['new_firm_town_id'];
+     $_['query_str']=trim(preg_replace('/( +)+|\+/',' ',$_REQUEST['new_firm_street_name']));
+     $_['query_str']=substr(join('|',explode(' ',' '.$_['query_str'])),1);
+     $hDB1->query($_CFG['SQL']['autocomplete_street'],$_);
+     $PageElement=$hDB1->fetch_field('label');}}
+
 header('Content-Type: application/json');
 echo json_encode($PageElement);
-//var_dump($_);
 ?>

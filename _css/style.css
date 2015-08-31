@@ -68,9 +68,13 @@ a		{font-size: 1em; color: #1A1A1A; text-decoration: none; }
 #login_form .ui-dialog .ui-state-error { padding: .3em; }
 #login_form .validateTips { border: 1px solid transparent; padding: 0.3em; }
 
-#new_firm_name  {display: inline-block; width: 80%; border: 1px solid; padding: 5px; text-align: left; font-size: 1.5em; text-transform: uppercase;}
-#new_firm_btn   {display: inline-block; width: 20%; border: 1px solid; padding: 5px; text-align: center; font-size: 1.5em;}
-#new_firm_item  {display: inline-block; width: 80%; border: 1px solid; padding: 5px; text-align: left; font-size: 1.2em; text-transform: uppercase;}
+#new_firm {vertical-align: top;}
+#new_firm input[type="text"]   {display: inline-block; border: 1px solid; margin: 2px; padding: 5px; text-align: left; text-transform: uppercase;}
+#new_firm input[type="submit"] {display: inline-block; border: 1px solid; margin: 2px; padding: 5px; text-align: left; text-transform: uppercase;}
+#new_firm select               {display: inline-block; border: 1px solid; margin: 2px; padding: 5px; text-align: left; text-transform: uppercase;}
+#new_firm fieldset {border: 1px solid; margin: 10px 2px; padding: 5px;} 
+#new_firm_name {font-size: 1.5em; width:80%; height: 40px;}
+#new_firm_btn  {font-size: 1.0em; width:19%; height: 40px;}
 
 #result_cat	{width:900px; margin: 1px auto;}
 #result_cat ul	{-moz-column-count: 3; -moz-column-width: 280px; -webkit-column-count: 3; -webkit-column-width: 280px; column-count: 3; column-width: 280px; -webkit-column-gap: 30px; -moz-column-gap: 30px; column-gap: 30px; -moz-column-rule: 1px solid #ccc; -webkit-column-rule: 1px solid #ccc; column-rule: 1px solid #ccc; width:900px; margin: 1px auto;}

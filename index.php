@@ -14,12 +14,6 @@ $_FRONT_END['keyword']='';
 
 $_FRONT_END['user']='guest';
 
-$_FRONT_END['new_firm_id']=0;
-$_FRONT_END['new_firm_name']='';
-$_FRONT_END['new_firm_item']='';
-$_FRONT_END['new_firm_phone']='';
-$_FRONT_END['new_firm_address']='';
-
 $_PAGE='index';
 $_SYNC=array();
 $PageElement=array();
@@ -39,7 +33,7 @@ $hDB1= new sqlLink("localhost","root","root","artex_all");
       $hDB1->query($_CFG['SQL']['get_catalog_by_pid'],$_FRONT_END);}
     $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('catalog','item'));
     $_SYNC[]=array('items'=>'true');}
- //Firm 
+ //Firm
  if (session::diff('keyword','item','town')){
     if($_FRONT_END['item']>0 or mb_strlen($_FRONT_END['keyword'])>3){
        $_FRONT_END['keyword']=trim(preg_replace('/( +)+/',' ',$_FRONT_END['keyword']));
@@ -74,8 +68,16 @@ $hDB1= new sqlLink("localhost","root","root","artex_all");
        $hDB1->query($_CFG['SQL']['get_firm_address'],$_FRONT_END);
        $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','address'));
        $hDB1->query($_CFG['SQL']['get_firm_phone'],$_FRONT_END);
-       $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','phone'));}
-       $_SYNC[]=array('new_firm'=>'true');}
+       $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','phone'));
+       $_SYNC[]=array('new_firm'=>'true');}}
+
+ if (session::exists('new_firm_item') and session::set('new_firm_id','new_firm_item_name')){
+    if($_FRONT_END['new_firm_id']>0 and $_FRONT_END['new_firm_item_name']!=''){
+       $hDB1->query($_CFG['SQL']['create_firm_div'],$_FRONT_END);
+       $hDB1->query($_CFG['SQL']['get_firm_div'],$_FRONT_END);
+       $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','item'));
+       $_SYNC[]=array('new_firm_item'=>'true');}}
+
 
 session::close();
 
@@ -87,6 +89,6 @@ $PageData{'nodes'}=$PageElement;
 $XSLT = new XSLT();
 echo $XSLT->Process($_CFG['XSL_PATH'].$_PAGE.'.xsl',$PageData);
 $_hdebug = fopen("debug.html", "w+");
-//fwrite ($_hdebug,sprintf('<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body><pre>%s<hr>%s<hr>%s</pre></body><html>',var_export($_FRONT_END,true),var_export($hDB1->querylog,true),var_export($PageData,true)));
+fwrite ($_hdebug,sprintf('<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body><pre>%s<hr>%s<hr>%s</pre></body><html>',var_export($_FRONT_END,true),var_export($hDB1->querylog,true),var_export($PageData,true)));
 fclose($_hdebug);
 ?>

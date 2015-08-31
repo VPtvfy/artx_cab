@@ -179,10 +179,31 @@ ENDSQL;
 
 # Firm address
 
+$_CFG['SQL']['autocomplete_street']=<<<ENDSQL
+drop temporary table if exists keywords;
+set @keylist = ucase(:query_str);
+set @key='';
+create temporary table keywords
+select @key:=substr(@keylist,1,instr(concat(@keylist,'|'),'|')-1) keyword,
+       @keylist:=substr(@keylist,instr(concat(@keylist,'|'),'|')+1,255) dummy
+from  firm
+where @keylist!='';                                  
+select s.street_id `value`, s.street_name `label`
+  from street s
+ inner join  keywords k on s.street_name like concat('%',k.keyword,'%') and s.town_id=:town_id
+ group by s.street_name
+ order by relevance(ucase(group_concat(k.keyword separator '|')),s.street_name) desc
+ limit 15
+ENDSQL;
+
+
 $_CFG['SQL']['get_firm_address']=<<<ENDSQL
-select *
-  from firm_address
- where `firm_id`=:new_firm_id;
+select a.firm_id,a.address_id,t.town_name, s.street_name, CONCAT (a.building,bletter) building,  CONCAT (a.office,oletter) office
+  from firm_address a
+ inner join street s on a.street_id=s.street_id
+ inner join town t on s.town_id=t.town_id
+ where firm_id=:new_firm_id
+ order by 3,4,5,6;
 ENDSQL;
 
 $_CFG['SQL']['create_firm_address']=<<<ENDSQL

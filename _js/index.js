@@ -10,14 +10,11 @@ if (document.location.search+document.location.hash!=''){
     document.location.replace(document.location.protocol+'//'+document.location.host+document.location.pathname);}
 
 function router(response){
-         parser=new DOMParser();
-         xmlDoc=parser.parseFromString('<response>'+response+'</response>',"text/xml");
-         xmlDoc=xmlDoc.getElementsByTagName('response')[0];
-         for (i=0;i<xmlDoc.childNodes.length;i++){
-              target=xmlDoc.childNodes[i].id;
-              if (typeof(target) !== 'undefined'){
-                  document.getElementById(target).innerHTML='Loading';
-                  document.getElementById(target).innerHTML=xmlDoc.childNodes[i].innerHTML;}}}
+         htmlDoc=$.parseHTML(response);
+         $.each(htmlDoc,function( i, el ){
+                target=el.id;
+                if (typeof(target) !== 'undefined'){
+                    document.getElementById(target).innerHTML=el.innerHTML;}});}
 $(
 function(){
          $('body').on('submit',"form",
@@ -43,19 +40,53 @@ function(){
                                       event.preventDefault();
                                      });
 
+         $('body').on('change','input[type="button"]',
+                      function(event){
+                                       data=$(this).parents('form:first').serialize();
+                                       $.ajax({data: data, 
+                                            success: function(html){router(html);}});
+
+                                      });
+         $('body').on('change','input[type="checkbox"]',
+                      function(event){
+                                       data=$(this).parents('form:first').serialize();
+                                       $.ajax({data: data, 
+                                            success: function(html){router(html);}});
+                                      });
+
+         $('body').on('change','input[type="image"]',
+                      function(event){
+                                       data=$(this).parents('form:first').serialize();
+                                       $.ajax({data: data, 
+                                            success: function(html){router(html);}});
+                                      });
+
          $('body').on('change','input[type="radio"]',
                       function(event){
-                                       url=$(this).attr("name")+'='+$(this).attr("value");
-                                       $.ajax({data: url, 
+                                       data=$(this).parents('form:first').serialize();
+                                       $.ajax({data: data, 
+                                            success: function(html){router(html);}});
+                                      });
+
+         $('body').on('change','input[type="submit"]',
+                      function(event){
+                                       data=$(this).parents('form:first').serialize();
+                                       $.ajax({data: data, 
+                                            success: function(html){router(html);}});
+                                      });
+
+         $('body').on('change','select',
+                      function(event){
+                                       data=$(this).parents('form:first').serialize();
+                                       $.ajax({data: data, 
                                             success: function(html){router(html);}});
                                       });
 
          $('body').on('keyup.autocomplete','input[type="text"]',
-                       function(event){
-                                data=$(this).attr("name");
-                                $(this).autocomplete({source: "_predict.php?"+data,
-                                              deferRequestBy:500});
-                                      });
+                      function(event){
+                                     data=$(this).parents('form:first').serialize();
+                                     $(this).autocomplete({source: "_predict.php?"+data, deferRequestBy:500});
+                                     });
 
          $('body').on('click',"#logo_tools_login a",
                       function(event){
