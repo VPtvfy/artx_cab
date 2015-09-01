@@ -1,6 +1,6 @@
 <?
 global $_CFG;
-$_CFG['XSL_PATH']='_xsl\\';
+$_CFG['XSL_PATH']='_xsl//';
 
 $_CFG['SQL']['login']=<<<ENDSQL
 update users

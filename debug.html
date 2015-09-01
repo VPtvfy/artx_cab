@@ -3,16 +3,66 @@
   'town' => 0,
   'keyword' => '',
   'user' => 'guest',
-  'new_firm_street' => '',
-  'new_firm_id' => '2924',
-  'new_firm_town_id' => '2',
-  'new_firm_street_name' => '',
-  'new_firm_building' => '',
-  'new_firm_office' => '',
 )<hr>array (
+  0 => 
+  array (
+    'query' => 'select distinct c.item_id,c.item_pid,if (char_length(c.item_name)>3,concat(substr(c.item_name,1,1),lower(substr(c.item_name,2,64))),c.item_name) item_name,c.`count`,c.`stat`
+  from catalog_tree c1
+ inner join catalog_tree c2 on c2.id=c1.pid and c1.id=?
+ inner join catalog_tree c3 on c3.id=c2.pid
+ inner join catalog_tree c4 on c4.id=c3.pid
+ inner join vcatalog c on c.item_pid=c1.id or c.item_id=c1.id or c.item_id=c2.id or c.item_id=c3.id or c.item_id=c4.id
+ where c.`count`>0 or c.stat>0
+ order by if(c.item_id=0,1,0),c.item_pid,c.item_name;',
+    'values' => 
+    array (
+      0 => 'i',
+      1 => 0,
+    ),
+    'affected_rows' => 25,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 1,
+    'field_count' => 5,
+    'Execution time' => 0.0625,
+    'Transfer time' => 0,
+  ),
+  1 => 
+  array (
+    'query' => 'select *
+  from town
+ order by 2;',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 3,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 3,
+    'Execution time' => 0,
+    'Transfer time' => 0,
+  ),
+  2 => 
+  array (
+    'query' => 'select distinct if (upper(left(item_name,1))>=\'А\',upper(left(item_name,1)),\'*\') sym
+  from catalog_item
+ order by upper(left(item_name,1));',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 28,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 1,
+    'Execution time' => 0.001953125,
+    'Transfer time' => 0,
+  ),
 )<hr>array (
   'sync' => 
   array (
+    'index' => 'true',
   ),
   'state' => 
   array (
@@ -20,14 +70,512 @@
     'town' => 0,
     'keyword' => '',
     'user' => 'guest',
-    'new_firm_street' => '',
-    'new_firm_id' => '2924',
-    'new_firm_town_id' => '2',
-    'new_firm_street_name' => '',
-    'new_firm_building' => '',
-    'new_firm_office' => '',
   ),
   'nodes' => 
   array (
+    'catalog' => 
+    array (
+      0 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 1,
+          'item_pid' => 0,
+          'item_name' => 'Автомобили',
+          'count' => 12,
+          'stat' => 0,
+        ),
+      ),
+      1 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 2,
+          'item_pid' => 0,
+          'item_name' => 'Безопасность, страхование',
+          'count' => 10,
+          'stat' => 0,
+        ),
+      ),
+      2 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 3,
+          'item_pid' => 0,
+          'item_name' => 'Бизнес и финансы',
+          'count' => 6,
+          'stat' => 0,
+        ),
+      ),
+      3 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 4,
+          'item_pid' => 0,
+          'item_name' => 'Государственные учреждения',
+          'count' => 52,
+          'stat' => 0,
+        ),
+      ),
+      4 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 5,
+          'item_pid' => 0,
+          'item_name' => 'Дети',
+          'count' => 21,
+          'stat' => 0,
+        ),
+      ),
+      5 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 6,
+          'item_pid' => 0,
+          'item_name' => 'Досуг, развлечения',
+          'count' => 36,
+          'stat' => 0,
+        ),
+      ),
+      6 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 7,
+          'item_pid' => 0,
+          'item_name' => 'ЖКХ',
+          'count' => 18,
+          'stat' => 0,
+        ),
+      ),
+      7 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 8,
+          'item_pid' => 0,
+          'item_name' => 'Компьютеры, бытовая техника',
+          'count' => 3,
+          'stat' => 0,
+        ),
+      ),
+      8 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 9,
+          'item_pid' => 0,
+          'item_name' => 'Мебель, интерьер',
+          'count' => 2,
+          'stat' => 0,
+        ),
+      ),
+      9 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 10,
+          'item_pid' => 0,
+          'item_name' => 'Медицина',
+          'count' => 37,
+          'stat' => 0,
+        ),
+      ),
+      10 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 11,
+          'item_pid' => 0,
+          'item_name' => 'Оборудование',
+          'count' => 36,
+          'stat' => 0,
+        ),
+      ),
+      11 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 12,
+          'item_pid' => 0,
+          'item_name' => 'Образование, культура',
+          'count' => 2,
+          'stat' => 0,
+        ),
+      ),
+      12 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 13,
+          'item_pid' => 0,
+          'item_name' => 'Общественные, религиозные организации',
+          'count' => 3,
+          'stat' => 0,
+        ),
+      ),
+      13 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 14,
+          'item_pid' => 0,
+          'item_name' => 'Промышленность',
+          'count' => 52,
+          'stat' => 0,
+        ),
+      ),
+      14 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 15,
+          'item_pid' => 0,
+          'item_name' => 'Разное',
+          'count' => 4,
+          'stat' => 0,
+        ),
+      ),
+      15 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 16,
+          'item_pid' => 0,
+          'item_name' => 'Связь',
+          'count' => 17,
+          'stat' => 0,
+        ),
+      ),
+      16 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 17,
+          'item_pid' => 0,
+          'item_name' => 'Сельское хозяйство',
+          'count' => 22,
+          'stat' => 21,
+        ),
+      ),
+      17 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 18,
+          'item_pid' => 0,
+          'item_name' => 'Сми, реклама, полиграфия',
+          'count' => 3,
+          'stat' => 0,
+        ),
+      ),
+      18 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 19,
+          'item_pid' => 0,
+          'item_name' => 'Строительство, недвижимость',
+          'count' => 4,
+          'stat' => 0,
+        ),
+      ),
+      19 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 20,
+          'item_pid' => 0,
+          'item_name' => 'Телефоны первой необходимости',
+          'count' => 4,
+          'stat' => 0,
+        ),
+      ),
+      20 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 21,
+          'item_pid' => 0,
+          'item_name' => 'Торговля',
+          'count' => 87,
+          'stat' => 0,
+        ),
+      ),
+      21 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 22,
+          'item_pid' => 0,
+          'item_name' => 'Транспорт',
+          'count' => 7,
+          'stat' => 0,
+        ),
+      ),
+      22 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 23,
+          'item_pid' => 0,
+          'item_name' => 'Туризм, спорт',
+          'count' => 2,
+          'stat' => 0,
+        ),
+      ),
+      23 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 24,
+          'item_pid' => 0,
+          'item_name' => 'Услуги',
+          'count' => 53,
+          'stat' => 0,
+        ),
+      ),
+      24 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 0,
+          'item_pid' => 0,
+          'item_name' => 'Рубрики',
+          'count' => 25,
+          'stat' => 0,
+        ),
+      ),
+      25 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => '*',
+        ),
+      ),
+      26 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'А',
+        ),
+      ),
+      27 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Б',
+        ),
+      ),
+      28 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'В',
+        ),
+      ),
+      29 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Г',
+        ),
+      ),
+      30 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Д',
+        ),
+      ),
+      31 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Ж',
+        ),
+      ),
+      32 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'З',
+        ),
+      ),
+      33 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'И',
+        ),
+      ),
+      34 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'К',
+        ),
+      ),
+      35 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Л',
+        ),
+      ),
+      36 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'М',
+        ),
+      ),
+      37 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Н',
+        ),
+      ),
+      38 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'О',
+        ),
+      ),
+      39 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'П',
+        ),
+      ),
+      40 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Р',
+        ),
+      ),
+      41 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'С',
+        ),
+      ),
+      42 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Т',
+        ),
+      ),
+      43 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'У',
+        ),
+      ),
+      44 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Ф',
+        ),
+      ),
+      45 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Х',
+        ),
+      ),
+      46 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Ц',
+        ),
+      ),
+      47 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Ч',
+        ),
+      ),
+      48 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Ш',
+        ),
+      ),
+      49 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Щ',
+        ),
+      ),
+      50 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Э',
+        ),
+      ),
+      51 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Ю',
+        ),
+      ),
+      52 => 
+      array (
+        'alpha' => 
+        array (
+          'sym' => 'Я',
+        ),
+      ),
+    ),
+    'towns' => 
+    array (
+      0 => 
+      array (
+        'town' => 
+        array (
+          'town_id' => 3,
+          'town_name' => 'Павлодар',
+          'code' => '7182',
+        ),
+      ),
+      1 => 
+      array (
+        'town' => 
+        array (
+          'town_id' => 1,
+          'town_name' => 'Семей',
+          'code' => '7222',
+        ),
+      ),
+      2 => 
+      array (
+        'town' => 
+        array (
+          'town_id' => 2,
+          'town_name' => 'Усть-Каменогорск',
+          'code' => '7232',
+        ),
+      ),
+    ),
   ),
 )</pre></body><html>
