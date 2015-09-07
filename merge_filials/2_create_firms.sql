@@ -13,6 +13,26 @@ UPDATE artex_ukg.firm  SET NAME=REPLACE(NAME,' ,',',')   WHERE NAME REGEXP '[[:b
 UPDATE artex_ukg.firm  SET NAME=REPLACE(NAME,' -,',' -') WHERE NAME REGEXP '[[:blank:]]-,';
 UPDATE artex_ukg.firm  SET NAME=REPLACE(TRIM(NAME),'  ',' ') WHERE NAME REGEXP '[[:blank:]]{2,}';
 
+UPDATE artex_pvl.catalog  SET DATA='1я: асуцюкрепхъ' WHERE DATA='1я:асуцюкрепхъ';
+UPDATE artex_spl.catalog  SET DATA='1я: асуцюкрепхъ' WHERE DATA='1я:асуцюкрепхъ';
+UPDATE artex_ukg.catalog  SET DATA='1я: асуцюкрепхъ' WHERE DATA='1я:асуцюкрепхъ';
+
+UPDATE artex_pvl.catalog  SET DATA='кецйюъ опнлшькеммнярэ' WHERE DATA='кецйюъ опнл - рэ';
+UPDATE artex_spl.catalog  SET DATA='кецйюъ опнлшькеммнярэ' WHERE DATA='кецйюъ опнл - рэ';
+UPDATE artex_ukg.catalog  SET DATA='кецйюъ опнлшькеммнярэ' WHERE DATA='кецйюъ опнл - рэ';
+
+UPDATE artex_pvl.catalog  SET DATA='охыебюъ опнлшькеммнярэ' WHERE DATA='охыебюъ опнл - рэ';
+UPDATE artex_spl.catalog  SET DATA='охыебюъ опнлшькеммнярэ' WHERE DATA='охыебюъ опнл - рэ';
+UPDATE artex_ukg.catalog  SET DATA='охыебюъ опнлшькеммнярэ' WHERE DATA='охыебюъ опнл - рэ';
+
+UPDATE artex_pvl.catalog  SET DATA='яекэяйне унгъиярбн' WHERE DATA='яекэяйне унгъиярбн (акнй)';
+UPDATE artex_spl.catalog  SET DATA='яекэяйне унгъиярбн' WHERE DATA='яекэяйне унгъиярбн (акнй)';
+UPDATE artex_ukg.catalog  SET DATA='яекэяйне унгъиярбн' WHERE DATA='яекэяйне унгъиярбн (акнй)';
+
+UPDATE artex_pvl.catalog  SET DATA='яекэяйне унгъиярбн' WHERE DATA='яекэяйне унг - бн';
+UPDATE artex_spl.catalog  SET DATA='яекэяйне унгъиярбн' WHERE DATA='яекэяйне унг - бн';
+UPDATE artex_ukg.catalog  SET DATA='яекэяйне унгъиярбн' WHERE DATA='яекэяйне унг - бн';
+
 DROP TABLE IF EXISTS artex_all._firm;
 DROP TEMPORARY TABLE IF EXISTS artex_all._firm;
 CREATE TABLE artex_all._firm 
@@ -89,7 +109,8 @@ INSERT INTO artex_all.firm_div(firm_id,firm_div_name,item_id)
  SELECT DISTINCT f.firm_id,d.div_name,c.item_id item_id 
    FROM artex_all.firm f
   INNER JOIN artex_all._firm d ON f.firm_name=d.firm_name
-  INNER JOIN artex_all.`catalog_item` c ON c.item_name=d.class; 
+  INNER JOIN artex_all.`catalog_item` c ON c.item_name=d.class
+  group by f.firm_id,c.item_id; 
  
 CREATE OR REPLACE VIEW vcatalog AS 
 SELECT

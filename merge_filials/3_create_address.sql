@@ -79,12 +79,12 @@ alter table artex_all.firm_phone
   add unique index unq_phone (`phone_type`,`phone_code`,`phone_number`);
 
 insert into artex_all.firm_phone(firm_id,phone_type,phone_code,phone_number,phone_description)
-select distinct a.firm_id,1,t.town_code,f.phone,f.div_name 
+select distinct a.firm_id,1,t.code,f.phone,f.div_name 
   from artex_all._firm f
  inner join artex_all.firm a on a.firm_name=f.firm_name
   left join artex_all.town t on f.town=t.town_name
  where length(phone) in (3,6,10) 
- group by t.town_code,f.phone;
+ group by t.code,f.phone;
  
 create or replace view vfirm as 
 select f.firm_id,a.town_id,c.item_id,a.address_id,p.phone_id,
