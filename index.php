@@ -24,14 +24,16 @@ $hDB1= new sqlLink("localhost","root","root","artex_all");
 #$hDB1= new sqlLink("95.59.26.103","moderator","9ab97e0958c6c98c44319b8d06b29c94","cabinet");
 #$hDB1= new sqlLink("46.101.227.162","root","digitaloceandbpwd","cabinet");
 
- //Catalog
+ //Categories
  if (session::diff('alpha','item')){
     if (session::exists('alpha')){
-         $hDB1->query($_CFG['SQL']['get_catalog_by_alpha'],$_FRONT_END);
-         $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('catalog','item'));
-         $_SYNC[]=array('alpha'=>'true');}
+       $_FRONT_END['item']=-1;
+       $hDB1->query($_CFG['SQL']['get_catalog_by_alpha'],$_FRONT_END);
+       $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('catalog','item'));
+       $_SYNC[]=array('alpha'=>'true');}
 
     if (session::exists('item')){
+       $_FRONT_END['alpha']='';
        $hDB1->query($_CFG['SQL']['get_catalog_by_pid'],$_FRONT_END);
        $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('catalog','item'));
        $_SYNC[]=array('items'=>'true');}}
@@ -59,6 +61,9 @@ $hDB1= new sqlLink("localhost","root","root","artex_all");
  //Alphaindex
     $hDB1->query($_CFG['SQL']['get_alpha'],$_FRONT_END);
     $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('catalog','alpha'));
+ //Categories
+    $hDB1->query($_CFG['SQL']['get_catalog_by_pid'],$_FRONT_END);
+    $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('catalog','item'));
     $_SYNC=array('index'=>'true');}
 
  if (session::exists('new_firm') and session::set('new_firm_name')){
