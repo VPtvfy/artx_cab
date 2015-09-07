@@ -1,579 +1,376 @@
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body><pre>array (
-  'item' => 0,
-  'town' => 0,
+  'item' => '259',
+  'town' => '2',
   'keyword' => '',
   'user' => 'guest',
+  'find' => '',
+  'query_str' => false,
 )<hr>array (
   0 => 
   array (
-    'query' => 'select distinct c.item_id,c.item_pid,if (char_length(c.item_name)>3,concat(substr(c.item_name,1,1),lower(substr(c.item_name,2,64))),c.item_name) item_name,c.`count`,c.`stat`
-  from catalog_tree c1
- inner join catalog_tree c2 on c2.id=c1.pid and c1.id=?
- inner join catalog_tree c3 on c3.id=c2.pid
- inner join catalog_tree c4 on c4.id=c3.pid
- inner join vcatalog c on c.item_pid=c1.id or c.item_id=c1.id or c.item_id=c2.id or c.item_id=c3.id or c.item_id=c4.id
- where c.`count`>0 or c.stat>0
- order by if(c.item_id=0,1,0),c.item_pid,c.item_name;',
+    'query' => 'set @keylist = ucase(?)',
     'values' => 
     array (
-      0 => 'i',
-      1 => 0,
+      0 => 's',
+      1 => false,
     ),
-    'affected_rows' => 25,
+    'affected_rows' => 0,
     'insert_id' => 0,
     'num_rows' => 0,
     'param_count' => 1,
-    'field_count' => 5,
-    'Execution time' => 0.0625,
+    'field_count' => 0,
+    'Execution time' => 0.00097703933715820312,
     'Transfer time' => 0,
   ),
   1 => 
   array (
-    'query' => 'select *
-  from town
- order by 2;',
+    'query' => 'set @key=\'\'',
     'values' => 
     array (
     ),
-    'affected_rows' => 3,
+    'affected_rows' => 0,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 0,
+    'Execution time' => 0.00097584724426269531,
+    'Transfer time' => 0,
+  ),
+  2 => 
+  array (
+    'query' => 'create temporary table keywords
+select @key:=substr(@keylist,1,instr(concat(@keylist,\'|\'),\'|\')-1) keyword,
+       @keylist:=substr(@keylist,instr(concat(@keylist,\'|\'),\'|\')+1,255) dummy
+  from  firm
+ where @keylist!=\'\'',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 0,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 0,
+    'Execution time' => 0.1142580509185791,
+    'Transfer time' => 0,
+  ),
+  3 => 
+  array (
+    'query' => 'delete from keywords where char_length(keyword)<3',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 0,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 0,
+    'Execution time' => 0,
+    'Transfer time' => 0,
+  ),
+  4 => 
+  array (
+    'query' => 'create temporary table fresult
+as
+select max(if(char_length(?)<3,1,relevance(upper(?),concat_ws(\' \',firm_name,item_name,address,phone)))) as relevance,               
+               firm_id
+          from vfirm
+          left join keywords k on concat_ws(\' \',firm_name,item_name,address,phone) like concat(\'%\',k.keyword,\'%\')
+         where (town_id=? or ?=0)
+           and (item_id=? or ?=0)
+           and (char_length(?)<3 or k.keyword is not null)
+ group by firm_id
+having max(if(char_length(?)<3,1,relevance(upper(?),concat_ws(\' \',firm_name,item_name,address,phone))))>0
+ order by 1 desc
+ limit 100; ',
+    'values' => 
+    array (
+      0 => 'ssddddsss',
+      1 => false,
+      2 => false,
+      3 => '2',
+      4 => '2',
+      5 => '259',
+      6 => '259',
+      7 => false,
+      8 => false,
+      9 => false,
+    ),
+    'affected_rows' => 2,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 9,
+    'field_count' => 0,
+    'Execution time' => 1.0566408634185791,
+    'Transfer time' => 0,
+  ),
+  5 => 
+  array (
+    'query' => 'select f.*
+  from fresult r
+ inner join firm f on f.firm_id=r.firm_id
+order by r.relevance desc,f.firm_name;',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 2,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 3,
+    'Execution time' => 0.00097703933715820312,
+    'Transfer time' => 0,
+  ),
+  6 => 
+  array (
+    'query' => 'select r.firm_id,c.*
+  from fresult r
+ inner join firm_div d on d.firm_id=r.firm_id
+ inner join catalog_item c on c.item_id=d.item_id',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 10,
     'insert_id' => 0,
     'num_rows' => 0,
     'param_count' => 0,
     'field_count' => 3,
     'Execution time' => 0,
-    'Transfer time' => 0,
+    'Transfer time' => 0.00097680091857910156,
   ),
-  2 => 
+  7 => 
   array (
-    'query' => 'select distinct if (upper(left(item_name,1))>=\'А\',upper(left(item_name,1)),\'*\') sym
-  from catalog_item
- order by upper(left(item_name,1));',
+    'query' => 'SELECT r.firm_id,t.town_name, s.street_name, CONCAT (a.building,bletter) building,  CONCAT (a.office,oletter) office
+  from fresult r
+ INNER JOIN firm_address a ON a.firm_id=r.firm_id
+ INNER JOIN street s ON a.street_id=s.street_id
+ INNER JOIN town t ON s.town_id=t.town_id
+order by 2,3,4,5',
     'values' => 
     array (
     ),
-    'affected_rows' => 28,
+    'affected_rows' => 2,
     'insert_id' => 0,
     'num_rows' => 0,
     'param_count' => 0,
-    'field_count' => 1,
-    'Execution time' => 0.001953125,
+    'field_count' => 5,
+    'Execution time' => 0.00097608566284179688,
     'Transfer time' => 0,
+  ),
+  8 => 
+  array (
+    'query' => 'select p.*
+  from fresult r
+ inner join firm_phone p on p.firm_id=r.firm_id
+order by phone_code,phone_number;',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 4,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 6,
+    'Execution time' => 0.00097703933715820312,
+    'Transfer time' => 0.00097608566284179688,
   ),
 )<hr>array (
   'sync' => 
   array (
-    'index' => 'true',
+    0 => 
+    array (
+      'firms' => 'true',
+    ),
   ),
   'state' => 
   array (
-    'item' => 0,
-    'town' => 0,
+    'item' => '259',
+    'town' => '2',
     'keyword' => '',
     'user' => 'guest',
+    'find' => '',
+    'query_str' => false,
   ),
   'nodes' => 
   array (
-    'catalog' => 
+    'firms' => 
     array (
       0 => 
       array (
-        'item' => 
+        'firm' => 
         array (
-          'item_id' => 1,
-          'item_pid' => 0,
-          'item_name' => 'Автомобили',
-          'count' => 12,
-          'stat' => 0,
+          'firm_id' => 3691,
+          'firm_name' => 'ВК ОБЛАСТНОЙ ДЕПАРТАМЕНТ КОМИТЕТА ТЕХНИЧЕСКОГО РЕГУЛИРОВАНИЯ И МЕТРОЛОГИИ',
+          'firm_descr' => '',
         ),
       ),
       1 => 
       array (
-        'item' => 
+        'firm' => 
         array (
-          'item_id' => 2,
-          'item_pid' => 0,
-          'item_name' => 'Безопасность, страхование',
-          'count' => 10,
-          'stat' => 0,
+          'firm_id' => 3897,
+          'firm_name' => 'ВОСТОКЭНЕРГОСЕРВИС, ТОО',
+          'firm_descr' => '',
         ),
       ),
       2 => 
       array (
         'item' => 
         array (
-          'item_id' => 3,
-          'item_pid' => 0,
-          'item_name' => 'Бизнес и финансы',
-          'count' => 6,
-          'stat' => 0,
+          'firm_id' => 3691,
+          'item_id' => 126,
+          'item_name' => 'ДЕПАРТАМЕНТЫ',
         ),
       ),
       3 => 
       array (
         'item' => 
         array (
-          'item_id' => 4,
-          'item_pid' => 0,
-          'item_name' => 'Государственные учреждения',
-          'count' => 52,
-          'stat' => 0,
+          'firm_id' => 3691,
+          'item_id' => 259,
+          'item_name' => 'МЕТРОЛОГИЯ',
         ),
       ),
       4 => 
       array (
         'item' => 
         array (
-          'item_id' => 5,
-          'item_pid' => 0,
-          'item_name' => 'Дети',
-          'count' => 21,
-          'stat' => 0,
+          'firm_id' => 3897,
+          'item_id' => 170,
+          'item_name' => 'ИЗМЕРИТЕЛЬНЫЕ ПРИБОРЫ',
         ),
       ),
       5 => 
       array (
         'item' => 
         array (
-          'item_id' => 6,
-          'item_pid' => 0,
-          'item_name' => 'Досуг, развлечения',
-          'count' => 36,
-          'stat' => 0,
+          'firm_id' => 3897,
+          'item_id' => 259,
+          'item_name' => 'МЕТРОЛОГИЯ',
         ),
       ),
       6 => 
       array (
         'item' => 
         array (
-          'item_id' => 7,
-          'item_pid' => 0,
-          'item_name' => 'ЖКХ',
-          'count' => 18,
-          'stat' => 0,
+          'firm_id' => 3897,
+          'item_id' => 332,
+          'item_name' => 'ПОВЕРКА СРЕДСТВ ИЗМЕРЕНИЙ',
         ),
       ),
       7 => 
       array (
         'item' => 
         array (
-          'item_id' => 8,
-          'item_pid' => 0,
-          'item_name' => 'Компьютеры, бытовая техника',
-          'count' => 3,
-          'stat' => 0,
+          'firm_id' => 3897,
+          'item_id' => 359,
+          'item_name' => 'РАДИОСВЯЗЬ',
         ),
       ),
       8 => 
       array (
         'item' => 
         array (
-          'item_id' => 9,
-          'item_pid' => 0,
-          'item_name' => 'Мебель, интерьер',
-          'count' => 2,
-          'stat' => 0,
+          'firm_id' => 3897,
+          'item_id' => 439,
+          'item_name' => 'СЧЕТЧИКИ ГАЗА, ВОДЫ, ТЕПЛА, ПАРА, ЭЛЕКТРИЧЕСТВА',
         ),
       ),
       9 => 
       array (
         'item' => 
         array (
-          'item_id' => 10,
-          'item_pid' => 0,
-          'item_name' => 'Медицина',
-          'count' => 37,
-          'stat' => 0,
+          'firm_id' => 3897,
+          'item_id' => 498,
+          'item_name' => 'ЭЛЕКТРОИЗМЕРИТЕЛЬНЫЕ ПРИБОРЫ',
         ),
       ),
       10 => 
       array (
         'item' => 
         array (
-          'item_id' => 11,
-          'item_pid' => 0,
-          'item_name' => 'Оборудование',
-          'count' => 36,
-          'stat' => 0,
+          'firm_id' => 3897,
+          'item_id' => 501,
+          'item_name' => 'ЭЛЕКТРОТЕХНИЧЕСКОЕ ОБОРУДОВАНИЕ',
         ),
       ),
       11 => 
       array (
         'item' => 
         array (
-          'item_id' => 12,
-          'item_pid' => 0,
-          'item_name' => 'Образование, культура',
-          'count' => 2,
-          'stat' => 0,
+          'firm_id' => 3897,
+          'item_id' => 505,
+          'item_name' => 'ЭНЕРГЕТИЧЕСКОЕ ОБОРУДОВАНИЕ',
         ),
       ),
       12 => 
       array (
-        'item' => 
+        'address' => 
         array (
-          'item_id' => 13,
-          'item_pid' => 0,
-          'item_name' => 'Общественные, религиозные организации',
-          'count' => 3,
-          'stat' => 0,
+          'firm_id' => 3691,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Казахстан',
+          'building' => '5',
+          'office' => NULL,
         ),
       ),
       13 => 
       array (
-        'item' => 
+        'address' => 
         array (
-          'item_id' => 14,
-          'item_pid' => 0,
-          'item_name' => 'Промышленность',
-          'count' => 52,
-          'stat' => 0,
+          'firm_id' => 3897,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Краснознаменная',
+          'building' => '149Б',
+          'office' => NULL,
         ),
       ),
       14 => 
       array (
-        'item' => 
+        'phone' => 
         array (
-          'item_id' => 15,
-          'item_pid' => 0,
-          'item_name' => 'Разное',
-          'count' => 4,
-          'stat' => 0,
+          'phone_id' => 8936,
+          'firm_id' => 3897,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '224929',
+          'phone_description' => '',
         ),
       ),
       15 => 
       array (
-        'item' => 
+        'phone' => 
         array (
-          'item_id' => 16,
-          'item_pid' => 0,
-          'item_name' => 'Связь',
-          'count' => 17,
-          'stat' => 0,
+          'phone_id' => 10371,
+          'firm_id' => 3691,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '267358',
+          'phone_description' => '',
         ),
       ),
       16 => 
       array (
-        'item' => 
+        'phone' => 
         array (
-          'item_id' => 17,
-          'item_pid' => 0,
-          'item_name' => 'Сельское хозяйство',
-          'count' => 22,
-          'stat' => 21,
+          'phone_id' => 12972,
+          'firm_id' => 3897,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '772511',
+          'phone_description' => '',
         ),
       ),
       17 => 
       array (
-        'item' => 
+        'phone' => 
         array (
-          'item_id' => 18,
-          'item_pid' => 0,
-          'item_name' => 'Сми, реклама, полиграфия',
-          'count' => 3,
-          'stat' => 0,
-        ),
-      ),
-      18 => 
-      array (
-        'item' => 
-        array (
-          'item_id' => 19,
-          'item_pid' => 0,
-          'item_name' => 'Строительство, недвижимость',
-          'count' => 4,
-          'stat' => 0,
-        ),
-      ),
-      19 => 
-      array (
-        'item' => 
-        array (
-          'item_id' => 20,
-          'item_pid' => 0,
-          'item_name' => 'Телефоны первой необходимости',
-          'count' => 4,
-          'stat' => 0,
-        ),
-      ),
-      20 => 
-      array (
-        'item' => 
-        array (
-          'item_id' => 21,
-          'item_pid' => 0,
-          'item_name' => 'Торговля',
-          'count' => 87,
-          'stat' => 0,
-        ),
-      ),
-      21 => 
-      array (
-        'item' => 
-        array (
-          'item_id' => 22,
-          'item_pid' => 0,
-          'item_name' => 'Транспорт',
-          'count' => 7,
-          'stat' => 0,
-        ),
-      ),
-      22 => 
-      array (
-        'item' => 
-        array (
-          'item_id' => 23,
-          'item_pid' => 0,
-          'item_name' => 'Туризм, спорт',
-          'count' => 2,
-          'stat' => 0,
-        ),
-      ),
-      23 => 
-      array (
-        'item' => 
-        array (
-          'item_id' => 24,
-          'item_pid' => 0,
-          'item_name' => 'Услуги',
-          'count' => 53,
-          'stat' => 0,
-        ),
-      ),
-      24 => 
-      array (
-        'item' => 
-        array (
-          'item_id' => 0,
-          'item_pid' => 0,
-          'item_name' => 'Рубрики',
-          'count' => 25,
-          'stat' => 0,
-        ),
-      ),
-      25 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => '*',
-        ),
-      ),
-      26 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'А',
-        ),
-      ),
-      27 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Б',
-        ),
-      ),
-      28 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'В',
-        ),
-      ),
-      29 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Г',
-        ),
-      ),
-      30 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Д',
-        ),
-      ),
-      31 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Ж',
-        ),
-      ),
-      32 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'З',
-        ),
-      ),
-      33 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'И',
-        ),
-      ),
-      34 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'К',
-        ),
-      ),
-      35 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Л',
-        ),
-      ),
-      36 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'М',
-        ),
-      ),
-      37 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Н',
-        ),
-      ),
-      38 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'О',
-        ),
-      ),
-      39 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'П',
-        ),
-      ),
-      40 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Р',
-        ),
-      ),
-      41 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'С',
-        ),
-      ),
-      42 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Т',
-        ),
-      ),
-      43 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'У',
-        ),
-      ),
-      44 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Ф',
-        ),
-      ),
-      45 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Х',
-        ),
-      ),
-      46 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Ц',
-        ),
-      ),
-      47 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Ч',
-        ),
-      ),
-      48 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Ш',
-        ),
-      ),
-      49 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Щ',
-        ),
-      ),
-      50 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Э',
-        ),
-      ),
-      51 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Ю',
-        ),
-      ),
-      52 => 
-      array (
-        'alpha' => 
-        array (
-          'sym' => 'Я',
-        ),
-      ),
-    ),
-    'towns' => 
-    array (
-      0 => 
-      array (
-        'town' => 
-        array (
-          'town_id' => 3,
-          'town_name' => 'Павлодар',
-          'code' => '7182',
-        ),
-      ),
-      1 => 
-      array (
-        'town' => 
-        array (
-          'town_id' => 1,
-          'town_name' => 'Семей',
-          'code' => '7222',
-        ),
-      ),
-      2 => 
-      array (
-        'town' => 
-        array (
-          'town_id' => 2,
-          'town_name' => 'Усть-Каменогорск',
-          'code' => '7232',
+          'phone_id' => 12986,
+          'firm_id' => 3897,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '772862',
+          'phone_description' => '',
         ),
       ),
     ),

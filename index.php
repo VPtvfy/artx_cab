@@ -26,13 +26,16 @@ $hDB1= new sqlLink("localhost","root","root","artex_all");
 
  //Catalog
  if (session::diff('alpha','item')){
-    if(isset($_FRONT_END['alpha']) and $_FRONT_END['alpha']!=''){
-      $hDB1->query($_CFG['SQL']['get_catalog_by_alpha'],$_FRONT_END);
-      $_SYNC[]=array('alpha'=>'true');}
-    else{
-      $hDB1->query($_CFG['SQL']['get_catalog_by_pid'],$_FRONT_END);}
-    $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('catalog','item'));
-    $_SYNC[]=array('items'=>'true');}
+    if (session::exists('alpha')){
+         $hDB1->query($_CFG['SQL']['get_catalog_by_alpha'],$_FRONT_END);
+         $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('catalog','item'));
+         $_SYNC[]=array('alpha'=>'true');}
+
+    if (session::exists('item')){
+       $hDB1->query($_CFG['SQL']['get_catalog_by_pid'],$_FRONT_END);
+       $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('catalog','item'));
+       $_SYNC[]=array('items'=>'true');}}
+
  //Firm
  if (session::diff('keyword','item','town')){
     if($_FRONT_END['item']>0 or mb_strlen($_FRONT_END['keyword'])>3){

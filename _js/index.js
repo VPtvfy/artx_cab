@@ -108,7 +108,7 @@ function(){
                            event.preventDefault();
                          });
 
-          $("#new_firm").dialog({autoOpen: false,
+          $('#new_firm').dialog({autoOpen: false,
                                      height: 600,
                                       width: 900,
                                        show: {effect: "slide", duration: 200},
@@ -116,7 +116,9 @@ function(){
                                    position:({my:"center top", at:"center top",  of:window}),
                                       modal: true});
 
-         $("#quick_search_keyword").focus();
+         $('fieldset div div').selectable();
+
+         $('#quick_search_keyword').focus();
 
          }
 );
