@@ -88,15 +88,15 @@ select distinct a.firm_id,1,t.town_code,f.phone,f.div_name
  
 create or replace view vfirm as 
 select f.firm_id,s.town_id,c.item_id,a.address_id,p.phone_id,
-       concat_ws(' ',f.firm_name, group_concat(distinct f.firm_descr), group_concat(distinct d.firm_div_name)) firm_name,
-       group_concat(distinct c.item_name separator ', ') item_name,
-       group_concat(distinct concat(s.street_name,' ',a.building,ifnull(a.bletter,''),if(a.office>0,concat('-',a.office,ifnull(a.oletter,'')),'')) separator ', ') address,
-       group_concat(distinct concat('(',p.phone_code,')',phone_number,' ',phone_description) separator ', ') phone
+       concat_ws(' ',f.firm_name, f.firm_descr, d.firm_div_name) firm_name,
+       c.item_name item_name,
+       concat(s.street_name,' ',a.building,ifnull(a.bletter,''),if(a.office>0,concat('-',a.office,ifnull(a.oletter,'')),'')) address,
+       concat('(',p.phone_code,')',phone_number,' ',phone_description) phone
   from artex_all.firm f
   left join artex_all.firm_div d on f.firm_id=d.firm_id
   left join artex_all.catalog_item c on c.item_id=d.item_id
   left join artex_all.firm_address a on f.firm_id=a.firm_id
   left join artex_all.street s on s.street_id=a.street_id
   left join artex_all.firm_phone p on f.firm_id=p.firm_id
-group by f.firm_id,s.town_id,c.item_id,a.address_id,p.phone_id;
+ group by f.firm_id,s.town_id,c.item_id,a.address_id,p.phone_id;
     
