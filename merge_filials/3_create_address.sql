@@ -28,17 +28,16 @@ update artex_all.street  set street_name=replace(trim(street_name),'  ',' ') whe
 create table artex_all.firm_address(
   address_id int(6) unsigned not null auto_increment,
   firm_id int(6) unsigned not null,
-  town_id int(4) unsigned not null,
   street_id int(6)unsigned,
-  building int(4) unsigned,
-  bletter char(1),
+  building int(4) unsigned not null,
+  bletter char(1) not null,
   office int(4) unsigned,
-  oletter char(1),
+  oletter char(1) not null,
   description varchar(256),
   primary key  (address_id));
 
 alter table artex_all.firm_address
-add  unique index unq_address (town_id,street_id,building,bletter,office,oletter);
+add  unique index unq_address (street_id,building,bletter,office,oletter);
 
 alter table artex_all.firm_address
 add  index idx_firm_address (firm_id);
@@ -49,20 +48,21 @@ add constraint fk_address_street  foreign key (street_id) references artex_all.s
 alter table artex_all.firm_address
 add constraint fk_address_firm  foreign key (firm_id) references artex_all.firm(firm_id) on update cascade;
 
-insert into artex_all.firm_address(firm_id,town_id,street_id,building,bletter,office,oletter)
-select distinct a.firm_id,s.town_id,s.street_id,f.building,f.bletter,f.office,f.oletter 
+update artex_all._firm
+   set office=null
+ where office=0;
+
+insert into artex_all.firm_address(firm_id,street_id,building,bletter,office,oletter)
+select distinct a.firm_id,s.street_id,f.building,ifnull(f.bletter,''),f.office,ifnull(f.oletter,'')
   from artex_all._firm f
  inner join artex_all.firm a on a.firm_name=f.firm_name
   left join artex_all.town t on t.town_name=f.town 
   left join artex_all.street s on f.street=s.street_name and s.town_id=t.town_id
  where s.town_id is not null 
- group by s.town_id,s.street_id,f.building,f.bletter,f.office,f.oletter
- order by 2,3,1;
+ group by s.street_id,f.building,ifnull(f.bletter,''),f.office,ifnull(f.oletter,'')
+ order by 2,3,1
+    on duplicate key update office=null;
  
-update artex_all.firm_address 
-   set office=null
- where office=0;
-
 create table artex_all.firm_phone(
   phone_id	int(6) unsigned not null auto_increment,
   firm_id	int(6) unsigned not null,  
@@ -79,15 +79,15 @@ alter table artex_all.firm_phone
   add unique index unq_phone (`phone_type`,`phone_code`,`phone_number`);
 
 insert into artex_all.firm_phone(firm_id,phone_type,phone_code,phone_number,phone_description)
-select distinct a.firm_id,1,t.code,f.phone,f.div_name 
+select distinct a.firm_id,1,t.town_code,f.phone,f.div_name 
   from artex_all._firm f
  inner join artex_all.firm a on a.firm_name=f.firm_name
   left join artex_all.town t on f.town=t.town_name
- where length(phone) in (3,6,10) 
- group by t.code,f.phone;
+ where f.phone is not null
+ group by t.town_code,f.phone;
  
 create or replace view vfirm as 
-select f.firm_id,a.town_id,c.item_id,a.address_id,p.phone_id,
+select f.firm_id,s.town_id,c.item_id,a.address_id,p.phone_id,
        concat_ws(' ',f.firm_name, group_concat(distinct f.firm_descr), group_concat(distinct d.firm_div_name)) firm_name,
        group_concat(distinct c.item_name separator ', ') item_name,
        group_concat(distinct concat(s.street_name,' ',a.building,ifnull(a.bletter,''),if(a.office>0,concat('-',a.office,ifnull(a.oletter,'')),'')) separator ', ') address,
@@ -98,5 +98,5 @@ select f.firm_id,a.town_id,c.item_id,a.address_id,p.phone_id,
   left join artex_all.firm_address a on f.firm_id=a.firm_id
   left join artex_all.street s on s.street_id=a.street_id
   left join artex_all.firm_phone p on f.firm_id=p.firm_id
-group by f.firm_id,a.town_id,c.item_id,a.address_id,p.phone_id;
+group by f.firm_id,s.town_id,c.item_id,a.address_id,p.phone_id;
     
