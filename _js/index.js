@@ -10,11 +10,17 @@ if (document.location.search+document.location.hash!=''){
     document.location.replace(document.location.protocol+'//'+document.location.host+document.location.pathname);}
 
 function router(response){
-         htmlDoc=$.parseHTML(response);
-         $.each(htmlDoc,function( i, el ){
-                target=el.id;
-                if (typeof(target) !== 'undefined'){
-                    document.getElementById(target).innerHTML=el.innerHTML;}});}
+         htmlDoc=$.parseHTML(response,true);
+         $.each(htmlDoc,function( i, element ){
+                target=element.id;
+                tagname=element.tagName;
+                if (target!==''){
+                    document.getElementById(target).innerHTML=element.innerHTML;}
+                else
+                if (tagname.toUpperCase() === String('SCRIPT')){
+                    $.globalEval(element.innerHTML);}})
+         }
+
 $(
 function(){
          $('body').on('submit',"form",
