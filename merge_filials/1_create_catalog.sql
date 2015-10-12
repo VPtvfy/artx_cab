@@ -64,33 +64,13 @@ UPDATE artex_ukg.catalog  SET DATA=REPLACE(TRIM(DATA),'  ',' ') WHERE DATA REGEX
 DROP TEMPORARY TABLE IF EXISTS artex_all._tree;
 DROP TABLE IF EXISTS artex_all._tree;
 CREATE TABLE artex_all._tree AS 
-SELECT DISTINCT IF (c2='',c1, IF (c3='',c2, IF (c4='',c3 ,c4))) NAME,c1,c2,c3,c4 
-  FROM (
-SELECT IFNULL(UPPER(pvl1.data),'') c1,IFNULL(UPPER(pvl2.data),'') c2,IFNULL(UPPER(pvl3.data),'') c3,IFNULL(UPPER(pvl4.data),'') c4 
-  FROM artex_pvl.catalog pvl1 
-  LEFT JOIN artex_pvl.catalog pvl2 ON pvl1.id=pvl2.pid
-  LEFT JOIN artex_pvl.catalog pvl3 ON pvl2.id=pvl3.pid
-  LEFT JOIN artex_pvl.catalog pvl4 ON pvl3.id=pvl4.pid
- WHERE pvl1.pid=0 AND pvl1.id!=0
-UNION  
-SELECT IFNULL(UPPER(spl1.data),'') c1,IFNULL(UPPER(spl2.data),'') c2,IFNULL(UPPER(spl3.data),'') c3,IFNULL(UPPER(spl4.data),'') c4 
-  FROM artex_spl.catalog spl1 
-  LEFT JOIN artex_spl.catalog spl2 ON spl1.id=spl2.pid
-  LEFT JOIN artex_spl.catalog spl3 ON spl2.id=spl3.pid
-  LEFT JOIN artex_spl.catalog spl4 ON spl3.id=spl4.pid
- WHERE spl1.pid=0 AND spl1.id!=0
-UNION 
-SELECT IFNULL(UPPER(ukg1.data),'') c1,IFNULL(UPPER(ukg2.data),'') c2,IFNULL(UPPER(ukg3.data),'') c3,IFNULL(UPPER(ukg4.data),'') c4 
-  FROM artex_pvl.catalog ukg1 
-  LEFT JOIN artex_ukg.catalog ukg2 ON ukg1.id=ukg2.pid
-  LEFT JOIN artex_ukg.catalog ukg3 ON ukg2.id=ukg3.pid
-  LEFT JOIN artex_ukg.catalog ukg4 ON ukg3.id=ukg4.pid
- WHERE ukg1.pid=0 AND ukg1.id!=0) a 
+SELECT n2.name `name`,n.name c1,n2.name c2, NULL c3, NULL c4
+  FROM `artx_categories` c
+  LEFT JOIN `artx_categories_lang` n ON c.id=n.id
+  LEFT JOIN `artx_categories` c2  ON c.id=c2.parent_id
+  LEFT JOIN `artx_categories_lang` n2 ON c2.id=n2.id  
+ WHERE c.parent_id =0  
  ORDER BY c1,c2,c3,c4;
- 
-update _tree 
-   set c1='ÄÅÒÈ'
- where c1='ÄÅÒÑÊÈÉ ÏÀÐÊ';
 
  UPDATE _tree
    SET  c4=''
@@ -142,8 +122,8 @@ ADD CONSTRAINT fk_pid FOREIGN KEY (pid) REFERENCES artex_all.catalog_item(item_i
 INSERT INTO artex_all.catalog_item(item_name)
 select DISTINCT h.c1
   FROM artex_all._tree h
-  left join artex_all._tree t on t.c1=h.c2 or t.c1=h.c3 or t.c1=h.c4  
- WHERE t.name is null and h.c1!=''
+  left join artex_all._tree t on t.c1=h.c2 or t.c1=h.c3 or t.c1=h.c4
+ WHERE t.name is null and h.c1!='' and h.c1!='Ðóáðèêè'
 ORDER BY 1;
 
 insert INTO artex_all.catalog_item(item_name) 
@@ -172,14 +152,16 @@ ORDER BY 1;
 INSERT INTO artex_all.catalog_tree (pid,id)
 SELECT DISTINCT 0,c.item_id
  FROM artex_all._tree h 
- LEFT JOIN  artex_all.catalog_item c ON c.item_name =h.c1;
+ LEFT JOIN  artex_all.catalog_item c ON c.item_name =h.c1
+where c.item_id>0;
 
 INSERT INTO artex_all.catalog_tree (pid,id)
 SELECT DISTINCT c1.item_id,c2.item_id
-  FROM  artex_all._tree h  
- INNER  JOIN artex_all.catalog_item c1 ON c1.item_name =h.c1
- INNER  JOIN artex_all.catalog_item c2 ON c2.item_name =h.c2
-ORDER BY 1,2 ;
+  FROM artex_all._tree h  
+ INNER JOIN artex_all.catalog_item c1 ON c1.item_name =h.c1
+ INNER JOIN artex_all.catalog_item c2 ON c2.item_name =h.c2
+ where c1.item_id!=0
+ ORDER BY 1,2;
 
 INSERT INTO artex_all.catalog_tree (pid,id)
 SELECT DISTINCT c2.item_id,c3.item_id
@@ -222,4 +204,6 @@ SELECT h1.id,
   LEFT JOIN artex_all.catalog_tree h4 ON h4.pid=h3.id
   LEFT JOIN artex_all.catalog_item c4 ON c3.item_id=h4.id  
  WHERE h1.id>0 AND h1.pid=0
- ORDER BY c1.item_id,c2.item_id,c3.item_id,c4.item_id;  
+ ORDER BY c1.item_id,c2.item_id,c3.item_id,c4.item_id;
+
+ 

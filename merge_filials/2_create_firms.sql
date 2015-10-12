@@ -1,3 +1,9 @@
+DROP TABLE IF EXISTS artex_all.firm_phone;
+DROP TABLE IF EXISTS artex_all.firm_address;
+DROP TABLE IF EXISTS artex_all.street;
+DROP TABLE IF EXISTS artex_all.firm_div;
+DROP TABLE IF EXISTS artex_all.firm;
+
 UPDATE artex_pvl.firm  SET NAME=REPLACE(NAME,'-',' - ')  WHERE NAME REGEXP '[[:graph:]]-|-[[:graph:]]';
 UPDATE artex_pvl.firm  SET NAME=REPLACE(NAME,' ,',',')   WHERE NAME REGEXP '[[:blank:]],';
 UPDATE artex_pvl.firm  SET NAME=REPLACE(NAME,' -,',' -') WHERE NAME REGEXP '[[:blank:]]-,';
@@ -59,9 +65,16 @@ SELECT * FROM (
 WHERE firm_name !=''
 ORDER BY 1,2,3,4,5,6,7,8,9;
 
+
+UPDATE _firm f
+   SET f.class=(SELECT DISTINCT IFNULL(spr_name,f.class) FROM `catalog_map` WHERE UPPER(art_name)=UPPER(f.class))
+ WHERE UPPER(f.class) IN (SELECT UPPER(art_name) FROM `catalog_map`);
+
+
 DROP TABLE IF EXISTS artex_all.firm;
 CREATE TABLE artex_all.firm(
   firm_id INT(6) UNSIGNED NOT NULL,
+  firm_type int (1) UNSIGNED default 0,
   firm_name VARCHAR(150) NOT NULL,
   firm_descr VARCHAR(1024) DEFAULT ''
   ) ENGINE=INNODB DEFAULT CHARSET=utf8;
@@ -71,7 +84,7 @@ UPDATE artex_all.firm SET firm_id =0;
 
 ALTER TABLE artex_all.firm   
   ADD PRIMARY KEY (firm_id),
-  ADD  UNIQUE INDEX unq_name (firm_name);
+  ADD  UNIQUE INDEX unq_name (firm_type,firm_name);
 
 ALTER TABLE artex_all.firm  
 AUTO_INCREMENT=1;  
