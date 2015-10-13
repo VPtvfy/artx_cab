@@ -112,7 +112,6 @@ public  function fetch_all(){
            while ($hROW=$this->hCursor->fetch_array(MYSQLI_ASSOC)){
                  array_push($rowset,$hROW);}}
         return $rowset;}
-
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 public  function fetch_field($field){
         $rowset=array();
@@ -121,6 +120,5 @@ public  function fetch_field($field){
            while ($hROW=$this->hCursor->fetch_array(MYSQLI_ASSOC)){
                  array_push($rowset,$hROW[$field]);}}
         return $rowset;}
-
 }
 ?>
