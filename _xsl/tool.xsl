@@ -94,7 +94,7 @@
     <div><xsl:attribute name="id">new_firm_address</xsl:attribute>
          <xsl:if test='/state/new_firm_id !=0'>
              <fieldset>
-               <legend> Адрес <xsl:value-of select="/state/new_firm_id"/></legend>
+               <legend> Адрес </legend>
                <xsl:call-template name="firm_address">
                    <xsl:with-param name="firm_id" select="/state/new_firm_id"/>
                </xsl:call-template>

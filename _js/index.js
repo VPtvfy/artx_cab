@@ -9,6 +9,7 @@
 if (document.location.search+document.location.hash!=''){
     document.location.replace(document.location.protocol+'//'+document.location.host+document.location.pathname);}
 
+
 function router(response){
          htmlDoc=$.parseHTML(response,true);
          $.each(htmlDoc,function( i, element ){
@@ -20,7 +21,6 @@ function router(response){
                 if (tagname.toUpperCase() === String('SCRIPT')){
                     $.globalEval(element.innerHTML);}})
          }
-
 $(
 function(){
          $('body').on('submit',"form",
@@ -103,9 +103,9 @@ function(){
           $("#login_form").dialog({autoOpen: false,
                                      height: 200,
                                       width: 220,
-                                       show: {effect: "slide", duration: 200},
-                                       hide: {effect: "slide", duration: 100},
-                                   position:({my:"left top", at:"left top",  of:window}),
+                                       show: {effect: "slide", direction: "up", duration: 200},
+                                       hide: {effect: "slide", direction: "up", duration: 100},
+                                   position:({my:"right top", at:"right top",  of:window}),
                                       modal: true});
 
          $('body').on('click',"#logo_tools_firm a",
@@ -114,17 +114,15 @@ function(){
                            event.preventDefault();
                          });
 
-          $('#new_firm').dialog({autoOpen: false,
+          $("#new_firm").dialog({autoOpen: false,
                                      height: 600,
                                       width: 900,
                                        show: {effect: "slide", duration: 200},
                                        hide: {effect: "slide", duration: 100},
-                                   position:({my:"center top", at:"center top",  of:window}),
+                                   position:({my:"right top", at:"right top",  of:"event"}),
                                       modal: true});
 
-         $('fieldset div div').selectable();
-
-         $('#quick_search_keyword').focus();
+         $("#quick_search_keyword").focus();
 
          }
 );

@@ -1,30 +1,23 @@
 <html>
 <head>
+      <link rel="stylesheet" href="jquery/jquery-ui/jquery-ui.css"/>
       <script src="jquery/jquery.js"></script>
+      <script src="jquery/jquery-ui/jquery-ui.js"></script>
 </head>
 <body>
 <div id='div1'>div1</div>
 <div id='div2'>div2</div>
 <div id='div3'>div3</div>
-<div id='new_firm'>new</div>
+<div id='new1'>div3</div>
 <script>
 function router(response){
          htmlDoc=$.parseHTML(response,true);
-         $.each(htmlDoc,function( i, element ){
-                target=element.id;
-                tagname=element.tagName;
-                if (target!==''){
-                    document.getElementById(target).innerHTML=element.innerHTML;}
-                else
-                if (tagname.toUpperCase() === String('SCRIPT')){
-                    $.globalEval(element.innerHTML);}})
-         }
-
-$.ajax({    url: 'response.html', 
-        success: function(html){router(html);}});
-
-$.globalEval("alert('globaleval')");
-
+         $.each(htmlDoc,function( i, el ){
+                target=el.id;
+                if (typeof(target) !== 'undefined'){
+                    document.getElementById(target).innerHTML=el.innerHTML;}});}
+XHRresponse='<'+'script>alert()</script'+'>';
+router (XHRresponse);
 </script>
 </body>
 </html>
