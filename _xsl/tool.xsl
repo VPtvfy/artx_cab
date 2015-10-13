@@ -13,13 +13,15 @@
 <xsl:template name="logo_tools">
     <ul>
       <li><xsl:attribute name="id">logo_tools_login</xsl:attribute>
-       <a><xsl:attribute name="href">#</xsl:attribute>*</a></li>
-      <li><xsl:attribute name="id">logo_tools_catalog</xsl:attribute>
-       <a><xsl:attribute name="href">#</xsl:attribute>*</a></li>
-      <li><xsl:attribute name="id">logo_tools_street</xsl:attribute>
-       <a><xsl:attribute name="href">#</xsl:attribute>*</a></li>
+       <a><xsl:attribute name="href">##</xsl:attribute>*</a></li>
       <li><xsl:attribute name="id">logo_tools_firm</xsl:attribute>
-       <a><xsl:attribute name="href">#</xsl:attribute>*</a></li>
+       <a><xsl:attribute name="href">##</xsl:attribute>*</a></li>
+      <li><xsl:attribute name="id">logo_tools_catalog</xsl:attribute>
+       <a><xsl:attribute name="href">##</xsl:attribute>*</a></li>
+      <li><xsl:attribute name="id">logo_tools_street</xsl:attribute>
+       <a><xsl:attribute name="href">##</xsl:attribute>*</a></li>
+      <li><xsl:attribute name="id">logo_tools_layout</xsl:attribute>
+       <a><xsl:attribute name="href">##</xsl:attribute>*</a></li>
     </ul>
 </xsl:template>
 <!--
