@@ -2,14 +2,6 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-<xsl:template name="tool_forms">
-    <div><xsl:attribute name="id">tool_forms</xsl:attribute>
-      <div><xsl:call-template name="login_form"/></div>
-      <div><xsl:call-template name="new_firm"/></div>
-    </div>
-</xsl:template>
-<!--
--->
 <xsl:template name="logo_tools">
     <ul>
       <li><xsl:attribute name="id">logo_tools_login</xsl:attribute>
@@ -23,6 +15,15 @@
       <li><xsl:attribute name="id">logo_tools_layout</xsl:attribute>
        <a><xsl:attribute name="href">##</xsl:attribute>*</a></li>
     </ul>
+</xsl:template>
+<!--
+-->
+<xsl:template name="tool_forms">
+    <div><xsl:attribute name="id">tool_forms</xsl:attribute>
+      <div><xsl:call-template name="login_form"/></div>
+      <div><xsl:call-template name="new_firm"/></div>
+      <div><xsl:call-template name="layout"/></div>
+    </div>
 </xsl:template>
 <!--
 -->
@@ -234,6 +235,32 @@
          <xsl:call-template name="new_firm_item"/>
          <xsl:call-template name="new_firm_address"/>
          <xsl:call-template name="new_firm_phone"/>
+    </div>
+</xsl:template>
+<!--
+-->
+<xsl:template name="layout_form">
+    <div><xsl:attribute name="id">layout_form</xsl:attribute>
+         <select><xsl:attribute name="name">layout_town_id</xsl:attribute>
+           <option><xsl:attribute name="value">3</xsl:attribute>Павлодар</option>
+           <option><xsl:attribute name="value">1</xsl:attribute>Семей</option>
+           <option><xsl:attribute name="value">2</xsl:attribute>Усть-Каменогорск</option>
+         </select>
+    </div>
+</xsl:template>
+<!--
+-->
+<xsl:template name="layout_result">
+    <div><xsl:attribute name="id">layout_result</xsl:attribute>
+    </div>
+</xsl:template>
+<!--
+-->
+<xsl:template name="layout">
+    <div><xsl:attribute name="id">layout</xsl:attribute>
+         <xsl:attribute name="title">Экспорт</xsl:attribute>
+         <xsl:call-template name="layout_form"/>
+         <xsl:call-template name="layout_result"/>
     </div>
 </xsl:template>
 </xsl:stylesheet>

@@ -30,7 +30,7 @@ a		{font-size: 1em; color: #1A1A1A; text-decoration: none; }
 #logo_tools	{display: inline-block; height: 58px; width: 125px; margin: 10px 0px}
 #logo_tools ul	{margin: 5px 0px; padding: 40px 0 0 0}
 #logo_tools li	{height: 25px; width: 25px; display: inline-block; margin: 1px 2px; overflow: hidden; text-align: center}
-#logo_tools a	{font-size: 1em; color: transparent; margin: 1px; padding: 0px; }
+#logo_tools a	{font-size: 2em; color: transparent; margin: 1px; padding: 0px; }
 #logo_tools_login	{background: url(../_img/icon_login.png) left top no-repeat; background-size: contain; }
 #logo_tools_firm	{background: url(../_img/icon_pen.png) left top no-repeat; background-size: contain; }
 #logo_tools_catalog	{background: url(../_img/icon_book.png) left top no-repeat; background-size: contain; }
@@ -71,7 +71,8 @@ a		{font-size: 1em; color: #1A1A1A; text-decoration: none; }
 
 #new_firm {vertical-align: top;}
 #new_firm input[type="text"]   {display: inline-block; border: 1px solid; margin: 2px; padding: 5px; text-align: left; text-transform: uppercase;}
-#new_firm input[type="submit"] {display: inline-block; border: 1px solid; margin: 2px; padding: 5px; text-align: left; text-transform: uppercase;}
+#new_firm input[type="submit"] {display: inline-block; border: 1px solid; margin: 2px; padding: 5px; text-align: center; text-transform: uppercase;}
+#new_firm input[type="button"] {display: inline-block; border: 1px solid; margin: 2px; padding: 5px; text-align: center; text-transform: uppercase;}
 #new_firm select               {display: inline-block; border: 1px solid; margin: 2px; padding: 5px; text-align: left; text-transform: uppercase;}
 #new_firm fieldset {border: 1px solid; margin: 10px 2px; padding: 5px;} 
 #new_firm_name {font-size: 1.5em; width:80%; height: 40px;}

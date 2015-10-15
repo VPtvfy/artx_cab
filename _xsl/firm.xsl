@@ -34,6 +34,9 @@
      <div><xsl:attribute name="class">address</xsl:attribute>
           <xsl:for-each select="key('idx_firm_address',$firm_id)">
               <div>
+              <xsl:call-template name="firm_phones">
+                  <xsl:with-param name="address_id" select="./address_id"/>
+              </xsl:call-template>
               <div><xsl:attribute name="class">firm_address</xsl:attribute>
                    <a><xsl:attribute name="title"><xsl:value-of select="./description"/></xsl:attribute>
                    г.<xsl:value-of select="./town_name"/>
@@ -42,9 +45,6 @@
                    &#160;<xsl:value-of select="./office"/>
                    </a>
               </div>
-              <xsl:call-template name="firm_phones">
-                  <xsl:with-param name="address_id" select="./address_id"/>
-              </xsl:call-template>
               </div>
           </xsl:for-each>
      </div>
