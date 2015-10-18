@@ -35,7 +35,7 @@ a		{font-size: 1em; color: #1A1A1A; text-decoration: none; }
 #logo_tools_firm	{background: url(../_img/icon_pen.png) left top no-repeat; background-size: contain; }
 #logo_tools_catalog	{background: url(../_img/icon_book.png) left top no-repeat; background-size: contain; }
 #logo_tools_street	{background: url(../_img/icon_house.png) left top no-repeat; background-size: contain; }
-#logo_tools_layout	{background: url(../_img/icon_layout.png) left top no-repeat; background-size: contain; }
+#logo_tools_export	{background: url(../_img/icon_export.png) left top no-repeat; background-size: contain; }
 
 /* Search form */
 #quick_search	 {overflow: hidden; height: 125px; margin-bottom: 10px; background: #3f9ed2; background-position: 20px 12px; color: #fff; border-radius: 12px; text-shadow: 1px 1px 2px black}

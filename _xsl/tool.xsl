@@ -12,7 +12,7 @@
        <a><xsl:attribute name="href">##</xsl:attribute>*</a></li>
       <li><xsl:attribute name="id">logo_tools_street</xsl:attribute>
        <a><xsl:attribute name="href">##</xsl:attribute>*</a></li>
-      <li><xsl:attribute name="id">logo_tools_layout</xsl:attribute>
+      <li><xsl:attribute name="id">logo_tools_export</xsl:attribute>
        <a><xsl:attribute name="href">##</xsl:attribute>*</a></li>
     </ul>
 </xsl:template>
@@ -22,7 +22,7 @@
     <div><xsl:attribute name="id">tool_forms</xsl:attribute>
       <div><xsl:call-template name="login_form"/></div>
       <div><xsl:call-template name="new_firm"/></div>
-      <div><xsl:call-template name="layout"/></div>
+      <div><xsl:call-template name="export"/></div>
     </div>
 </xsl:template>
 <!--
@@ -239,28 +239,55 @@
 </xsl:template>
 <!--
 -->
-<xsl:template name="layout_form">
-    <div><xsl:attribute name="id">layout_form</xsl:attribute>
-         <select><xsl:attribute name="name">layout_town_id</xsl:attribute>
+<xsl:template name="export_form_items">
+         <select>
+           <xsl:attribute name="id">export_item</xsl:attribute>
+           <xsl:attribute name="name">export_item_id</xsl:attribute>
+           <xsl:for-each select="/nodes/catalog/item">
+               <option><xsl:attribute name="value"><xsl:value-of select='item_id'/></xsl:attribute>
+                       <xsl:if test="/state/export_item_id=./item_id"><xsl:attribute name="selected"/></xsl:if>
+                       <xsl:value-of select='item_name'/> : <xsl:value-of select='stat'/></option>
+           </xsl:for-each>
+         </select>
+</xsl:template>
+<!--
+-->
+<xsl:template name="export_form">
+    <div><xsl:attribute name="id">export_form</xsl:attribute>
+         <form>
+         <input>
+            <xsl:attribute name="name">export</xsl:attribute>
+            <xsl:attribute name="type">hidden</xsl:attribute>
+         </input>
+         <select><xsl:attribute name="name">export_town_id</xsl:attribute>
+           <option><xsl:attribute name="value"></xsl:attribute></option>
            <option><xsl:attribute name="value">3</xsl:attribute>Павлодар</option>
            <option><xsl:attribute name="value">1</xsl:attribute>Семей</option>
            <option><xsl:attribute name="value">2</xsl:attribute>Усть-Каменогорск</option>
          </select>
+         <xsl:call-template name="export_form_items"/>
+         <input>
+           <xsl:attribute name="id">export_btn</xsl:attribute>
+           <xsl:attribute name="type">submit</xsl:attribute>
+           <xsl:attribute name="value">Запрос</xsl:attribute>
+         </input>
+
+         </form>
     </div>
 </xsl:template>
 <!--
 -->
-<xsl:template name="layout_result">
-    <div><xsl:attribute name="id">layout_result</xsl:attribute>
+<xsl:template name="export_result">
+    <div><xsl:attribute name="id">export_result</xsl:attribute>
     </div>
 </xsl:template>
 <!--
 -->
-<xsl:template name="layout">
-    <div><xsl:attribute name="id">layout</xsl:attribute>
+<xsl:template name="export">
+    <div><xsl:attribute name="id">export</xsl:attribute>
          <xsl:attribute name="title">Экспорт</xsl:attribute>
-         <xsl:call-template name="layout_form"/>
-         <xsl:call-template name="layout_result"/>
+         <xsl:call-template name="export_form"/>
+         <xsl:call-template name="export_result"/>
     </div>
 </xsl:template>
 </xsl:stylesheet>

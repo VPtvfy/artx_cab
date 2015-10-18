@@ -114,7 +114,21 @@ function(){
                            event.preventDefault();
                          });
 
+         $('body').on('click',"#logo_tools_export a",
+          function(event){
+                           $("#export").dialog("open");
+                           event.preventDefault();
+                         });
+
           $("#new_firm").dialog({autoOpen: false,
+                                     height: 600,
+                                      width: 900,
+                                       show: {effect: "slide", duration: 200},
+                                       hide: {effect: "slide", duration: 100},
+                                   position:({my:"right top", at:"right top",  of:"event"}),
+                                      modal: true});
+
+          $("#export").dialog({autoOpen: false,
                                      height: 600,
                                       width: 900,
                                        show: {effect: "slide", duration: 200},

@@ -65,6 +65,17 @@ select item_id,0 item_pid,if (char_length(item_name)>3,concat(substr(item_name,1
  order by if(`item_id`=0,1,0),item_name;
 ENDSQL;
 
+$_CFG['SQL']['get_catalog_by_town']=<<<ENDSQL
+select c.item_id,0 item_pid,c.item_name, 0 `count`,count(distinct i.firm_id) `stat`
+  from street s
+  left join firm_address a on s.street_id=a.street_id
+  left join firm_div i on a.firm_id=i.firm_id
+  left join catalog_item c on i.item_id=c.item_id
+ where town_id=:town_id
+ group by item_name
+ order by item_name;
+ENDSQL;
+
 $_CFG['SQL']['find_catalog']=<<<ENDSQL
 select `id`,0 pid,if (char_length(data)>3,concat(substr(data,1,1),lower(substr(data,2,64))),data) data,hidden,`count`,`stat`
   from vcatalog

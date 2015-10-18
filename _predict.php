@@ -40,6 +40,13 @@ if (session::exists('new_firm_street') and session::set('new_firm_town_id','new_
      $hDB1->query($_CFG['SQL']['autocomplete_street'],$_);
      $PageElement=$hDB1->fetch_field('label');}}
 
+if (session::exists('export') and session::set('export_town_id','export_item_name')){
+   if($_REQUEST['term']==$_REQUEST['export_item_name'] and mb_strlen($_REQUEST['export_item_name'])>=1){
+     $_['query_str']=trim(preg_replace('/( +)+|\+/',' ',$_REQUEST['export_item_name']));
+     $_['query_str']=substr(join('|',explode(' ',' '.$_['query_str'])),1);
+     $hDB1->query($_CFG['SQL']['autocomplete_item'],$_);
+     $PageElement=$hDB1->fetch_field('label');}}
+
 header('Content-Type: application/json');
 echo json_encode($PageElement);
 ?>
