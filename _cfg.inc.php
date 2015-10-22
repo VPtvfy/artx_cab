@@ -305,16 +305,13 @@ update firm_address
        `bletter`=firm_bletter,
        `oletter`=firm_oletter,
        `description`=:firm_description
- where `firm_div_id`=:firm_div_id;
+ where `address_id`=:firm_address_id;
 ENDSQL;
 
 $_CFG['SQL']['delete_firm_address']=<<<ENDSQL
 delete
   from firm_address
  where `address_id`=:firm_address_id;
-select *
-  from firm_address
- where `firm_id`=:firm_id;
 ENDSQL;
 
 # Firm phone ------------------------------------------------------------------------------------------------------- 
@@ -340,18 +337,12 @@ update firm_phone
        `phone_number`=:phone_number,
        `phone_description`= :phone_description
  where `phone_id`=:firm_phone_id;
-select *
-  from firm_phone
- where `firm_id`=:firm_id;
 ENDSQL;
 
 $_CFG['SQL']['delete_firm_phone']=<<<ENDSQL
 delete
   from firm_phone
  where `phone_id`=:firm_phone_id;
-select *
-  from firm_phone
- where `firm_id`=:firm_id;
 ENDSQL;
 
 # Items ------------------------------------------------------------------------------------------------------- 
