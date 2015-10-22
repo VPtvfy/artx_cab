@@ -20,29 +20,29 @@ select *
 ENDSQL;
 
 $_CFG['SQL']['create_user']=<<<ENDSQL
-ENDSQL
+ENDSQL;
 
 $_CFG['SQL']['delete_user']=<<<ENDSQL
-ENDSQL
+ENDSQL;
 
 $_CFG['SQL']['alter_user']=<<<ENDSQL
-ENDSQL
+ENDSQL;
 
 $_CFG['SQL']['lock_user']=<<<ENDSQL
-ENDSQL
+ENDSQL;
 
 $_CFG['SQL']['unlock_user']=<<<ENDSQL
-ENDSQL
+ENDSQL;
 
 # User priv ------------------------------------------------------------------------------------------------------- 
 
 $_CFG['SQL']['grant_user_priv']=<<<ENDSQL
-ENDSQL
+ENDSQL;
 
 $_CFG['SQL']['revoke_user_priv']=<<<ENDSQL
-ENDSQL
+ENDSQL;
 
-# Basic GUI d------------------------------------------------------------------------------------------------------- 
+# Basic GUI ------------------------------------------------------------------------------------------------------- 
 $_CFG['SQL']['get_town']=<<<ENDSQL
 select *
   from town
@@ -371,7 +371,7 @@ set @key='';
 create temporary table keywords
 select @key:=substr(@keylist,1,instr(concat(@keylist,'|'),'|')-1) keyword,
        @keylist:=substr(@keylist,instr(concat(@keylist,'|'),'|')+1,255) dummy
-  from  firm
+  from firm
  where @keylist!='';
 delete from keywords where char_length(keyword)<3;
 create temporary table fresult
