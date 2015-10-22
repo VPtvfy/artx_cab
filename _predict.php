@@ -9,7 +9,8 @@ require_once ('_lib/session/frontend.inc.php');
 
 $PageElement=array();
 session::start();
-$hDB1= new sqlLink("localhost","root","digitaloceandbpwd","cabinet");
+#$hDB1= new sqlLink("localhost","root","digitaloceandbpwd","cabinet");
+$hDB1= new sqlLink("localhost","root","root","artex_all");
 
 if (session::exists('find') and session::set('keyword')){
    if(isset($_REQUEST['keyword']) and mb_strlen($_REQUEST['keyword'])>=3){

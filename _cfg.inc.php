@@ -11,12 +11,13 @@ update users
    set status=0,
        lastlogin=now()
  where login=:login
-   and password=md5(concat(:login,:passwd));
+   and password=md5(concat(:login,:passwd))
+   and ifnull(expired,now())<=now();
 select *
   from users
  where login=:login
    and password=md5(concat(:login,:passwd))
-   and ifnull(expired,now()<=now());
+   and ifnull(expired,now())<=now();
 ENDSQL;
 
 $_CFG['SQL']['create_user']=<<<ENDSQL
@@ -113,6 +114,30 @@ ENDSQL;
 
 # Search ------------------------------------------------------------------------------------------------------- 
 
+$_CFG['SQL']['find']=<<<ENDSQL
+set @keylist = ucase(:query_str);
+set @key='';
+create temporary table keywords
+select @key:=substr(@keylist,1,instr(concat(@keylist,'|'),'|')-1) keyword,
+       @keylist:=substr(@keylist,instr(concat(@keylist,'|'),'|')+1,255) dummy
+  from firm
+ where @keylist!='';
+delete from keywords where char_length(keyword)<3;
+create temporary table fresult
+as
+select max(if(char_length(:query_str)<3,1,relevance(upper(:query_str),concat_ws(' ',firm_name,item_name,address,phone)))) as relevance,               
+       firm_id
+  from vfirm
+  left join keywords k on concat_ws(' ',firm_name,item_name,address,phone) like concat('%',k.keyword,'%')
+ where (town_id=:town or :town=0)
+   and (item_id=:item or :item=0)
+   and (char_length(:query_str)<3 or k.keyword is not null)
+ group by firm_id
+having max(if(char_length(:query_str)<3,1,relevance(upper(:query_str),concat_ws(' ',firm_name,item_name,address,phone))))>0
+ order by 1 desc
+ limit 100; 
+ENDSQL;
+
 $_CFG['SQL']['find_firm']=<<<ENDSQL
 select f.*
   from fresult r
@@ -140,8 +165,6 @@ $_CFG['SQL']['find_phone']=<<<ENDSQL
 select p.*
   from fresult r
  inner join firm_address a on a.firm_id=r.firm_id
- inner join street s on a.street_id=s.street_id
- inner join town t on s.town_id=t.town_id
  inner join firm_phone p on a.address_id=p.address_id
  order by 2,3,4,5;
 ENDSQL;
@@ -353,39 +376,5 @@ $_CFG['SQL']['find_by_id']=<<<ENDSQL
 select firm_id, firm_name, email, url, vip, subdiv_id, subdiv, town_id, town, street, building, bletter, office, oletter, code, phone, class_id, class
   from v_firm
  where firm_id = :firm_id;
-ENDSQL;
-
-# Find  ------------------------------------------------------------------------------------------------------- 
-
-$_CFG['SQL']['find_by_class']=<<<ENDSQL
-select firm_id, firm_name, email, url, vip, subdiv_id, subdiv, town_id, town, street, building, bletter, office, oletter, code, phone, class_id, class
-  from v_firm
- where (class_id=:class_id or :class_id=0)
-   and (town_id =:town_id or :town_id=0)
- order by firm_name,subdiv;
-ENDSQL;
-
-$_CFG['SQL']['find']=<<<ENDSQL
-set @keylist = ucase(:query_str);
-set @key='';
-create temporary table keywords
-select @key:=substr(@keylist,1,instr(concat(@keylist,'|'),'|')-1) keyword,
-       @keylist:=substr(@keylist,instr(concat(@keylist,'|'),'|')+1,255) dummy
-  from firm
- where @keylist!='';
-delete from keywords where char_length(keyword)<3;
-create temporary table fresult
-as
-select max(if(char_length(:query_str)<3,1,relevance(upper(:query_str),concat_ws(' ',firm_name,item_name,address,phone)))) as relevance,               
-       firm_id
-  from vfirm
-  left join keywords k on concat_ws(' ',firm_name,item_name,address,phone) like concat('%',k.keyword,'%')
- where (town_id=:town or :town=0)
-   and (item_id=:item or :item=0)
-   and (char_length(:query_str)<3 or k.keyword is not null)
- group by firm_id
-having max(if(char_length(:query_str)<3,1,relevance(upper(:query_str),concat_ws(' ',firm_name,item_name,address,phone))))>0
- order by 1 desc
- limit 100; 
 ENDSQL;
 ?>
