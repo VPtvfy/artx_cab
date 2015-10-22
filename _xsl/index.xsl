@@ -166,5 +166,9 @@
         <xsl:call-template name='export_form_items'/>
     </xsl:if>
 
+    <xsl:if test="/sync/export='true'">
+        <xsl:call-template name='export_result'/>
+    </xsl:if>
+
 </xsl:template>
 </xsl:stylesheet>

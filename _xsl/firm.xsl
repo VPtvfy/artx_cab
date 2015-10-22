@@ -21,7 +21,7 @@
      <!--div><xsl:attribute name="class">firm_phones</xsl:attribute-->
           <xsl:for-each select="key('idx_firm_phone',$address_id)">
               <div><xsl:attribute name="class">firm_phone</xsl:attribute>
-                  (<xsl:value-of select="./phone_code"/>)
+                  <xsl:if test='./phone_code!=""'>(<xsl:value-of select="./phone_code"/>)</xsl:if>
                   <a><xsl:attribute name="title"><xsl:value-of select="./phone_description"/></xsl:attribute>
                      <xsl:value-of select="./phone_number"/></a>
               </div>

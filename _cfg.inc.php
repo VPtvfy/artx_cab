@@ -161,6 +161,15 @@ select a.address_id,r.firm_id,t.town_name, s.street_name, concat (a.building,' '
  order by 2,3,4,5
 ENDSQL;
 
+$_CFG['SQL']['find_local_address']=<<<ENDSQL
+select a.address_id,r.firm_id,t.town_name, s.street_name, concat (a.building,' ',bletter) building, concat (a.office,' ',oletter) office
+  from fresult r
+ inner join firm_address a on a.firm_id=r.firm_id
+ inner join street s on a.street_id=s.street_id
+ inner join town t on s.town_id=t.town_id and  t.town_id=:export_town_id
+ order by 2,3,4,5
+ENDSQL;
+
 $_CFG['SQL']['find_phone']=<<<ENDSQL
 select p.*
   from fresult r
@@ -206,6 +215,17 @@ $_CFG['SQL']['delete_firm']=<<<ENDSQL
 delete
   from firm
  where id =:firm_id;
+ENDSQL;
+
+$_CFG['SQL']['export_firm']=<<<ENDSQL
+create temporary table fresult
+as
+select 0 as relevance,               
+       firm_id
+  from vfirm
+ where town_id=:export_town_id
+   and item_id=:export_item_id
+ group by firm_id;
 ENDSQL;
 
 # Firm div ------------------------------------------------------------------------------------------------------- 

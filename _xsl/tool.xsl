@@ -266,12 +266,6 @@
            <option><xsl:attribute name="value">2</xsl:attribute>Усть-Каменогорск</option>
          </select>
          <xsl:call-template name="export_form_items"/>
-         <input>
-           <xsl:attribute name="id">export_btn</xsl:attribute>
-           <xsl:attribute name="type">submit</xsl:attribute>
-           <xsl:attribute name="value">Запрос</xsl:attribute>
-         </input>
-
          </form>
     </div>
 </xsl:template>
@@ -279,6 +273,20 @@
 -->
 <xsl:template name="export_result">
     <div><xsl:attribute name="id">export_result</xsl:attribute>
+          <xsl:for-each select="/nodes/firms/firm">
+              <div><xsl:attribute name="class">firms</xsl:attribute>
+                   <div><xsl:attribute name="class">firm_caption</xsl:attribute>
+                        <a><xsl:attribute name="title"><xsl:value-of select="./firm_id"/>&#160;<xsl:value-of select="./firm_descr"/></xsl:attribute>
+                           <xsl:value-of select="./firm_name"/></a></div>
+                           <xsl:for-each select="key('idx_firm_address',./firm_id)">
+                                  <xsl:for-each select="key('idx_firm_phone',./address_id)">
+                                      <div>...
+                                          <a><xsl:value-of select="./phone_number"/>&#160;<xsl:value-of select="./phone_description"/></a>
+                                      </div>
+                                  </xsl:for-each>
+                           </xsl:for-each>
+              </div>
+          </xsl:for-each>
     </div>
 </xsl:template>
 <!--

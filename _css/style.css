@@ -91,6 +91,8 @@ a		{font-size: 1em; color: #1A1A1A; text-decoration: none; }
 .firm_item      {font-size: 1em; display: inline-block; padding: 0 5 0 15; background: url(../_img/icon_book.png) left center no-repeat; background-size: 12px;}	
 .firm_address   {font-size: 1em; display: inline-block; padding: 0 5 0 15; background: url(../_img/icon_house.png) left center no-repeat; background-size: 12px;}	
 
+#export         {overflow-y: hidden;}
+#export_result  {overflow-y: scroll; max-height: 95%;}
 #footer 	{margin: 10px}
 #footer img	{float: left;margin:0px 10px 0px 0px}
 /*#search		{position: relative; border: 0; outline: 0; width: 20px; height: 25px; margin-left: -40px; top: 15px; background: url(../_img/search.png) no-repeat; background-size: 100%; }*/

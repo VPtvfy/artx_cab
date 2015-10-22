@@ -24,7 +24,7 @@ session::start();
 #$hDB1= new sqlLink("localhost","root","digitaloceandbpwd","cabinet");
 $hDB1= new sqlLink("localhost","root","root","artex_all");
 
- //Categories
+//Categories
  if (session::diff('alpha','item')){
     if (session::exists('alpha')){
        $_FRONT_END['item']=-1;
@@ -38,7 +38,7 @@ $hDB1= new sqlLink("localhost","root","root","artex_all");
        $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('catalog','item'));
        $_SYNC[]=array('items'=>'true');}}
 
- //Firms
+//Firms
  if (session::diff('keyword','item','town')){
     if($_FRONT_END['item']>0 or mb_strlen($_FRONT_END['keyword'])>3){
        $_FRONT_END['keyword']=trim(preg_replace('/( +)+/',' ',$_FRONT_END['keyword']));
@@ -55,21 +55,21 @@ $hDB1= new sqlLink("localhost","root","root","artex_all");
        $_SYNC[]=array('firms'=>'true');}
 
  if (session::diff()){
- //Towns
+//Towns
     $hDB1->query($_CFG['SQL']['get_town']);
     $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('towns','town'));
- //Alphaindex
+//Alphaindex
     $hDB1->query($_CFG['SQL']['get_alpha'],$_FRONT_END);
     $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('catalog','alpha'));
- //Categories
+//Categories
     $hDB1->query($_CFG['SQL']['get_catalog_by_pid'],$_FRONT_END);
     $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('catalog','item'));
     $_SYNC=array('index'=>'true');}
  
- // Tools --------------------------------------------------------------------------------------------------
+// Tools --------------------------------------------------------------------------------------------------
 
  if (session::exists('new_firm') and session::set('new_firm_name')){
- //New firm
+//New firm
     if($_FRONT_END['new_firm_name']!=''){
        $hDB1->query($_CFG['SQL']['create_firm'],$_FRONT_END);
        $_FRONT_END['new_firm_id']=$hDB1->fetch_first()['firm_id'];
@@ -89,16 +89,24 @@ $hDB1= new sqlLink("localhost","root","root","artex_all");
        $_SYNC[]=array('new_firm_item'=>'true');}}
 
  if (session::exists('export') and session::set('export_town_id')){
- //Export
-     if($_FRONT_END['export_town_id']>0){ 
-     $_['town_id']=$_FRONT_END['export_town_id'];
-     $hDB1->query($_CFG['SQL']['get_catalog_by_town'],$_);
-     $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('catalog','item'));
-     $_SYNC[]=array('export_form_items'=>'true');}}
+//Export
+    if($_FRONT_END['export_town_id']>0){ 
+    $_['town_id']=$_FRONT_END['export_town_id'];
+    $hDB1->query($_CFG['SQL']['get_catalog_by_town'],$_);
+    $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('catalog','item'));
+    $_SYNC[]=array('export_form_items'=>'true');}}
 
- if (session::exists('export') and session::set('export_town_id','export_item_id')){
- //Export
-       $_SYNC[]=array('export'=>'true');}
+ if (session::exists('export') and session::diff('export_town_id','export_item_id')){
+    if($_FRONT_END['export_town_id']>0 and $_FRONT_END['export_item_id']>0){ 
+//Export
+       $hDB1->query($_CFG['SQL']['export_firm'],$_FRONT_END);
+       $hDB1->query($_CFG['SQL']['find_firm'],$_FRONT_END);
+       $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','firm'));
+       $hDB1->query($_CFG['SQL']['find_local_address'],$_FRONT_END);
+       $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','address'));
+       $hDB1->query($_CFG['SQL']['find_phone'],$_FRONT_END);
+       $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','phone'));
+       $_SYNC[]=array('export'=>'true');}}
 
 session::close();
 
