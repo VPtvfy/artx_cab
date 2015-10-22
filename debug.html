@@ -1,0 +1,3078 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body><pre>array (
+  'alpha' => '',
+  'item' => '227',
+  'town' => 0,
+  'keyword' => '',
+  'user' => 'guest',
+  'find' => '',
+  'SID' => '08njli4mmsdoo3i28ssmauve95',
+  'query_str' => false,
+)<hr>array (
+  0 => 
+  array (
+    'query' => 'select distinct c.item_id,c.item_pid,if (char_length(c.item_name)>3,concat(substr(c.item_name,1,1),lower(substr(c.item_name,2,64))),c.item_name) item_name,c.`count`,c.`stat`
+  from catalog_tree c1
+ inner join catalog_tree c2 on c2.id=c1.pid and c1.id=?
+ inner join catalog_tree c3 on c3.id=c2.pid
+ inner join catalog_tree c4 on c4.id=c3.pid
+ inner join vcatalog c on c.item_pid=c1.id or c.item_id=c1.id or c.item_id=c2.id or c.item_id=c3.id or c.item_id=c4.id
+ where c.`count`>0 or c.stat>0
+ order by if(c.item_id=0,1,0),c.item_pid,c.item_name;',
+    'values' => 
+    array (
+      0 => 'd',
+      1 => '227',
+    ),
+    'affected_rows' => 3,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 1,
+    'field_count' => 5,
+    'Execution time' => 0.0729999542236328125,
+    'Transfer time' => 0,
+  ),
+  1 => 
+  array (
+    'query' => 'set @keylist = ucase(?)',
+    'values' => 
+    array (
+      0 => 's',
+      1 => false,
+    ),
+    'affected_rows' => 0,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 1,
+    'field_count' => 0,
+    'Execution time' => 0,
+    'Transfer time' => 0,
+  ),
+  2 => 
+  array (
+    'query' => 'set @key=\'\'',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 0,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 0,
+    'Execution time' => 0.000999927520751953125,
+    'Transfer time' => 0,
+  ),
+  3 => 
+  array (
+    'query' => 'create temporary table keywords
+select @key:=substr(@keylist,1,instr(concat(@keylist,\'|\'),\'|\')-1) keyword,
+       @keylist:=substr(@keylist,instr(concat(@keylist,\'|\'),\'|\')+1,255) dummy
+  from  firm
+ where @keylist!=\'\'',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 0,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 0,
+    'Execution time' => 0.164000034332275390625,
+    'Transfer time' => 0,
+  ),
+  4 => 
+  array (
+    'query' => 'delete from keywords where char_length(keyword)<3',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 0,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 0,
+    'Execution time' => 0,
+    'Transfer time' => 0,
+  ),
+  5 => 
+  array (
+    'query' => 'create temporary table fresult
+as
+select max(if(char_length(?)<3,1,relevance(upper(?),concat_ws(\' \',firm_name,item_name,address,phone)))) as relevance,               
+       firm_id
+  from vfirm
+  left join keywords k on concat_ws(\' \',firm_name,item_name,address,phone) like concat(\'%\',k.keyword,\'%\')
+ where (town_id=? or ?=0)
+   and (item_id=? or ?=0)
+   and (char_length(?)<3 or k.keyword is not null)
+ group by firm_id
+having max(if(char_length(?)<3,1,relevance(upper(?),concat_ws(\' \',firm_name,item_name,address,phone))))>0
+ order by 1 desc
+ limit 100; ',
+    'values' => 
+    array (
+      0 => 'ssiiddsss',
+      1 => false,
+      2 => false,
+      3 => 0,
+      4 => 0,
+      5 => '227',
+      6 => '227',
+      7 => false,
+      8 => false,
+      9 => false,
+    ),
+    'affected_rows' => 36,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 9,
+    'field_count' => 0,
+    'Execution time' => 2.6219999790191650390625,
+    'Transfer time' => 0,
+  ),
+  6 => 
+  array (
+    'query' => 'select f.*
+  from fresult r
+ inner join firm f on f.firm_id=r.firm_id
+ order by r.relevance desc,f.firm_name;',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 36,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 4,
+    'Execution time' => 0.00199985504150390625,
+    'Transfer time' => 0.0010001659393310546875,
+  ),
+  7 => 
+  array (
+    'query' => 'select r.firm_id,c.*
+  from fresult r
+ inner join firm_div d on d.firm_id=r.firm_id
+ inner join catalog_item c on c.item_id=d.item_id',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 168,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 3,
+    'Execution time' => 0.0039999485015869140625,
+    'Transfer time' => 0.000999927520751953125,
+  ),
+  8 => 
+  array (
+    'query' => 'select a.address_id,r.firm_id,t.town_name, s.street_name, concat (a.building,\' \',bletter) building, concat (a.office,\' \',oletter) office
+  from fresult r
+ inner join firm_address a on a.firm_id=r.firm_id
+ inner join street s on a.street_id=s.street_id
+ inner join town t on s.town_id=t.town_id
+ order by 2,3,4,5',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 38,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 6,
+    'Execution time' => 0.210999965667724609375,
+    'Transfer time' => 0.000999927520751953125,
+  ),
+  9 => 
+  array (
+    'query' => 'select p.*
+  from fresult r
+ inner join firm_address a on a.firm_id=r.firm_id
+ inner join street s on a.street_id=s.street_id
+ inner join town t on s.town_id=t.town_id
+ inner join firm_phone p on a.address_id=p.address_id
+ order by 2,3,4,5;',
+    'values' => 
+    array (
+    ),
+    'affected_rows' => 40,
+    'insert_id' => 0,
+    'num_rows' => 0,
+    'param_count' => 0,
+    'field_count' => 6,
+    'Execution time' => 0.3079998493194580078125,
+    'Transfer time' => 0,
+  ),
+)<hr>array (
+  'sync' => 
+  array (
+    0 => 
+    array (
+      'items' => 'true',
+    ),
+    1 => 
+    array (
+      'firms' => 'true',
+    ),
+  ),
+  'state' => 
+  array (
+    'alpha' => '',
+    'item' => '227',
+    'town' => 0,
+    'keyword' => '',
+    'user' => 'guest',
+    'find' => '',
+    'SID' => '08njli4mmsdoo3i28ssmauve95',
+    'query_str' => false,
+  ),
+  'nodes' => 
+  array (
+    'catalog' => 
+    array (
+      0 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 15,
+          'item_pid' => 0,
+          'item_name' => 'Промышленность',
+          'count' => 59,
+          'stat' => 0,
+        ),
+      ),
+      1 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 227,
+          'item_pid' => 15,
+          'item_name' => 'Инжиниринг',
+          'count' => 0,
+          'stat' => 36,
+        ),
+      ),
+      2 => 
+      array (
+        'item' => 
+        array (
+          'item_id' => 0,
+          'item_pid' => 0,
+          'item_name' => 'Рубрики',
+          'count' => 25,
+          'stat' => 0,
+        ),
+      ),
+    ),
+    'firms' => 
+    array (
+      0 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 787,
+          'firm_type' => 0,
+          'firm_name' => 'FORMAT MACH COMPANY, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      1 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 965,
+          'firm_type' => 0,
+          'firm_name' => 'INTEC COMPANY, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      2 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 1540,
+          'firm_type' => 0,
+          'firm_name' => 'RATING, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      3 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 1649,
+          'firm_type' => 0,
+          'firm_name' => 'SIEMENS, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      4 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 1901,
+          'firm_type' => 0,
+          'firm_name' => 'VID ПРОЕКТ, КОМПАНИЯ',
+          'firm_descr' => '',
+        ),
+      ),
+      5 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 1942,
+          'firm_type' => 0,
+          'firm_name' => 'VOSTOK STD COMPANY, ФИРМА',
+          'firm_descr' => '',
+        ),
+      ),
+      6 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 2423,
+          'firm_type' => 0,
+          'firm_name' => 'АКЖАР ЖОБА, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      7 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 3282,
+          'firm_type' => 0,
+          'firm_name' => 'БЕЛ - КАЗ, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      8 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 3894,
+          'firm_type' => 0,
+          'firm_name' => 'ВОСТОКОБЛПРОЕКТ, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      9 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 5114,
+          'firm_type' => 0,
+          'firm_name' => 'ЗЕЙНЕТ - ВОСТОК, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      10 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 5208,
+          'firm_type' => 0,
+          'firm_name' => 'ИЗЫСКАТЕЛЬ ПВ ФИРМА, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      11 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 5215,
+          'firm_type' => 0,
+          'firm_name' => 'ИЛ ВЭС, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      12 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 5281,
+          'firm_type' => 0,
+          'firm_name' => 'ИНМАР, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      13 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 5511,
+          'firm_type' => 0,
+          'firm_name' => 'КАЗГИПРОЦВЕТМЕТ, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      14 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 5538,
+          'firm_type' => 0,
+          'firm_name' => 'КАЗННИИС, УКФ',
+          'firm_descr' => '',
+        ),
+      ),
+      15 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 5546,
+          'firm_type' => 0,
+          'firm_name' => 'КАЗПРОЕКТ ИННОВАЦИЯ, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      16 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 5578,
+          'firm_type' => 0,
+          'firm_name' => 'КАЗЦИНКТЕХ, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      17 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 6043,
+          'firm_type' => 0,
+          'firm_name' => 'КОТЭС - КАЗАХСТАН, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      18 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 6290,
+          'firm_type' => 0,
+          'firm_name' => 'ЛИТЕРА 3, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      19 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 6947,
+          'firm_type' => 0,
+          'firm_name' => 'НАЦИОНАЛЬНЫЙ ЦЕНТР КУРЫЛЫС КОНСАЛТИНГ, ВКФ АО',
+          'firm_descr' => '',
+        ),
+      ),
+      20 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 6952,
+          'firm_type' => 0,
+          'firm_name' => 'НАЦИОНАЛЬНЫЙ ЦЕНТР ҚҰРЫЛЫСКОНСАЛТИНГ, ВКФ АО',
+          'firm_descr' => '',
+        ),
+      ),
+      21 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 7059,
+          'firm_type' => 0,
+          'firm_name' => 'НПФ ПРОЕКТТЕХЭКСПЕРТ, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      22 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 7160,
+          'firm_type' => 0,
+          'firm_name' => 'ОБЛЖИЛКОМХОЗСТРОЙ, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      23 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 7624,
+          'firm_type' => 0,
+          'firm_name' => 'ПАВЛОДАРЭНЕРГОПРОЕКТ, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      24 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 7863,
+          'firm_type' => 0,
+          'firm_name' => 'ПОСТЭКСКОМ, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      25 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 7941,
+          'firm_type' => 0,
+          'firm_name' => 'ПРОЕКТ COMPANY, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      26 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 7943,
+          'firm_type' => 0,
+          'firm_name' => 'ПРОЕКТТЕХСЕРВИС, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      27 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 7945,
+          'firm_type' => 0,
+          'firm_name' => 'ПРОЕКТТЕХЭКСПЕРТ НПФ, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      28 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 7953,
+          'firm_type' => 0,
+          'firm_name' => 'ПРОМ ЭКСПЕРТИЗА, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      29 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 8736,
+          'firm_type' => 0,
+          'firm_name' => 'СИЛУМИН - ВОСТОК, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      30 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 9159,
+          'firm_type' => 0,
+          'firm_name' => 'СТРОЙ С, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      31 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 9178,
+          'firm_type' => 0,
+          'firm_name' => 'СТРОЙТЕХЭКСПЕРТ, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      32 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 9328,
+          'firm_type' => 0,
+          'firm_name' => 'ТВКС ИНЖИНИРИНГ, ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      33 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 9715,
+          'firm_type' => 0,
+          'firm_name' => 'УМЗ - ИНЖИНИРИНГ, НПО ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      34 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 10205,
+          'firm_type' => 0,
+          'firm_name' => 'ЦЕНТР НЕЗАВИСИМОЙ ОЦЕНКИ APPRAISER',
+          'firm_descr' => '',
+        ),
+      ),
+      35 => 
+      array (
+        'firm' => 
+        array (
+          'firm_id' => 10677,
+          'firm_type' => 0,
+          'firm_name' => 'ЭНЕРГОПРИБОРСЕРВИС, СФ ТОО',
+          'firm_descr' => '',
+        ),
+      ),
+      36 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7160,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      37 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7160,
+          'item_id' => 653,
+          'item_name' => 'Экспертиза техническая',
+        ),
+      ),
+      38 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 965,
+          'item_id' => 52,
+          'item_name' => 'Автоматизация промышленных предприятий',
+        ),
+      ),
+      39 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 965,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      40 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 965,
+          'item_id' => 389,
+          'item_name' => 'Оборудование промышленное',
+        ),
+      ),
+      41 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 965,
+          'item_id' => 390,
+          'item_name' => 'Оборудование разное',
+        ),
+      ),
+      42 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 965,
+          'item_id' => 661,
+          'item_name' => 'Электромонтажные работы',
+        ),
+      ),
+      43 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 965,
+          'item_id' => 667,
+          'item_name' => 'Энергетическое оборудование',
+        ),
+      ),
+      44 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 9715,
+          'item_id' => 52,
+          'item_name' => 'Автоматизация промышленных предприятий',
+        ),
+      ),
+      45 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 9715,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      46 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5281,
+          'item_id' => 162,
+          'item_name' => 'Грузоподъемное оборудование, механизмы',
+        ),
+      ),
+      47 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5281,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      48 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5281,
+          'item_id' => 532,
+          'item_name' => 'Спецтехника - продажа, запчасти, ремонт',
+        ),
+      ),
+      49 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5281,
+          'item_id' => 653,
+          'item_name' => 'Экспертиза техническая',
+        ),
+      ),
+      50 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7624,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      51 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7624,
+          'item_id' => 464,
+          'item_name' => 'Проектные работы',
+        ),
+      ),
+      52 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 1540,
+          'item_id' => 52,
+          'item_name' => 'Автоматизация промышленных предприятий',
+        ),
+      ),
+      53 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 1540,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      54 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 1540,
+          'item_id' => 271,
+          'item_name' => 'Компьютерные сети',
+        ),
+      ),
+      55 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 1540,
+          'item_id' => 276,
+          'item_name' => 'Консалтинговые услуги',
+        ),
+      ),
+      56 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 1540,
+          'item_id' => 462,
+          'item_name' => 'Программное обеспечение',
+        ),
+      ),
+      57 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 1540,
+          'item_id' => 520,
+          'item_name' => 'Системы безопасности, видеонаблюдения',
+        ),
+      ),
+      58 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 10205,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      59 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 10205,
+          'item_id' => 298,
+          'item_name' => 'Курсы профессиональные',
+        ),
+      ),
+      60 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 10205,
+          'item_id' => 653,
+          'item_name' => 'Экспертиза техническая',
+        ),
+      ),
+      61 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 10205,
+          'item_id' => 654,
+          'item_name' => 'Экспертные услуги',
+        ),
+      ),
+      62 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5511,
+          'item_id' => 88,
+          'item_name' => 'Архитектура и проектирование',
+        ),
+      ),
+      63 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5511,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      64 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5511,
+          'item_id' => 464,
+          'item_name' => 'Проектные работы',
+        ),
+      ),
+      65 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7863,
+          'item_id' => 88,
+          'item_name' => 'Архитектура и проектирование',
+        ),
+      ),
+      66 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7863,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      67 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7863,
+          'item_id' => 464,
+          'item_name' => 'Проектные работы',
+        ),
+      ),
+      68 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7863,
+          'item_id' => 553,
+          'item_name' => 'Строительно-монтажные работы',
+        ),
+      ),
+      69 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7863,
+          'item_id' => 556,
+          'item_name' => 'Строительно-отделочные работы',
+        ),
+      ),
+      70 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7863,
+          'item_id' => 557,
+          'item_name' => 'Строительные организации',
+        ),
+      ),
+      71 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7863,
+          'item_id' => 654,
+          'item_name' => 'Экспертные услуги',
+        ),
+      ),
+      72 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 1649,
+          'item_id' => 52,
+          'item_name' => 'Автоматизация промышленных предприятий',
+        ),
+      ),
+      73 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 1649,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      74 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 1649,
+          'item_id' => 389,
+          'item_name' => 'Оборудование промышленное',
+        ),
+      ),
+      75 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 1649,
+          'item_id' => 447,
+          'item_name' => 'Пожарная безопасность - оборудование, сигнализация',
+        ),
+      ),
+      76 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 1649,
+          'item_id' => 520,
+          'item_name' => 'Системы безопасности, видеонаблюдения',
+        ),
+      ),
+      77 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 1649,
+          'item_id' => 657,
+          'item_name' => 'Электродвигатели, трансформаторы',
+        ),
+      ),
+      78 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 1649,
+          'item_id' => 660,
+          'item_name' => 'Электромонтажные изделия',
+        ),
+      ),
+      79 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 1649,
+          'item_id' => 664,
+          'item_name' => 'Электротехническое оборудование',
+        ),
+      ),
+      80 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 1649,
+          'item_id' => 667,
+          'item_name' => 'Энергетическое оборудование',
+        ),
+      ),
+      81 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 10677,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      82 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 10677,
+          'item_id' => 447,
+          'item_name' => 'Пожарная безопасность - оборудование, сигнализация',
+        ),
+      ),
+      83 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 10677,
+          'item_id' => 464,
+          'item_name' => 'Проектные работы',
+        ),
+      ),
+      84 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 10677,
+          'item_id' => 520,
+          'item_name' => 'Системы безопасности, видеонаблюдения',
+        ),
+      ),
+      85 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 10677,
+          'item_id' => 653,
+          'item_name' => 'Экспертиза техническая',
+        ),
+      ),
+      86 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 10677,
+          'item_id' => 654,
+          'item_name' => 'Экспертные услуги',
+        ),
+      ),
+      87 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 10677,
+          'item_id' => 661,
+          'item_name' => 'Электромонтажные работы',
+        ),
+      ),
+      88 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5538,
+          'item_id' => 88,
+          'item_name' => 'Архитектура и проектирование',
+        ),
+      ),
+      89 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5538,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      90 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5538,
+          'item_id' => 464,
+          'item_name' => 'Проектные работы',
+        ),
+      ),
+      91 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7941,
+          'item_id' => 88,
+          'item_name' => 'Архитектура и проектирование',
+        ),
+      ),
+      92 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7941,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      93 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7941,
+          'item_id' => 464,
+          'item_name' => 'Проектные работы',
+        ),
+      ),
+      94 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 1901,
+          'item_id' => 88,
+          'item_name' => 'Архитектура и проектирование',
+        ),
+      ),
+      95 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 1901,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      96 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5546,
+          'item_id' => 88,
+          'item_name' => 'Архитектура и проектирование',
+        ),
+      ),
+      97 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5546,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      98 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5546,
+          'item_id' => 464,
+          'item_name' => 'Проектные работы',
+        ),
+      ),
+      99 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5546,
+          'item_id' => 557,
+          'item_name' => 'Строительные организации',
+        ),
+      ),
+      100 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5546,
+          'item_id' => 661,
+          'item_name' => 'Электромонтажные работы',
+        ),
+      ),
+      101 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7943,
+          'item_id' => 88,
+          'item_name' => 'Архитектура и проектирование',
+        ),
+      ),
+      102 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7943,
+          'item_id' => 226,
+          'item_name' => 'Инженерные сети',
+        ),
+      ),
+      103 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7943,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      104 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7943,
+          'item_id' => 409,
+          'item_name' => 'Отопительные системы - продажа, ремонт, техобслуживание',
+        ),
+      ),
+      105 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7943,
+          'item_id' => 464,
+          'item_name' => 'Проектные работы',
+        ),
+      ),
+      106 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 1942,
+          'item_id' => 88,
+          'item_name' => 'Архитектура и проектирование',
+        ),
+      ),
+      107 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 1942,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      108 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 1942,
+          'item_id' => 464,
+          'item_name' => 'Проектные работы',
+        ),
+      ),
+      109 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 1942,
+          'item_id' => 653,
+          'item_name' => 'Экспертиза техническая',
+        ),
+      ),
+      110 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5578,
+          'item_id' => 88,
+          'item_name' => 'Архитектура и проектирование',
+        ),
+      ),
+      111 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5578,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      112 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5578,
+          'item_id' => 464,
+          'item_name' => 'Проектные работы',
+        ),
+      ),
+      113 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5578,
+          'item_id' => 467,
+          'item_name' => 'Промышленные предприятия',
+        ),
+      ),
+      114 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7945,
+          'item_id' => 88,
+          'item_name' => 'Архитектура и проектирование',
+        ),
+      ),
+      115 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7945,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      116 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7945,
+          'item_id' => 464,
+          'item_name' => 'Проектные работы',
+        ),
+      ),
+      117 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 2423,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      118 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 2423,
+          'item_id' => 234,
+          'item_name' => 'Интернет - услуги',
+        ),
+      ),
+      119 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 6043,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      120 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 6043,
+          'item_id' => 464,
+          'item_name' => 'Проектные работы',
+        ),
+      ),
+      121 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7953,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      122 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7953,
+          'item_id' => 653,
+          'item_name' => 'Экспертиза техническая',
+        ),
+      ),
+      123 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 3282,
+          'item_id' => 88,
+          'item_name' => 'Архитектура и проектирование',
+        ),
+      ),
+      124 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 3282,
+          'item_id' => 125,
+          'item_name' => 'Вентиляционные системы, оборудование',
+        ),
+      ),
+      125 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 3282,
+          'item_id' => 134,
+          'item_name' => 'Водопровод – монтажные, пусконаладочные работы',
+        ),
+      ),
+      126 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 3282,
+          'item_id' => 214,
+          'item_name' => 'Земляные работы',
+        ),
+      ),
+      127 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 3282,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      128 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 3282,
+          'item_id' => 447,
+          'item_name' => 'Пожарная безопасность - оборудование, сигнализация',
+        ),
+      ),
+      129 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 3282,
+          'item_id' => 464,
+          'item_name' => 'Проектные работы',
+        ),
+      ),
+      130 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 3282,
+          'item_id' => 501,
+          'item_name' => 'Сантехмонтажные, сантехнические работы',
+        ),
+      ),
+      131 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 3282,
+          'item_id' => 520,
+          'item_name' => 'Системы безопасности, видеонаблюдения',
+        ),
+      ),
+      132 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 3282,
+          'item_id' => 553,
+          'item_name' => 'Строительно-монтажные работы',
+        ),
+      ),
+      133 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 3282,
+          'item_id' => 661,
+          'item_name' => 'Электромонтажные работы',
+        ),
+      ),
+      134 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 6290,
+          'item_id' => 88,
+          'item_name' => 'Архитектура и проектирование',
+        ),
+      ),
+      135 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 6290,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      136 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 8736,
+          'item_id' => 88,
+          'item_name' => 'Архитектура и проектирование',
+        ),
+      ),
+      137 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 8736,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      138 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 8736,
+          'item_id' => 269,
+          'item_name' => 'Компрессорное оборудование',
+        ),
+      ),
+      139 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 8736,
+          'item_id' => 389,
+          'item_name' => 'Оборудование промышленное',
+        ),
+      ),
+      140 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 8736,
+          'item_id' => 390,
+          'item_name' => 'Оборудование разное',
+        ),
+      ),
+      141 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 8736,
+          'item_id' => 464,
+          'item_name' => 'Проектные работы',
+        ),
+      ),
+      142 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 8736,
+          'item_id' => 623,
+          'item_name' => 'Холодильное оборудование',
+        ),
+      ),
+      143 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 8736,
+          'item_id' => 659,
+          'item_name' => 'Электроизмерительные приборы',
+        ),
+      ),
+      144 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 8736,
+          'item_id' => 663,
+          'item_name' => 'Электротехническая продукция',
+        ),
+      ),
+      145 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 3894,
+          'item_id' => 88,
+          'item_name' => 'Архитектура и проектирование',
+        ),
+      ),
+      146 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 3894,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      147 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 3894,
+          'item_id' => 464,
+          'item_name' => 'Проектные работы',
+        ),
+      ),
+      148 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 3894,
+          'item_id' => 653,
+          'item_name' => 'Экспертиза техническая',
+        ),
+      ),
+      149 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 6947,
+          'item_id' => 88,
+          'item_name' => 'Архитектура и проектирование',
+        ),
+      ),
+      150 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 6947,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      151 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 6947,
+          'item_id' => 276,
+          'item_name' => 'Консалтинговые услуги',
+        ),
+      ),
+      152 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 6947,
+          'item_id' => 310,
+          'item_name' => 'Лицензирование',
+        ),
+      ),
+      153 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 6947,
+          'item_id' => 464,
+          'item_name' => 'Проектные работы',
+        ),
+      ),
+      154 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 9159,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      155 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 9159,
+          'item_id' => 291,
+          'item_name' => 'Кровельные работы',
+        ),
+      ),
+      156 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 9159,
+          'item_id' => 501,
+          'item_name' => 'Сантехмонтажные, сантехнические работы',
+        ),
+      ),
+      157 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 9159,
+          'item_id' => 549,
+          'item_name' => 'Столярные работы',
+        ),
+      ),
+      158 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 9159,
+          'item_id' => 553,
+          'item_name' => 'Строительно-монтажные работы',
+        ),
+      ),
+      159 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 9159,
+          'item_id' => 556,
+          'item_name' => 'Строительно-отделочные работы',
+        ),
+      ),
+      160 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 9159,
+          'item_id' => 557,
+          'item_name' => 'Строительные организации',
+        ),
+      ),
+      161 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5114,
+          'item_id' => 52,
+          'item_name' => 'Автоматизация промышленных предприятий',
+        ),
+      ),
+      162 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5114,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      163 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 6952,
+          'item_id' => 88,
+          'item_name' => 'Архитектура и проектирование',
+        ),
+      ),
+      164 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 6952,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      165 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 6952,
+          'item_id' => 310,
+          'item_name' => 'Лицензирование',
+        ),
+      ),
+      166 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 6952,
+          'item_id' => 413,
+          'item_name' => 'Оценка имущества и недвижимости',
+        ),
+      ),
+      167 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 6952,
+          'item_id' => 464,
+          'item_name' => 'Проектные работы',
+        ),
+      ),
+      168 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 6952,
+          'item_id' => 654,
+          'item_name' => 'Экспертные услуги',
+        ),
+      ),
+      169 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 9178,
+          'item_id' => 88,
+          'item_name' => 'Архитектура и проектирование',
+        ),
+      ),
+      170 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 9178,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      171 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 9178,
+          'item_id' => 464,
+          'item_name' => 'Проектные работы',
+        ),
+      ),
+      172 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 9178,
+          'item_id' => 557,
+          'item_name' => 'Строительные организации',
+        ),
+      ),
+      173 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 9178,
+          'item_id' => 654,
+          'item_name' => 'Экспертные услуги',
+        ),
+      ),
+      174 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5208,
+          'item_id' => 88,
+          'item_name' => 'Архитектура и проектирование',
+        ),
+      ),
+      175 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5208,
+          'item_id' => 148,
+          'item_name' => 'Геологоразведочные, геодезические работы',
+        ),
+      ),
+      176 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5208,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      177 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7059,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      178 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7059,
+          'item_id' => 464,
+          'item_name' => 'Проектные работы',
+        ),
+      ),
+      179 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7059,
+          'item_id' => 653,
+          'item_name' => 'Экспертиза техническая',
+        ),
+      ),
+      180 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 7059,
+          'item_id' => 654,
+          'item_name' => 'Экспертные услуги',
+        ),
+      ),
+      181 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 787,
+          'item_id' => 172,
+          'item_name' => 'Деревообработка',
+        ),
+      ),
+      182 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 787,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      183 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 787,
+          'item_id' => 231,
+          'item_name' => 'Инструменты различные',
+        ),
+      ),
+      184 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 787,
+          'item_id' => 308,
+          'item_name' => 'Литейное производство',
+        ),
+      ),
+      185 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 787,
+          'item_id' => 343,
+          'item_name' => 'Металлообработка',
+        ),
+      ),
+      186 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 787,
+          'item_id' => 467,
+          'item_name' => 'Промышленные предприятия',
+        ),
+      ),
+      187 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 9328,
+          'item_id' => 226,
+          'item_name' => 'Инженерные сети',
+        ),
+      ),
+      188 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 9328,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      189 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 9328,
+          'item_id' => 553,
+          'item_name' => 'Строительно-монтажные работы',
+        ),
+      ),
+      190 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 9328,
+          'item_id' => 557,
+          'item_name' => 'Строительные организации',
+        ),
+      ),
+      191 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5215,
+          'item_id' => 52,
+          'item_name' => 'Автоматизация промышленных предприятий',
+        ),
+      ),
+      192 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5215,
+          'item_id' => 154,
+          'item_name' => 'Горно-добывающая, горно-обогатительная промышленность',
+        ),
+      ),
+      193 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5215,
+          'item_id' => 155,
+          'item_name' => 'Горно-шахтное оборудование',
+        ),
+      ),
+      194 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5215,
+          'item_id' => 227,
+          'item_name' => 'Инжиниринг',
+        ),
+      ),
+      195 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5215,
+          'item_id' => 340,
+          'item_name' => 'Металлические изделия - производство, продажа',
+        ),
+      ),
+      196 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5215,
+          'item_id' => 341,
+          'item_name' => 'Металлоконструкции - производство, сборка',
+        ),
+      ),
+      197 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5215,
+          'item_id' => 389,
+          'item_name' => 'Оборудование промышленное',
+        ),
+      ),
+      198 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5215,
+          'item_id' => 464,
+          'item_name' => 'Проектные работы',
+        ),
+      ),
+      199 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5215,
+          'item_id' => 474,
+          'item_name' => 'Пусконаладочные работы',
+        ),
+      ),
+      200 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5215,
+          'item_id' => 553,
+          'item_name' => 'Строительно-монтажные работы',
+        ),
+      ),
+      201 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5215,
+          'item_id' => 660,
+          'item_name' => 'Электромонтажные изделия',
+        ),
+      ),
+      202 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5215,
+          'item_id' => 661,
+          'item_name' => 'Электромонтажные работы',
+        ),
+      ),
+      203 => 
+      array (
+        'item' => 
+        array (
+          'firm_id' => 5215,
+          'item_id' => 664,
+          'item_name' => 'Электротехническое оборудование',
+        ),
+      ),
+      204 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 9516,
+          'firm_id' => 787,
+          'town_name' => 'Павлодар',
+          'street_name' => 'Космонавтов',
+          'building' => '1 ',
+          'office' => NULL,
+        ),
+      ),
+      205 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 11907,
+          'firm_id' => 965,
+          'town_name' => 'Павлодар',
+          'street_name' => 'Торговая',
+          'building' => '7 3',
+          'office' => NULL,
+        ),
+      ),
+      206 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 3949,
+          'firm_id' => 1540,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Казахстан',
+          'building' => '27 ',
+          'office' => NULL,
+        ),
+      ),
+      207 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 10977,
+          'firm_id' => 1649,
+          'town_name' => 'Павлодар',
+          'street_name' => 'пл. Победы',
+          'building' => '5 Б',
+          'office' => '603 ',
+        ),
+      ),
+      208 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 6221,
+          'firm_id' => 1649,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'пр. К. Сатпаева',
+          'building' => '62 ',
+          'office' => '206 ',
+        ),
+      ),
+      209 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 4394,
+          'firm_id' => 1901,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Кирова',
+          'building' => '44 ',
+          'office' => NULL,
+        ),
+      ),
+      210 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 3726,
+          'firm_id' => 1942,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Кабанбай батыра',
+          'building' => '78 ',
+          'office' => NULL,
+        ),
+      ),
+      211 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 6233,
+          'firm_id' => 2423,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'пр. К. Сатпаева',
+          'building' => '64 ',
+          'office' => NULL,
+        ),
+      ),
+      212 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 1686,
+          'firm_id' => 3282,
+          'town_name' => 'Семей',
+          'street_name' => 'Пархоменко',
+          'building' => '137 А',
+          'office' => NULL,
+        ),
+      ),
+      213 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 2634,
+          'firm_id' => 3894,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => '30-й Гвардейской дивизии',
+          'building' => '24 1',
+          'office' => NULL,
+        ),
+      ),
+      214 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 6853,
+          'firm_id' => 5114,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Протозанова',
+          'building' => '95 Б',
+          'office' => NULL,
+        ),
+      ),
+      215 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 7690,
+          'firm_id' => 5208,
+          'town_name' => 'Павлодар',
+          'street_name' => 'ак. Бектурова',
+          'building' => '21 ',
+          'office' => '49 ',
+        ),
+      ),
+      216 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 5319,
+          'firm_id' => 5215,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Омская',
+          'building' => '4 ',
+          'office' => NULL,
+        ),
+      ),
+      217 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 3354,
+          'firm_id' => 5281,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Гоголя',
+          'building' => '1 ',
+          'office' => '28 ',
+        ),
+      ),
+      218 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 3258,
+          'firm_id' => 5511,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Ворошилова',
+          'building' => '156 ',
+          'office' => NULL,
+        ),
+      ),
+      219 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 4789,
+          'firm_id' => 5538,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'М. Горького',
+          'building' => '21 ',
+          'office' => '203 ',
+        ),
+      ),
+      220 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 7298,
+          'firm_id' => 5546,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Шолохова',
+          'building' => '49 ',
+          'office' => NULL,
+        ),
+      ),
+      221 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 6721,
+          'firm_id' => 5578,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Промышленная',
+          'building' => '2 ',
+          'office' => '210 ',
+        ),
+      ),
+      222 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 8938,
+          'firm_id' => 6043,
+          'town_name' => 'Павлодар',
+          'street_name' => 'Исиналиева',
+          'building' => '1 ',
+          'office' => '109 ',
+        ),
+      ),
+      223 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 3530,
+          'firm_id' => 6290,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Доватора',
+          'building' => '7 1',
+          'office' => NULL,
+        ),
+      ),
+      224 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 1422,
+          'firm_id' => 6947,
+          'town_name' => 'Семей',
+          'street_name' => 'Ленина',
+          'building' => '9 ',
+          'office' => '503 ',
+        ),
+      ),
+      225 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 5214,
+          'firm_id' => 6952,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Новаторов',
+          'building' => '3 ',
+          'office' => NULL,
+        ),
+      ),
+      226 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 6808,
+          'firm_id' => 7059,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Протозанова',
+          'building' => '73 ',
+          'office' => '409 ',
+        ),
+      ),
+      227 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 4075,
+          'firm_id' => 7160,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Казахстан',
+          'building' => '71 А',
+          'office' => NULL,
+        ),
+      ),
+      228 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 11689,
+          'firm_id' => 7624,
+          'town_name' => 'Павлодар',
+          'street_name' => 'Торайгырова',
+          'building' => '62 ',
+          'office' => NULL,
+        ),
+      ),
+      229 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 2839,
+          'firm_id' => 7863,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Бажова',
+          'building' => '34 А',
+          'office' => NULL,
+        ),
+      ),
+      230 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 8585,
+          'firm_id' => 7941,
+          'town_name' => 'Павлодар',
+          'street_name' => 'ген. Дюсенова',
+          'building' => '106 ',
+          'office' => '221 ',
+        ),
+      ),
+      231 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 1475,
+          'firm_id' => 7943,
+          'town_name' => 'Семей',
+          'street_name' => 'Ленина',
+          'building' => '26 ',
+          'office' => '233 ',
+        ),
+      ),
+      232 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 675,
+          'firm_id' => 7945,
+          'town_name' => 'Семей',
+          'street_name' => 'Достоевского',
+          'building' => '110 ',
+          'office' => '417 ',
+        ),
+      ),
+      233 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 4081,
+          'firm_id' => 7953,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Казахстан',
+          'building' => '71 А',
+          'office' => NULL,
+        ),
+      ),
+      234 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 7662,
+          'firm_id' => 8736,
+          'town_name' => 'Павлодар',
+          'street_name' => 'ак. Бектурова',
+          'building' => '15 ',
+          'office' => NULL,
+        ),
+      ),
+      235 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 7174,
+          'firm_id' => 8736,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Тракторная',
+          'building' => '24 ',
+          'office' => NULL,
+        ),
+      ),
+      236 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 2475,
+          'firm_id' => 9159,
+          'town_name' => 'Семей',
+          'street_name' => 'Чайжунусова',
+          'building' => '76 ',
+          'office' => NULL,
+        ),
+      ),
+      237 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 3809,
+          'firm_id' => 9178,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Кабанбай батыра',
+          'building' => '112 ',
+          'office' => NULL,
+        ),
+      ),
+      238 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 10540,
+          'firm_id' => 9328,
+          'town_name' => 'Павлодар',
+          'street_name' => 'Ломова',
+          'building' => '186 ',
+          'office' => NULL,
+        ),
+      ),
+      239 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 5815,
+          'firm_id' => 9715,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'пр. Абая',
+          'building' => '102 ',
+          'office' => NULL,
+        ),
+      ),
+      240 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 6789,
+          'firm_id' => 10205,
+          'town_name' => 'Усть-Каменогорск',
+          'street_name' => 'Протозанова',
+          'building' => '47 ',
+          'office' => NULL,
+        ),
+      ),
+      241 => 
+      array (
+        'address' => 
+        array (
+          'address_id' => 245,
+          'firm_id' => 10677,
+          'town_name' => 'Семей',
+          'street_name' => 'Аймаутова',
+          'building' => '50 ',
+          'office' => NULL,
+        ),
+      ),
+      242 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 12997,
+          'address_id' => 245,
+          'phone_type' => 1,
+          'phone_code' => '7222',
+          'phone_number' => '561597',
+          'phone_description' => '',
+        ),
+      ),
+      243 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 9803,
+          'address_id' => 675,
+          'phone_type' => 1,
+          'phone_code' => '7222',
+          'phone_number' => '523380',
+          'phone_description' => '',
+        ),
+      ),
+      244 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 8408,
+          'address_id' => 1422,
+          'phone_type' => 1,
+          'phone_code' => '7222',
+          'phone_number' => '520724',
+          'phone_description' => '',
+        ),
+      ),
+      245 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 9801,
+          'address_id' => 1475,
+          'phone_type' => 1,
+          'phone_code' => '7222',
+          'phone_number' => '521702',
+          'phone_description' => '',
+        ),
+      ),
+      246 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 3949,
+          'address_id' => 1686,
+          'phone_type' => 1,
+          'phone_code' => '7222',
+          'phone_number' => '534718',
+          'phone_description' => '',
+        ),
+      ),
+      247 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 11146,
+          'address_id' => 2475,
+          'phone_type' => 1,
+          'phone_code' => '7222',
+          'phone_number' => '568169',
+          'phone_description' => '',
+        ),
+      ),
+      248 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 4687,
+          'address_id' => 2634,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '615125',
+          'phone_description' => '',
+        ),
+      ),
+      249 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 9722,
+          'address_id' => 2839,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '751675',
+          'phone_description' => '',
+        ),
+      ),
+      250 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 6729,
+          'address_id' => 3258,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '226201',
+          'phone_description' => '',
+        ),
+      ),
+      251 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 6445,
+          'address_id' => 3354,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '524131',
+          'phone_description' => '',
+        ),
+      ),
+      252 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 7607,
+          'address_id' => 3530,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '782318',
+          'phone_description' => '',
+        ),
+      ),
+      253 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 2314,
+          'address_id' => 3726,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '216564',
+          'phone_description' => '',
+        ),
+      ),
+      254 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 11165,
+          'address_id' => 3809,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '268244',
+          'phone_description' => '',
+        ),
+      ),
+      255 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 1861,
+          'address_id' => 3949,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '203203',
+          'phone_description' => '',
+        ),
+      ),
+      256 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 8661,
+          'address_id' => 4075,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '261683',
+          'phone_description' => '',
+        ),
+      ),
+      257 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 9817,
+          'address_id' => 4081,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '216230',
+          'phone_description' => '',
+        ),
+      ),
+      258 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 2268,
+          'address_id' => 4394,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '524911',
+          'phone_description' => '',
+        ),
+      ),
+      259 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 6793,
+          'address_id' => 4789,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '245623',
+          'phone_description' => '',
+        ),
+      ),
+      260 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 8416,
+          'address_id' => 5214,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '267950',
+          'phone_description' => '',
+        ),
+      ),
+      261 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 6376,
+          'address_id' => 5319,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '522920',
+          'phone_description' => '',
+        ),
+      ),
+      262 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 11731,
+          'address_id' => 5815,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '298098',
+          'phone_description' => '',
+        ),
+      ),
+      263 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 1979,
+          'address_id' => 6221,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '203400',
+          'phone_description' => '',
+        ),
+      ),
+      264 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 2884,
+          'address_id' => 6233,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '203552',
+          'phone_description' => '',
+        ),
+      ),
+      265 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 6864,
+          'address_id' => 6721,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '291098',
+          'phone_description' => '',
+        ),
+      ),
+      266 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 6865,
+          'address_id' => 6721,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '291408',
+          'phone_description' => '',
+        ),
+      ),
+      267 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 12442,
+          'address_id' => 6789,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '260433',
+          'phone_description' => '',
+        ),
+      ),
+      268 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 8524,
+          'address_id' => 6808,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '227115',
+          'phone_description' => '',
+        ),
+      ),
+      269 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 6254,
+          'address_id' => 6853,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '285132',
+          'phone_description' => '',
+        ),
+      ),
+      270 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 10692,
+          'address_id' => 7174,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '558983',
+          'phone_description' => '',
+        ),
+      ),
+      271 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 6830,
+          'address_id' => 7298,
+          'phone_type' => 1,
+          'phone_code' => '7232',
+          'phone_number' => '225934',
+          'phone_description' => '',
+        ),
+      ),
+      272 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 10693,
+          'address_id' => 7662,
+          'phone_type' => 1,
+          'phone_code' => '7182',
+          'phone_number' => '556372',
+          'phone_description' => '',
+        ),
+      ),
+      273 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 6367,
+          'address_id' => 7690,
+          'phone_type' => 1,
+          'phone_code' => '7182',
+          'phone_number' => '558947',
+          'phone_description' => '',
+        ),
+      ),
+      274 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 9799,
+          'address_id' => 8585,
+          'phone_type' => 1,
+          'phone_code' => '7182',
+          'phone_number' => '326349',
+          'phone_description' => '',
+        ),
+      ),
+      275 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 7355,
+          'address_id' => 8938,
+          'phone_type' => 1,
+          'phone_code' => '7182',
+          'phone_number' => '651390',
+          'phone_description' => '',
+        ),
+      ),
+      276 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 935,
+          'address_id' => 9516,
+          'phone_type' => 1,
+          'phone_code' => '7182',
+          'phone_number' => '326823',
+          'phone_description' => '',
+        ),
+      ),
+      277 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 11319,
+          'address_id' => 10540,
+          'phone_type' => 1,
+          'phone_code' => '7182',
+          'phone_number' => '601345',
+          'phone_description' => '',
+        ),
+      ),
+      278 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 1980,
+          'address_id' => 10977,
+          'phone_type' => 1,
+          'phone_code' => '7182',
+          'phone_number' => '593654',
+          'phone_description' => '',
+        ),
+      ),
+      279 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 9395,
+          'address_id' => 11689,
+          'phone_type' => 1,
+          'phone_code' => '7182',
+          'phone_number' => '558477',
+          'phone_description' => '',
+        ),
+      ),
+      280 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 1171,
+          'address_id' => 11907,
+          'phone_type' => 1,
+          'phone_code' => '7182',
+          'phone_number' => '627236',
+          'phone_description' => '',
+        ),
+      ),
+      281 => 
+      array (
+        'phone' => 
+        array (
+          'phone_id' => 1172,
+          'address_id' => 11907,
+          'phone_type' => 1,
+          'phone_code' => '7182',
+          'phone_number' => '660134',
+          'phone_description' => '',
+        ),
+      ),
+    ),
+  ),
+)</pre></body><html>

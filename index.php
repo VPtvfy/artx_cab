@@ -21,7 +21,8 @@ $PageElement=array();
 
 session::start();
 
-$hDB1= new sqlLink("localhost","root","digitaloceandbpwd","cabinet");
+#$hDB1= new sqlLink("localhost","root","digitaloceandbpwd","cabinet");
+$hDB1= new sqlLink("localhost","root","root","artex_all");
 
  //Categories
  if (session::diff('alpha','item')){
@@ -108,7 +109,7 @@ $PageData{'nodes'}=$PageElement;
 
 $XSLT = new XSLT();
 echo $XSLT->Process($_CFG['XSL_PATH'].$_PAGE.'.xsl',$PageData);
-//$_hdebug = fopen("debug.html", "w+");
-//fwrite ($_hdebug,sprintf('<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body><pre>%s<hr>%s<hr>%s</pre></body><html>',var_export($_FRONT_END,true),var_export($hDB1->querylog,true),var_export($PageData,true)));
-//fclose($_hdebug);
+$_hdebug = fopen("debug.html", "w+");
+fwrite ($_hdebug,sprintf('<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body><pre>%s<hr>%s<hr>%s</pre></body><html>',var_export($_FRONT_END,true),var_export($hDB1->querylog,true),var_export($PageData,true)));
+fclose($_hdebug);
 ?>

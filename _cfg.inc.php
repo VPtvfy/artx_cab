@@ -2,6 +2,7 @@
 global $_CFG;
 $_CFG['XSL_PATH']='_xsl//';
 
+# Account -------------------------------------------------------------------------------------------------------
 $_CFG['SQL']['login']=<<<ENDSQL
 update users
    SET status_id=status_id+1
@@ -18,6 +19,30 @@ select *
    and ifnull(expired,now()<=now());
 ENDSQL;
 
+$_CFG['SQL']['create_user']=<<<ENDSQL
+ENDSQL
+
+$_CFG['SQL']['delete_user']=<<<ENDSQL
+ENDSQL
+
+$_CFG['SQL']['alter_user']=<<<ENDSQL
+ENDSQL
+
+$_CFG['SQL']['lock_user']=<<<ENDSQL
+ENDSQL
+
+$_CFG['SQL']['unlock_user']=<<<ENDSQL
+ENDSQL
+
+# User priv ------------------------------------------------------------------------------------------------------- 
+
+$_CFG['SQL']['grant_user_priv']=<<<ENDSQL
+ENDSQL
+
+$_CFG['SQL']['revoke_user_priv']=<<<ENDSQL
+ENDSQL
+
+# Basic GUI d------------------------------------------------------------------------------------------------------- 
 $_CFG['SQL']['get_town']=<<<ENDSQL
 select *
   from town
@@ -29,6 +54,8 @@ select distinct if (upper(left(item_name,1))>='А',upper(left(item_name,1)),'*')
   from catalog_item
  order by upper(left(item_name,1));
 ENDSQL;
+
+# Catalog ------------------------------------------------------------------------------------------------------- 
 
 $_CFG['SQL']['get_catalog']=<<<ENDSQL
 select id,pid,if (char_length(data)>3,concat(substr(data,1,1),lower(substr(data,2,64))),data) data,hidden,`count`,`stat`
@@ -84,6 +111,8 @@ select `id`,0 pid,if (char_length(data)>3,concat(substr(data,1,1),lower(substr(d
  order by if(`id`=0,1,0),pid,data;
 ENDSQL;
 
+# Search ------------------------------------------------------------------------------------------------------- 
+
 $_CFG['SQL']['find_firm']=<<<ENDSQL
 select f.*
   from fresult r
@@ -117,7 +146,24 @@ select p.*
  order by 2,3,4,5;
 ENDSQL;
 
-# Firm
+# Firm ------------------------------------------------------------------------------------------------------- 
+
+$_CFG['SQL']['autocomplete_firm']=<<<ENDSQL
+drop temporary table if exists keywords;
+set @keylist = ucase(:query_str);
+set @key='';
+create temporary table keywords
+select @key:=substr(@keylist,1,instr(concat(@keylist,'|'),'|')-1) keyword,
+       @keylist:=substr(@keylist,instr(concat(@keylist,'|'),'|')+1,255) dummy
+  from firm
+ where @keylist!='';
+select f.firm_name `value`
+  from firm f
+ inner join  keywords k on char_length(k.keyword) and f.firm_name like concat('%',k.keyword,'%')
+ group by firm_id
+ order by relevance(ucase(group_concat(k.keyword separator '|')),firm_name) desc
+ limit 15
+ENDSQL;
 
 $_CFG['SQL']['create_firm']=<<<ENDSQL
 insert into firm (`firm_name`,`firm_descr`)
@@ -139,24 +185,7 @@ delete
  where id =:firm_id;
 ENDSQL;
 
-# Firm div
-
-$_CFG['SQL']['autocomplete_item']=<<<ENDSQL
-drop temporary table if exists keywords;
-set @keylist = ucase(:query_str);
-set @key='';
-create temporary table keywords
-select @key:=substr(@keylist,1,instr(concat(@keylist,'|'),'|')-1) keyword,
-       @keylist:=substr(@keylist,instr(concat(@keylist,'|'),'|')+1,255) dummy
-  from firm
- where @keylist!='';
-select i.item_id `value`, i.item_name `label`
-  from vcatalog i
- inner join  keywords k on i.item_name like concat('%',k.keyword,'%') and i.count=0
- group by i.item_name
- order by relevance(ucase(group_concat(k.keyword separator '|')),item_name) desc
- limit 15
-ENDSQL;
+# Firm div ------------------------------------------------------------------------------------------------------- 
 
 $_CFG['SQL']['get_firm_div']=<<<ENDSQL
 select d.firm_id,d.firm_div_id,c.*,d.firm_div_name
@@ -191,7 +220,7 @@ select *
  where `firm_id`=:firm_id;
 ENDSQL;
 
-# Firm address
+# Firm address ------------------------------------------------------------------------------------------------------- 
 
 $_CFG['SQL']['autocomplete_street']=<<<ENDSQL
 drop temporary table if exists keywords;
@@ -209,7 +238,6 @@ select s.street_id `value`, s.street_name `label`
  order by relevance(ucase(group_concat(k.keyword separator '|')),s.street_name) desc
  limit 15
 ENDSQL;
-
 
 $_CFG['SQL']['get_firm_address']=<<<ENDSQL
 select a.firm_id,a.address_id,t.town_name, s.street_name, CONCAT (a.building,bletter) building,  CONCAT (a.office,oletter) office
@@ -246,7 +274,7 @@ select *
  where `firm_id`=:firm_id;
 ENDSQL;
 
-# Firm phone
+# Firm phone ------------------------------------------------------------------------------------------------------- 
 
 $_CFG['SQL']['get_firm_phone']=<<<ENDSQL
 select *
@@ -283,7 +311,24 @@ select *
  where `firm_id`=:firm_id;
 ENDSQL;
 
-# Items
+# Items ------------------------------------------------------------------------------------------------------- 
+
+$_CFG['SQL']['autocomplete_item']=<<<ENDSQL
+drop temporary table if exists keywords;
+set @keylist = ucase(:query_str);
+set @key='';
+create temporary table keywords
+select @key:=substr(@keylist,1,instr(concat(@keylist,'|'),'|')-1) keyword,
+       @keylist:=substr(@keylist,instr(concat(@keylist,'|'),'|')+1,255) dummy
+  from firm
+ where @keylist!='';
+select i.item_id `value`, i.item_name `label`
+  from vcatalog i
+ inner join  keywords k on i.item_name like concat('%',k.keyword,'%') and i.count=0
+ group by i.item_name
+ order by relevance(ucase(group_concat(k.keyword separator '|')),item_name) desc
+ limit 15
+ENDSQL;
 
 $_CFG['SQL']['create_item']=<<<ENDSQL
 insert into catalog_item(`item_name`);
@@ -295,13 +340,13 @@ ENDSQL;
 $_CFG['SQL']['rename_item']=<<<ENDSQL
 update catalog_item
    set `item_name`=:item_name
- where `item_id`=item_id;
+ where `item_id`=:item_id;
 ENDSQL;
 
 $_CFG['SQL']['move_item']=<<<ENDSQL
 update catalog_tree
    set `item_pid`=:item_pid
- where `item_id`= item_id;
+ where `item_id`= :item_id;
 ENDSQL;
 
 $_CFG['SQL']['find_by_id']=<<<ENDSQL
@@ -310,6 +355,8 @@ select firm_id, firm_name, email, url, vip, subdiv_id, subdiv, town_id, town, st
  where firm_id = :firm_id;
 ENDSQL;
 
+# Find  ------------------------------------------------------------------------------------------------------- 
+
 $_CFG['SQL']['find_by_class']=<<<ENDSQL
 select firm_id, firm_name, email, url, vip, subdiv_id, subdiv, town_id, town, street, building, bletter, office, oletter, code, phone, class_id, class
   from v_firm
@@ -317,8 +364,6 @@ select firm_id, firm_name, email, url, vip, subdiv_id, subdiv, town_id, town, st
    and (town_id =:town_id or :town_id=0)
  order by firm_name,subdiv;
 ENDSQL;
-
-# Find
 
 $_CFG['SQL']['find']=<<<ENDSQL
 set @keylist = ucase(:query_str);
@@ -342,22 +387,5 @@ select max(if(char_length(:query_str)<3,1,relevance(upper(:query_str),concat_ws(
 having max(if(char_length(:query_str)<3,1,relevance(upper(:query_str),concat_ws(' ',firm_name,item_name,address,phone))))>0
  order by 1 desc
  limit 100; 
-ENDSQL;
-
-$_CFG['SQL']['autocomplete_firm']=<<<ENDSQL
-DROP TEMPORARY TABLE IF exists keywords;
-SET @keylist = UCASE(:query_str);
-SET @key='';
-CREATE TEMPORARY TABLE keywords
-SELECT @key:=SUBSTR(@keylist,1,INSTR(CONCAT(@keylist,'|'),'|')-1) keyword,
-       @keylist:=SUBSTR(@keylist,INSTR(CONCAT(@keylist,'|'),'|')+1,255) dummy
-  FROM firm
- WHERE @keylist!='';
-SELECT f.firm_name `value`
-  FROM firm f
- INNER JOIN  keywords k ON char_length(k.keyword) and f.firm_name LIKE CONCAT('%',k.keyword,'%')
- GROUP BY firm_id
- ORDER BY relevance(UCASE(GROUP_CONCAT(k.keyword SEPARATOR '|')),firm_name) DESC
- LIMIT 15
 ENDSQL;
 ?>
