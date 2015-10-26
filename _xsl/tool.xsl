@@ -280,8 +280,8 @@
                            <xsl:value-of select="./firm_name"/></a></div>
                            <xsl:for-each select="key('idx_firm_address',./firm_id)">
                                   <xsl:for-each select="key('idx_firm_phone',./address_id)">
-                                      <div>...
-                                          <a><xsl:value-of select="./phone_number"/>&#160;<xsl:value-of select="./phone_description"/></a>
+                                      <div>
+                                          <xsl:value-of select="./phone_description"/> ... <xsl:value-of select="substring(./phone_number,1,2)"/>-<xsl:value-of select="substring(./phone_number,3,2)"/>-<xsl:value-of select="substring(./phone_number,5,2)"/>
                                       </div>
                                   </xsl:for-each>
                            </xsl:for-each>
