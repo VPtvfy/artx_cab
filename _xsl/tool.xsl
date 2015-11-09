@@ -96,15 +96,12 @@
 <xsl:template name="new_firm_address">
     <div><xsl:attribute name="id">new_firm_address</xsl:attribute>
          <xsl:if test='/state/new_firm_id !=0'>
-             <fieldset>
-               <legend> Адрес </legend>
-               <xsl:call-template name="firm_address">
+               <xsl:call-template name="firm_address_ctrl">
                    <xsl:with-param name="firm_id" select="/state/new_firm_id"/>
                </xsl:call-template>
-             </fieldset>
              <form>
                <input>
-                 <xsl:attribute name="name">new_firm_street</xsl:attribute>
+                 <xsl:attribute name="name">new_firm_address</xsl:attribute>
                  <xsl:attribute name="type">hidden</xsl:attribute>
                </input>
                <input>
@@ -234,7 +231,7 @@
          <xsl:call-template name="new_firm_form"/>
          <xsl:call-template name="new_firm_item"/>
          <xsl:call-template name="new_firm_address"/>
-         <xsl:call-template name="new_firm_phone"/>
+         <!--xsl:call-template name="new_firm_phone"/-->
     </div>
 </xsl:template>
 <!--

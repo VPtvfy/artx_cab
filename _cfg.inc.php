@@ -317,9 +317,10 @@ ENDSQL;
 # Firm phone ------------------------------------------------------------------------------------------------------- 
 
 $_CFG['SQL']['get_firm_phone']=<<<ENDSQL
-select *
-  from firm_phone
- where `firm_id`=:new_firm_id;
+select p.*
+  from firm_address a 
+ inner join firm_phone p on a.address_id=p.address_id and a.firm_id=:new_firm_id
+ order by 2,3,4,5;
 ENDSQL;
 
 $_CFG['SQL']['create_firm_phone']=<<<ENDSQL
