@@ -9,8 +9,8 @@ require_once ('_lib/session/frontend.inc.php');
 
 $PageElement=array();
 session::start();
-#$hDB1= new sqlLink("localhost","root","digitaloceandbpwd","cabinet");
 $hDB1= new sqlLink("localhost","root","root","artex_all");
+//$hDB1= new sqlLink("localhost","root","digitaloceandbpwd","cabinet");
 
 if (session::exists('find') and session::set('keyword')){
    if(isset($_REQUEST['keyword']) and mb_strlen($_REQUEST['keyword'])>=3){
@@ -33,7 +33,7 @@ if (session::exists('new_firm_item') and session::set('new_firm_item_name')){
      $hDB1->query($_CFG['SQL']['autocomplete_item'],$_);
      $PageElement=$hDB1->fetch_field('label');}}
 
-if (session::exists('new_firm_street') and session::set('new_firm_town_id','new_firm_street_name')){
+if (session::exists('new_firm_address') and session::set('new_firm_town_id','new_firm_street_name')){
    if($_REQUEST['term']==$_REQUEST['new_firm_street_name'] and mb_strlen($_REQUEST['new_firm_street_name'])>=2){
      $_['town_id']=$_REQUEST['new_firm_town_id'];
      $_['query_str']=trim(preg_replace('/( +)+|\+/',' ',$_REQUEST['new_firm_street_name']));
