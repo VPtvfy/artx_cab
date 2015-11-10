@@ -24,7 +24,7 @@ alter table artex_all.street
 alter table artex_all.street 
   add constraint fk_street_town foreign key (town_id) references artex_all.town(town_id) on update cascade;
 
-update _firm 
+update artex_all._firm 
    set street='' 
  where CHAR_LENGTH(street)<3;
 
@@ -66,25 +66,25 @@ alter table artex_all.firm_address
   add constraint fk_firm_address   foreign key (firm_id)   references artex_all.firm(firm_id) on update cascade;
 
 
-update _firm 
+update artex_all._firm 
    set building=0 
  where building is null;
    
-update _firm 
+update artex_all._firm 
    set office=null 
  where trim(office) in ('0','');
    
-update _firm 
+update artex_all._firm 
    set bletter=upper(trim(ifnull(bletter,'')));
     
-update _firm 
+update artex_all._firm 
    set bletter=''
  where trim(bletter)='0';   
 
-update _firm 
+update artex_all._firm 
    set oletter=upper(trim(ifnull(oletter,'')));
     
-update _firm 
+update artex_all._firm 
    set oletter=''
  where trim(oletter)='0'; 
  

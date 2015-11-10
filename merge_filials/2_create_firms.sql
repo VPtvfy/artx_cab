@@ -66,9 +66,9 @@ WHERE firm_name !=''
 ORDER BY 1,2,3,4,5,6,7,8,9;
 
 
-UPDATE _firm f
-   SET f.class=(SELECT DISTINCT IFNULL(spr_name,f.class) FROM `catalog_map` WHERE UPPER(art_name)=UPPER(f.class))
- WHERE UPPER(f.class) IN (SELECT UPPER(art_name) FROM `catalog_map`);
+UPDATE artex_all._firm f
+   SET f.class=(SELECT DISTINCT IFNULL(spr_name,f.class) FROM artex_all.catalog_map WHERE UPPER(art_name)=UPPER(f.class))
+ WHERE UPPER(f.class) IN (SELECT UPPER(art_name) FROM artex_all.catalog_map);
 
 
 DROP TABLE IF EXISTS artex_all.firm;
@@ -110,10 +110,10 @@ CREATE TABLE artex_all.firm_div (
   ) ENGINE=INNODB DEFAULT CHARSET=utf8;
 
 ALTER TABLE artex_all.firm_div  
-ADD CONSTRAINT fk_firm_div FOREIGN KEY (firm_id)  REFERENCES firm (firm_id) ON UPDATE CASCADE ON DELETE RESTRICT;
+ADD CONSTRAINT fk_firm_div FOREIGN KEY (firm_id)  REFERENCES artex_all.firm (firm_id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
 ALTER TABLE artex_all.firm_div  
-ADD CONSTRAINT fk_item_id FOREIGN KEY (item_id) REFERENCES catalog_item(item_id) ON UPDATE CASCADE ON DELETE RESTRICT;
+ADD CONSTRAINT fk_item_id FOREIGN KEY (item_id) REFERENCES artex_all.catalog_item(item_id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
 ALTER TABLE artex_all.firm_div  
 AUTO_INCREMENT=1;  
@@ -122,19 +122,19 @@ INSERT INTO artex_all.firm_div(firm_id,firm_div_name,item_id)
  SELECT DISTINCT f.firm_id,d.div_name,c.item_id item_id 
    FROM artex_all.firm f
   INNER JOIN artex_all._firm d ON f.firm_name=d.firm_name
-  INNER JOIN artex_all.`catalog_item` c ON c.item_name=d.class
+  INNER JOIN artex_all.catalog_item c ON c.item_name=d.class
   group by f.firm_id,c.item_id; 
  
-CREATE OR REPLACE VIEW vcatalog AS 
+CREATE OR REPLACE VIEW artex_all.vcatalog AS 
 SELECT
   c.item_id   AS item_id,
   b.pid  AS item_pid,
   c.item_name AS item_name,
   COUNT(DISTINCT t.id) AS `count`,
   COUNT(DISTINCT f.firm_id) AS stat
-  FROM catalog_item c   
- INNER JOIN catalog_tree b   ON b.id = c.item_id
-  LEFT JOIN catalog_tree t   ON t.pid = b.id
-  LEFT JOIN firm_div f  ON f.item_id = c.item_id
+  FROM artex_all.catalog_item c   
+ INNER JOIN artex_all.catalog_tree b   ON b.id = c.item_id
+  LEFT JOIN artex_all.catalog_tree t   ON t.pid = b.id
+  LEFT JOIN artex_all.firm_div f  ON f.item_id = c.item_id
 GROUP BY b.pid,c.item_id
 ORDER BY b.pid,c.item_id;
