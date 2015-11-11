@@ -145,7 +145,7 @@ create or replace view vfirm as
 select f.firm_id,s.town_id,c.item_id,a.address_id,p.phone_id,
        concat_ws(' ',f.firm_name, f.firm_descr, d.firm_div_name) firm_name,
        c.item_name item_name,
-       concat(s.street_name,' ',if(a.building=0,'',a.building),' ',ifnull(a.bletter,''),if(a.office>0,concat('-',a.office,' ',ifnull(a.oletter,'')),'')) address,
+       if(s.street_name!='',concat(s.street_name,' ',if(a.building=0,'',a.building),' ',ifnull(a.bletter,''),if(a.office>0,concat('-',a.office,' ',ifnull(a.oletter,'')),'')),'') address,
        concat('(',p.phone_code,')',phone_number,' ',phone_description) phone
   from artex_all.firm f
   left join artex_all.firm_div d on f.firm_id=d.firm_id

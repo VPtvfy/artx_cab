@@ -1,140 +1,141 @@
-DROP TABLE IF EXISTS artex_all.firm_phone;
-DROP TABLE IF EXISTS artex_all.firm_address;
-DROP TABLE IF EXISTS artex_all.street;
-DROP TABLE IF EXISTS artex_all.firm_div;
-DROP TABLE IF EXISTS artex_all.firm;
+drop table if exists artex_all.firm_phone;
+drop table if exists artex_all.firm_address;
+drop table if exists artex_all.street;
+drop table if exists artex_all.firm_div;
+drop table if exists artex_all.firm;
 
-UPDATE artex_pvl.firm  SET NAME=REPLACE(NAME,'-',' - ')  WHERE NAME REGEXP '[[:graph:]]-|-[[:graph:]]';
-UPDATE artex_pvl.firm  SET NAME=REPLACE(NAME,' ,',',')   WHERE NAME REGEXP '[[:blank:]],';
-UPDATE artex_pvl.firm  SET NAME=REPLACE(NAME,' -,',' -') WHERE NAME REGEXP '[[:blank:]]-,';
-UPDATE artex_pvl.firm  SET NAME=REPLACE(TRIM(NAME),'  ',' ') WHERE NAME REGEXP '[[:blank:]]{2,}';
+update artex_pvl.firm  set name=replace(name,'-',' - ')  where name regexp '[[:graph:]]-|-[[:graph:]]';
+update artex_pvl.firm  set name=replace(name,' ,',',')   where name regexp '[[:blank:]],';
+update artex_pvl.firm  set name=replace(name,' -,',' -') where name regexp '[[:blank:]]-,';
+update artex_pvl.firm  set name=replace(trim(name),'  ',' ') where name regexp '[[:blank:]]{2,}';
 
-UPDATE artex_spl.firm  SET NAME=REPLACE(NAME,'-',' - ')  WHERE NAME REGEXP '[[:graph:]]-|-[[:graph:]]';
-UPDATE artex_spl.firm  SET NAME=REPLACE(NAME,' ,',',')   WHERE NAME REGEXP '[[:blank:]],';
-UPDATE artex_spl.firm  SET NAME=REPLACE(NAME,' -,',' -') WHERE NAME REGEXP '[[:blank:]]-,';
-UPDATE artex_spl.firm  SET NAME=REPLACE(TRIM(NAME),'  ',' ') WHERE NAME REGEXP '[[:blank:]]{2,}';
+update artex_spl.firm  set name=replace(name,'-',' - ')  where name regexp '[[:graph:]]-|-[[:graph:]]';
+update artex_spl.firm  set name=replace(name,' ,',',')   where name regexp '[[:blank:]],';
+update artex_spl.firm  set name=replace(name,' -,',' -') where name regexp '[[:blank:]]-,';
+update artex_spl.firm  set name=replace(trim(name),'  ',' ') where name regexp '[[:blank:]]{2,}';
 
-UPDATE artex_ukg.firm  SET NAME=REPLACE(NAME,'-',' - ')  WHERE NAME REGEXP '[[:graph:]]-|-[[:graph:]]';
-UPDATE artex_ukg.firm  SET NAME=REPLACE(NAME,' ,',',')   WHERE NAME REGEXP '[[:blank:]],';
-UPDATE artex_ukg.firm  SET NAME=REPLACE(NAME,' -,',' -') WHERE NAME REGEXP '[[:blank:]]-,';
-UPDATE artex_ukg.firm  SET NAME=REPLACE(TRIM(NAME),'  ',' ') WHERE NAME REGEXP '[[:blank:]]{2,}';
+update artex_ukg.firm  set name=replace(name,'-',' - ')  where name regexp '[[:graph:]]-|-[[:graph:]]';
+update artex_ukg.firm  set name=replace(name,' ,',',')   where name regexp '[[:blank:]],';
+update artex_ukg.firm  set name=replace(name,' -,',' -') where name regexp '[[:blank:]]-,';
+update artex_ukg.firm  set name=replace(trim(name),'  ',' ') where name regexp '[[:blank:]]{2,}';
 
-UPDATE artex_pvl.catalog  SET DATA='1—: Ѕ”’√јЋ“≈–»я' WHERE DATA='1—:Ѕ”’√јЋ“≈–»я';
-UPDATE artex_spl.catalog  SET DATA='1—: Ѕ”’√јЋ“≈–»я' WHERE DATA='1—:Ѕ”’√јЋ“≈–»я';
-UPDATE artex_ukg.catalog  SET DATA='1—: Ѕ”’√јЋ“≈–»я' WHERE DATA='1—:Ѕ”’√јЋ“≈–»я';
+update artex_pvl.catalog  set data='1с: бухгалтери€' where data='1с:бухгалтери€';
+update artex_spl.catalog  set data='1с: бухгалтери€' where data='1с:бухгалтери€';
+update artex_ukg.catalog  set data='1с: бухгалтери€' where data='1с:бухгалтери€';
 
-UPDATE artex_pvl.catalog  SET DATA='Ћ≈√ јя ѕ–ќћџЎЋ≈ЌЌќ—“№' WHERE DATA='Ћ≈√ јя ѕ–ќћ - “№';
-UPDATE artex_spl.catalog  SET DATA='Ћ≈√ јя ѕ–ќћџЎЋ≈ЌЌќ—“№' WHERE DATA='Ћ≈√ јя ѕ–ќћ - “№';
-UPDATE artex_ukg.catalog  SET DATA='Ћ≈√ јя ѕ–ќћџЎЋ≈ЌЌќ—“№' WHERE DATA='Ћ≈√ јя ѕ–ќћ - “№';
+update artex_pvl.catalog  set data='легка€ промышленность' where data='легка€ пром - ть';
+update artex_spl.catalog  set data='легка€ промышленность' where data='легка€ пром - ть';
+update artex_ukg.catalog  set data='легка€ промышленность' where data='легка€ пром - ть';
 
-UPDATE artex_pvl.catalog  SET DATA='ѕ»ў≈¬јя ѕ–ќћџЎЋ≈ЌЌќ—“№' WHERE DATA='ѕ»ў≈¬јя ѕ–ќћ - “№';
-UPDATE artex_spl.catalog  SET DATA='ѕ»ў≈¬јя ѕ–ќћџЎЋ≈ЌЌќ—“№' WHERE DATA='ѕ»ў≈¬јя ѕ–ќћ - “№';
-UPDATE artex_ukg.catalog  SET DATA='ѕ»ў≈¬јя ѕ–ќћџЎЋ≈ЌЌќ—“№' WHERE DATA='ѕ»ў≈¬јя ѕ–ќћ - “№';
+update artex_pvl.catalog  set data='пищева€ промышленность' where data='пищева€ пром - ть';
+update artex_spl.catalog  set data='пищева€ промышленность' where data='пищева€ пром - ть';
+update artex_ukg.catalog  set data='пищева€ промышленность' where data='пищева€ пром - ть';
 
-UPDATE artex_pvl.catalog  SET DATA='—≈Ћ№— ќ≈ ’ќ«я…—“¬ќ' WHERE DATA='—≈Ћ№— ќ≈ ’ќ«я…—“¬ќ (ЅЋќ )';
-UPDATE artex_spl.catalog  SET DATA='—≈Ћ№— ќ≈ ’ќ«я…—“¬ќ' WHERE DATA='—≈Ћ№— ќ≈ ’ќ«я…—“¬ќ (ЅЋќ )';
-UPDATE artex_ukg.catalog  SET DATA='—≈Ћ№— ќ≈ ’ќ«я…—“¬ќ' WHERE DATA='—≈Ћ№— ќ≈ ’ќ«я…—“¬ќ (ЅЋќ )';
+update artex_pvl.catalog  set data='сельское хоз€йство' where data='сельское хоз€йство (блок)';
+update artex_spl.catalog  set data='сельское хоз€йство' where data='сельское хоз€йство (блок)';
+update artex_ukg.catalog  set data='сельское хоз€йство' where data='сельское хоз€йство (блок)';
 
-UPDATE artex_pvl.catalog  SET DATA='—≈Ћ№— ќ≈ ’ќ«я…—“¬ќ' WHERE DATA='—≈Ћ№— ќ≈ ’ќ« - ¬ќ';
-UPDATE artex_spl.catalog  SET DATA='—≈Ћ№— ќ≈ ’ќ«я…—“¬ќ' WHERE DATA='—≈Ћ№— ќ≈ ’ќ« - ¬ќ';
-UPDATE artex_ukg.catalog  SET DATA='—≈Ћ№— ќ≈ ’ќ«я…—“¬ќ' WHERE DATA='—≈Ћ№— ќ≈ ’ќ« - ¬ќ';
+update artex_pvl.catalog  set data='сельское хоз€йство' where data='сельское хоз - во';
+update artex_spl.catalog  set data='сельское хоз€йство' where data='сельское хоз - во';
+update artex_ukg.catalog  set data='сельское хоз€йство' where data='сельское хоз - во';
 
-DROP TABLE IF EXISTS artex_all._firm;
-DROP TEMPORARY TABLE IF EXISTS artex_all._firm;
-CREATE TABLE artex_all._firm 
-AS 
-SELECT * FROM (
-        SELECT f.name firm_name,d.name div_name, t.name town, c.data class, d.street,d.building,d.bletter,d.office,d.oletter, d.phone
-          FROM artex_pvl.firm f
-          LEFT JOIN artex_pvl.firm_div d ON d.firm_id=f.id
-          LEFT JOIN artex_pvl.town t ON t.id=d.town_id
-          LEFT JOIN artex_pvl.catalog c ON c.id=d.class_id
-        UNION ALL
-        SELECT f.name firm_name,d.name div_name, t.name town, c.data class,d.street,d.building,d.bletter,d.office,d.oletter, d.phone 
-          FROM artex_spl.firm f
-          LEFT JOIN artex_spl.firm_div d ON d.firm_id=f.id
-          LEFT JOIN artex_spl.town t ON t.id=d.town_id
-          LEFT JOIN artex_spl.catalog c ON c.id=d.class_id
-        UNION ALL
-        SELECT f.name firm_name,d.name div_name, t.name town, c.data class,d.street,d.building,d.bletter,d.office,d.oletter, d.phone
-          FROM artex_ukg.firm f
-          LEFT JOIN artex_ukg.firm_div d ON d.firm_id=f.id
-          LEFT JOIN artex_ukg.town t ON t.id=d.town_id
-          LEFT JOIN artex_ukg.catalog c ON c.id=d.class_id                 
+drop table if exists artex_all._firm;
+drop temporary table if exists artex_all._firm;
+create table artex_all._firm 
+as 
+select * from (
+        select f.name firm_name,d.name div_name, t.name town, c.data class, d.street,d.building,d.bletter,d.office,d.oletter, d.phone
+          from artex_pvl.firm f
+          left join artex_pvl.firm_div d on d.firm_id=f.id
+          left join artex_pvl.town t on t.id=d.town_id
+          left join artex_pvl.catalog c on c.id=d.class_id
+        union all
+        select f.name firm_name,d.name div_name, t.name town, c.data class,d.street,d.building,d.bletter,d.office,d.oletter, d.phone 
+          from artex_spl.firm f
+          left join artex_spl.firm_div d on d.firm_id=f.id
+          left join artex_spl.town t on t.id=d.town_id
+          left join artex_spl.catalog c on c.id=d.class_id
+        union all
+        select f.name firm_name,d.name div_name, t.name town, c.data class,d.street,d.building,d.bletter,d.office,d.oletter, d.phone
+          from artex_ukg.firm f
+          left join artex_ukg.firm_div d on d.firm_id=f.id
+          left join artex_ukg.town t on t.id=d.town_id
+          left join artex_ukg.catalog c on c.id=d.class_id                 
         ) a
-WHERE firm_name !=''
-ORDER BY 1,2,3,4,5,6,7,8,9;
+where firm_name !=''
+order by 1,2,3,4,5,6,7,8,9;
+
+alter table `artex_all`.`_firm` add index `_firm_name` (`firm_name`);
+
+update artex_all._firm f
+   set f.class=(select distinct ifnull(spr_name,f.class) from artex_all.catalog_map where upper(art_name)=upper(f.class))
+ where upper(f.class) in (select upper(art_name) from artex_all.catalog_map);
 
 
-UPDATE artex_all._firm f
-   SET f.class=(SELECT DISTINCT IFNULL(spr_name,f.class) FROM artex_all.catalog_map WHERE UPPER(art_name)=UPPER(f.class))
- WHERE UPPER(f.class) IN (SELECT UPPER(art_name) FROM artex_all.catalog_map);
+drop table if exists artex_all.firm;
+create table artex_all.firm(
+  firm_id int(6) unsigned not null,
+  firm_type int (1) unsigned default 0,
+  firm_name varchar(150) not null,
+  firm_descr varchar(1024) default ''
+  ) engine=innodb default charset=utf8;
 
+insert into artex_all.firm (firm_id,firm_name) values (0,'');
+update artex_all.firm set firm_id =0;
 
-DROP TABLE IF EXISTS artex_all.firm;
-CREATE TABLE artex_all.firm(
-  firm_id INT(6) UNSIGNED NOT NULL,
-  firm_type int (1) UNSIGNED default 0,
-  firm_name VARCHAR(150) NOT NULL,
-  firm_descr VARCHAR(1024) DEFAULT ''
-  ) ENGINE=INNODB DEFAULT CHARSET=utf8;
+alter table artex_all.firm   
+  add primary key (firm_id),
+  add  unique index unq_name (firm_type,firm_name);
 
-INSERT INTO artex_all.firm (firm_id,firm_name) VALUES (0,'');
-UPDATE artex_all.firm SET firm_id =0;
+alter table artex_all.firm  
+auto_increment=1;  
 
-ALTER TABLE artex_all.firm   
-  ADD PRIMARY KEY (firm_id),
-  ADD  UNIQUE INDEX unq_name (firm_type,firm_name);
+alter table artex_all.firm   
+  change firm_id firm_id int(6) unsigned not null auto_increment;
 
-ALTER TABLE artex_all.firm  
-AUTO_INCREMENT=1;  
+insert into artex_all.firm(firm_name)
+     select distinct  firm_name
+       from `artex_all`.`_firm`
+      where firm_name  !=''
+      order by 1;
 
-ALTER TABLE artex_all.firm   
-  CHANGE firm_id firm_id INT(6) UNSIGNED NOT NULL AUTO_INCREMENT;
+drop table if exists artex_all.firm_div;
+create table artex_all.firm_div (
+  firm_div_id int(10) unsigned not null auto_increment,
+  firm_id int(10) unsigned default null,
+  item_id int(4) unsigned not null,  
+  firm_div_name varchar(100) default null,
+  primary key  (firm_div_id),
+  key idx_firm (firm_id),
+  unique key `unq_item` (`item_id`,`firm_id`)
+  ) engine=innodb default charset=utf8;
 
-INSERT INTO artex_all.firm(firm_name)
-     SELECT distinct  firm_name
-       FROM `artex_all`.`_firm`
-      WHERE firm_name  !=''
-      ORDER BY 1;
+alter table artex_all.firm_div  
+add constraint fk_firm_div foreign key (firm_id)  references artex_all.firm (firm_id) on update cascade on delete restrict;
 
-DROP TABLE IF EXISTS artex_all.firm_div;
-CREATE TABLE artex_all.firm_div (
-  firm_div_id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  firm_id INT(10) UNSIGNED DEFAULT NULL,
-  item_id INT(4) UNSIGNED NOT NULL,  
-  firm_div_name VARCHAR(100) DEFAULT NULL,
-  PRIMARY KEY  (firm_div_id),
-  KEY idx_firm (firm_id),
-  UNIQUE KEY `unq_item` (`item_id`,`firm_id`)
-  ) ENGINE=INNODB DEFAULT CHARSET=utf8;
+alter table artex_all.firm_div  
+add constraint fk_item_id foreign key (item_id) references artex_all.catalog_item(item_id) on update cascade on delete restrict;
 
-ALTER TABLE artex_all.firm_div  
-ADD CONSTRAINT fk_firm_div FOREIGN KEY (firm_id)  REFERENCES artex_all.firm (firm_id) ON UPDATE CASCADE ON DELETE RESTRICT;
+alter table artex_all.firm_div  
+auto_increment=1;  
 
-ALTER TABLE artex_all.firm_div  
-ADD CONSTRAINT fk_item_id FOREIGN KEY (item_id) REFERENCES artex_all.catalog_item(item_id) ON UPDATE CASCADE ON DELETE RESTRICT;
-
-ALTER TABLE artex_all.firm_div  
-AUTO_INCREMENT=1;  
-
-INSERT INTO artex_all.firm_div(firm_id,firm_div_name,item_id)
- SELECT DISTINCT f.firm_id,d.div_name,c.item_id item_id 
-   FROM artex_all.firm f
-  INNER JOIN artex_all._firm d ON f.firm_name=d.firm_name
-  INNER JOIN artex_all.catalog_item c ON c.item_name=d.class
+insert into artex_all.firm_div(firm_id,firm_div_name,item_id)
+ select distinct f.firm_id,d.div_name,c.item_id item_id 
+   from artex_all.firm f
+  inner join artex_all._firm d on f.firm_name=d.firm_name
+  inner join artex_all.catalog_item c on c.item_name=d.class
   group by f.firm_id,c.item_id; 
  
-CREATE OR REPLACE VIEW artex_all.vcatalog AS 
-SELECT
-  c.item_id   AS item_id,
-  b.pid  AS item_pid,
-  c.item_name AS item_name,
-  COUNT(DISTINCT t.id) AS `count`,
-  COUNT(DISTINCT f.firm_id) AS stat
-  FROM artex_all.catalog_item c   
- INNER JOIN artex_all.catalog_tree b   ON b.id = c.item_id
-  LEFT JOIN artex_all.catalog_tree t   ON t.pid = b.id
-  LEFT JOIN artex_all.firm_div f  ON f.item_id = c.item_id
-GROUP BY b.pid,c.item_id
-ORDER BY b.pid,c.item_id;
+create or replace view artex_all.vcatalog as 
+select
+  c.item_id   as item_id,
+  b.pid  as item_pid,
+  c.item_name as item_name,
+  count(distinct t.id) as `count`,
+  count(distinct f.firm_id) as stat
+  from artex_all.catalog_item c   
+ inner join artex_all.catalog_tree b   on b.id = c.item_id
+  left join artex_all.catalog_tree t   on t.pid = b.id
+  left join artex_all.firm_div f  on f.item_id = c.item_id
+group by b.pid,c.item_id
+order by b.pid,c.item_id;
