@@ -158,12 +158,12 @@
         <xsl:call-template name='new_firm_phone'/>
     </xsl:if>
 
-    <xsl:if test="/sync/export_form_items='true'">
-        <xsl:call-template name='export_form_items'/>
-    </xsl:if>
-
     <xsl:if test="/sync/export='true'">
         <xsl:call-template name='export_result'/>
+    </xsl:if>
+
+    <xsl:if test="/sync/export_form_items='true'">
+        <xsl:call-template name='export_form_items'/>
     </xsl:if>
 
 </xsl:template>

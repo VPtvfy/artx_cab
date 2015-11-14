@@ -81,9 +81,12 @@ $hDB1= new sqlLink("localhost","root","root","artex_all");
        $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','phone'));
        $_SYNC[]=array('new_firm'=>'true');}}
 
- if (session::exists('new_firm_item') and session::set('new_firm_id','new_firm_item_name')){
+ if (session::exists('new_firm_item') and session::set('new_firm_id')){
     if($_FRONT_END['new_firm_id']>0 and $_FRONT_END['new_firm_item_name']!=''){
-       $hDB1->query($_CFG['SQL']['create_firm_div'],$_FRONT_END);
+       if(session::exists('new_firm_item_del')){
+          $hDB1->query($_CFG['SQL']['delete_firm_div'],$_FRONT_END);}
+       else {
+          $hDB1->query($_CFG['SQL']['create_firm_div'],$_FRONT_END);}
        $hDB1->query($_CFG['SQL']['get_firm_div'],$_FRONT_END);
        $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','item'));
        $_SYNC[]=array('new_firm_item'=>'true');}}

@@ -255,12 +255,10 @@ select *
 ENDSQL;
 
 $_CFG['SQL']['delete_firm_div']=<<<ENDSQL
-delete
-  from firm_div
- where `firm_div_id`=abs(:firm_div_id);
-select *
-  from firm_div
- where `firm_id`=:firm_id;
+select i.item_id into @item_id
+  from catalog_item i
+ where `item_name`=:new_firm_item_name;
+delete from firm_div where firm_id=:new_firm_id and item_id=@item_id;
 ENDSQL;
 
 # Firm address ------------------------------------------------------------------------------------------------------- 

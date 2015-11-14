@@ -10,34 +10,31 @@ if (document.location.search+document.location.hash!=''){
     document.location.replace(document.location.protocol+'//'+document.location.host+document.location.pathname);}
 
 
-function router(response){
-         htmlDoc=$.parseHTML(response,true);
-         $.each(htmlDoc,function( i, element ){
-                target=element.id;
-                tagname=element.tagName;
-                if (target!==''){
-                    document.getElementById(target).innerHTML=element.innerHTML;}
-                else
-                if (tagname.toUpperCase() === String('SCRIPT')){
-                    $.globalEval(element.innerHTML);}})
-         }
+$(document).ajaxSuccess(function(event, xhr, settings) {
+            htmlDoc=$.parseHTML(xhr.responseText,true);
+            $.each(htmlDoc,function( i, element ){
+                   target=element.id;
+                   tagname=element.tagName;
+                   if (target!==''){
+                       document.getElementById(target).innerHTML=element.innerHTML;}
+                   else
+                   if (tagname.toUpperCase() === String('SCRIPT')){
+                       $.globalEval(element.innerHTML);}})
+             });
+
 $(
 function(){
          $('body').on('submit',"form",
                       function(event){
                                        url=$(this).serialize();
-//                                       target=$(this).attr("target");
-                                       $.ajax({data: url, 
-                                            success: function(html){router(html);}});
+                                       $.ajax({data: url});
                                        event.preventDefault();
                                      });
 
          $('body').on('click',"a[href!='#']",
                       function(event){
                                        url=$(this).attr("href");
-//                                       target=$(this).attr("target");
-                                       $.ajax({data: url, 
-                                            success: function(html){router(html);}});
+                                       $.ajax({data: url});
                                        event.preventDefault();
                                       });
 
@@ -46,46 +43,58 @@ function(){
                                       event.preventDefault();
                                      });
 
-         $('body').on('change','input[type="button"]',
+         $('body').on('click','form a',
                       function(event){
                                        data=$(this).parents('form:first').serialize();
-                                       $.ajax({data: data, 
-                                            success: function(html){router(html);}});
-
+                                       data=data+'&'+$(this).attr("name");
+                                       $.ajax({data: data});
+                                       event.preventDefault();
                                       });
+
+         $('body').on('click','input[type="button"]',
+                      function(event){
+                                       data=$(this).parents('form:first').serialize();
+                                       data=data+'&'+$(this).attr("name");
+                                       $.ajax({data: data});
+                                       event.preventDefault();
+                                      });
+
+         $('body').on('click','input[type="submit"]',
+                      function(event){
+                                       data=$(this).parents('form:first').serialize();
+                                       data=data+'&'+$(this).attr("name");
+                                       $.ajax({data: data});
+                                       event.preventDefault();
+                                      });
+
          $('body').on('change','input[type="checkbox"]',
                       function(event){
                                        data=$(this).parents('form:first').serialize();
-                                       $.ajax({data: data, 
-                                            success: function(html){router(html);}});
+                                       $.ajax({data: data});
                                       });
 
          $('body').on('change','input[type="image"]',
                       function(event){
                                        data=$(this).parents('form:first').serialize();
-                                       $.ajax({data: data, 
-                                            success: function(html){router(html);}});
+                                       $.ajax({data: data});
                                       });
 
          $('body').on('change','input[type="radio"]',
                       function(event){
                                        data=$(this).parents('form:first').serialize();
-                                       $.ajax({data: data, 
-                                            success: function(html){router(html);}});
+                                       $.ajax({data: data});
                                       });
 
          $('body').on('change','input[type="submit"]',
                       function(event){
                                        data=$(this).parents('form:first').serialize();
-                                       $.ajax({data: data, 
-                                            success: function(html){router(html);}});
+                                       $.ajax({data: data});
                                       });
 
          $('body').on('change','select',
                       function(event){
                                        data=$(this).parents('form:first').serialize();
-                                       $.ajax({data: data, 
-                                            success: function(html){router(html);}});
+                                       $.ajax({data: data});
                                       });
 
          $('body').on('keyup.autocomplete','input[type="text"]',

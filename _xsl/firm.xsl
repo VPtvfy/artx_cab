@@ -38,11 +38,11 @@
                   <xsl:if test='./phone_code!=""'>(<xsl:value-of select="./phone_code"/>)</xsl:if>
                   <a><xsl:attribute name="title"><xsl:value-of select="./phone_description"/></xsl:attribute>
                      <xsl:value-of select="./phone_number"/></a>
-                  <a><xsl:attribute name="id"><xsl:value-of select="./phone_id"/>_phone</xsl:attribute> - </a>
               </div>
           </xsl:for-each>
           <input>
              <xsl:attribute name="name">new_phone</xsl:attribute>
+             <xsl:attribute name="placeholder">(XXXX)XXXXXX : Описание</xsl:attribute>
           </input>
      <!--/div-->
  </xsl:template>
