@@ -6,6 +6,8 @@
 <xsl:import href="find.xsl"/>
 <xsl:import href="firm.xsl"/>
 <xsl:import href="tool.xsl"/>
+<xsl:import href="edit.xsl"/>
+<xsl:import href="expt.xsl"/>
 
 <xsl:output method="html" encoding="utf-8" indent="no"/>
 
@@ -111,10 +113,15 @@
 
 <xsl:template name ="status">
     <ul>
-    <xsl:for-each select="/status">
+    <xsl:for-each select="/state">
       <li>var<xsl:value-of select="name()"/></li>
     </xsl:for-each>
     </ul>
+</xsl:template>
+
+<xsl:template name ="ui-dialog">
+    <xsl:param name="selector"/>
+    <script>$(<xsl:value-of select="$selector"/>).dialog;</script>
 </xsl:template>
 
 <xsl:template match="/">
@@ -142,20 +149,20 @@
         <xsl:call-template name='login_status'/>
     </xsl:if>
 
-    <xsl:if test="/sync/new_firm='true'">
-        <xsl:call-template name='new_firm'/>
+    <xsl:if test="/sync/edit_firm='true'">
+        <xsl:call-template name='edit_firm'/>
     </xsl:if>
 
-    <xsl:if test="/sync/new_firm_item='true'">
-        <xsl:call-template name='new_firm_item'/>
+    <xsl:if test="/sync/edit_firm_items='true'">
+        <xsl:call-template name='firm_items_form'/>
     </xsl:if>
 
-    <xsl:if test="/sync/new_firm_address='true'">
-        <xsl:call-template name='new_firm_address'/>
+    <xsl:if test="/sync/edit_firm_address='true'">
+        <xsl:call-template name='edit_firm_address'/>
     </xsl:if>
 
-    <xsl:if test="/sync/new_firm_phone='true'">
-        <xsl:call-template name='new_firm_phone'/>
+    <xsl:if test="/sync/edit_firm_phone='true'">
+        <xsl:call-template name='edit_firm_phone'/>
     </xsl:if>
 
     <xsl:if test="/sync/export='true'">
@@ -165,6 +172,5 @@
     <xsl:if test="/sync/export_form_items='true'">
         <xsl:call-template name='export_form_items'/>
     </xsl:if>
-
 </xsl:template>
 </xsl:stylesheet>

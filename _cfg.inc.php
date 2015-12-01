@@ -199,16 +199,16 @@ ENDSQL;
 
 $_CFG['SQL']['create_firm']=<<<ENDSQL
 insert into firm (`firm_name`,`firm_descr`)
-values (upper(trim(:new_firm_name)),:new_firm_descr);
+values (upper(trim(:firm_name)),:firm_descr);
 select *
   from firm
- where `firm_name`=upper(trim(:new_firm_name));
+ where `firm_name`=upper(trim(:firm_name));
 ENDSQL;
 
 $_CFG['SQL']['update_firm']=<<<ENDSQL
 update firm
-   set `name`=upper(trim(:new_firm_name)),`firm_description`=:new_firm_description
-  where id =:new_firm_id;
+   set `name`=upper(trim(:firm_name)),`firm_description`=:firm_description
+  where id =:firm_id;
 ENDSQL;
 
 $_CFG['SQL']['delete_firm']=<<<ENDSQL
@@ -234,31 +234,31 @@ $_CFG['SQL']['get_firm_div']=<<<ENDSQL
 select d.firm_id,d.firm_div_id,c.*,d.firm_div_name
   from firm_div d
  inner join catalog_item c on c.item_id=d.item_id
- where `firm_id`=:new_firm_id;
+ where `firm_id`=:firm_id;
 ENDSQL;
 
 $_CFG['SQL']['create_firm_div']=<<<ENDSQL
 insert into firm_div (`firm_id`,`item_id`,`firm_div_name`)
-select :new_firm_id,i.item_id,:new_firm_item_descr
+select :firm_id,i.item_id,:firm_item_descr
   from catalog_item i
- where `item_name`=:new_firm_item_name;
+ where `item_name`=:firm_item_name;
 ENDSQL;
 
 $_CFG['SQL']['update_firm_div']=<<<ENDSQL
 update firm_div
    set `item_id`=:firm_item_id,
        `firm_div_name`=trim(:firm_div_name)
- where `firm_div_id`=:new_firm_div_id;
+ where `firm_div_id`=:firm_div_id;
 select *
   from firm_div
- where `firm_id`=:new_firm_id;
+ where `firm_id`=:firm_id;
 ENDSQL;
 
 $_CFG['SQL']['delete_firm_div']=<<<ENDSQL
 select i.item_id into @item_id
   from catalog_item i
- where `item_name`=:new_firm_item_name;
-delete from firm_div where firm_id=:new_firm_id and item_id=@item_id;
+ where `item_name`=:firm_item_name;
+delete from firm_div where firm_id=:firm_id and item_id=@item_id;
 ENDSQL;
 
 # Firm address ------------------------------------------------------------------------------------------------------- 
@@ -285,7 +285,7 @@ select a.firm_id,a.address_id,t.town_name, s.street_name, CONCAT (a.building,ble
   from firm_address a
  inner join street s on a.street_id=s.street_id
  inner join town t on s.town_id=t.town_id
- where firm_id=:new_firm_id
+ where firm_id=:firm_id
  order by 3,4,5,6;
 ENDSQL;
 
@@ -317,7 +317,7 @@ ENDSQL;
 $_CFG['SQL']['get_firm_phone']=<<<ENDSQL
 select p.*
   from firm_address a 
- inner join firm_phone p on a.address_id=p.address_id and a.firm_id=:new_firm_id
+ inner join firm_phone p on a.address_id=p.address_id and a.firm_id=:firm_id
  order by 2,3,4,5;
 ENDSQL;
 

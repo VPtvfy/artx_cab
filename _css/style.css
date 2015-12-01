@@ -69,14 +69,14 @@ a		{font-size: 1em; color: #1A1A1A; text-decoration: none; }
 #login_form .ui-dialog .ui-state-error { padding: .3em; }
 #login_form .validateTips { border: 1px solid transparent; padding: 0.3em; }
 
-#new_firm {vertical-align: top;}
-#new_firm input[type="text"]   {display: inline-block; border: 1px solid; margin: 2px; padding: 5px; text-align: left; text-transform: uppercase;}
-#new_firm input[type="submit"] {display: inline-block; border: 1px solid; margin: 2px; padding: 5px; text-align: center; text-transform: uppercase;}
-#new_firm input[type="button"] {display: inline-block; border: 1px solid; margin: 2px; padding: 5px; text-align: center; text-transform: uppercase;}
-#new_firm select               {display: inline-block; border: 1px solid; margin: 2px; padding: 5px; text-align: left; text-transform: uppercase;}
-#new_firm fieldset {border: 1px solid; margin: 10px 2px; padding: 5px;} 
-#new_firm_name {font-size: 1.5em; width:80%; height: 40px;}
-#new_firm_btn  {font-size: 1.0em; width:19%; height: 40px;}
+#edit_firm {vertical-align: top;}
+#edit_firm input[type="text"]   {display: inline-block; border: 1px solid; margin: 2px; padding: 5px; text-align: left; text-transform: uppercase;}
+#edit_firm input[type="submit"] {display: inline-block; border: 1px solid; margin: 2px; padding: 5px; text-align: center; text-transform: uppercase;}
+#edit_firm input[type="button"] {display: inline-block; border: 1px solid; margin: 2px; padding: 5px; text-align: center; text-transform: uppercase;}
+#edit_firm select               {display: inline-block; border: 1px solid; margin: 2px; padding: 5px; text-align: left; text-transform: uppercase;}
+#edit_firm fieldset {border: 1px solid; margin: 10px 2px; padding: 5px;} 
+#edit_firm_name {font-size: 1.5em; width:80%; height: 40px;}
+#edit_firm_btn  {font-size: 1.0em; width:19%; height: 40px;}
 
 #result_cat	{width:900px; margin: 1px auto;}
 #result_cat ul	{-moz-column-count: 3; -moz-column-width: 280px; -webkit-column-count: 3; -webkit-column-width: 280px; column-count: 3; column-width: 280px; -webkit-column-gap: 30px; -moz-column-gap: 30px; column-gap: 30px; -moz-column-rule: 1px solid #ccc; -webkit-column-rule: 1px solid #ccc; column-rule: 1px solid #ccc; width:900px; margin: 1px auto;}
@@ -96,14 +96,4 @@ a		{font-size: 1em; color: #1A1A1A; text-decoration: none; }
 
 #footer 	{margin: 10px}
 #footer img	{float: left;margin:0px 10px 0px 0px}
-/*#search		{position: relative; border: 0; outline: 0; width: 20px; height: 25px; margin-left: -40px; top: 15px; background: url(../_img/search.png) no-repeat; background-size: 100%; }*/
-
-/*Menu items*/                                                                                 
-.alpha_item	{font-size: 1.50em; margin: 0; padding-top: 0; color: #000000; }
-.simple_item	{font-family: "Sans-Serif"; font-size: 1.12em; margin: 0; padding-top: 0; color: #336699; }
-.parent_item	{font-family: "Sans-Serif"; font-size: 1.12em; margin: 0; padding-top: 0; color: #663399; }
-.hidden_item	{font-family: "Sans-Serif"; font-size: 1.12em; margin: 0; padding-top: 0; color: #404040; }
-.active_item	{font-family: "Sans-Serif"; font-size: 1.12em; margin: 0; padding-top: 0; color: #b83030; }
-
-.va_bottom	{vertical-align: bottom; }
-.va_middle	{vertical-align: middle; }
+#tool_forms	{display: none}

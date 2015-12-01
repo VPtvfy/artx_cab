@@ -1,0 +1,17 @@
+<html>
+<head>
+      <link rel="stylesheet" href="jquery/jquery-ui/jquery-ui.css"/>
+      <script src="jquery/jquery.js"></script>
+      <script src="jquery/jquery-ui/jquery-ui.js"></script>
+</head>
+<body>
+<div id='container'>
+     <div id='dialog1'>dialog1</div>
+</div>
+<script>
+$('#dialog1').dialog();
+$('#container').html("<div id='dialog2'>dialog2</div>");
+$('#dialog2').dialog();
+</script>
+</body>
+</html>

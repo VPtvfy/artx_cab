@@ -68,28 +68,25 @@ $hDB1= new sqlLink("localhost","root","root","artex_all");
  
 // Tools --------------------------------------------------------------------------------------------------
 
- if (session::exists('new_firm') and session::set('new_firm_name')){
+ if (session::exists('firm') and session::set('firm_name')){
 //New firm
-    if($_FRONT_END['new_firm_name']!=''){
+    if($_FRONT_END['firm_name']!=''){
        $hDB1->query($_CFG['SQL']['create_firm'],$_FRONT_END);
-       $_FRONT_END['new_firm_id']=$hDB1->fetch_first()['firm_id'];
+       $_FRONT_END['firm_id']=$hDB1->fetch_first()['firm_id'];
        $hDB1->query($_CFG['SQL']['get_firm_div'],$_FRONT_END);
        $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','item'));
        $hDB1->query($_CFG['SQL']['get_firm_address'],$_FRONT_END);
        $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','address'));
        $hDB1->query($_CFG['SQL']['get_firm_phone'],$_FRONT_END);
        $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','phone'));
-       $_SYNC[]=array('new_firm'=>'true');}}
+       $_SYNC[]=array('edit_firm'=>'true');}}
 
- if (session::exists('new_firm_item') and session::set('new_firm_id')){
-    if($_FRONT_END['new_firm_id']>0 and $_FRONT_END['new_firm_item_name']!=''){
-       if(session::exists('new_firm_item_del')){
-          $hDB1->query($_CFG['SQL']['delete_firm_div'],$_FRONT_END);}
-       else {
-          $hDB1->query($_CFG['SQL']['create_firm_div'],$_FRONT_END);}
+ if (session::set('firm_id') and session::set('item_id')){
        $hDB1->query($_CFG['SQL']['get_firm_div'],$_FRONT_END);
        $PageElement=array_merge_recursive($PageElement,$hDB1->fetch_assoc('firms','item'));
-       $_SYNC[]=array('new_firm_item'=>'true');}}
+       $_SYNC[]=array('edit_firm_items'=>'true');}
+
+
 
  if (session::exists('export') and session::set('export_town_id')){
 //Export
@@ -120,6 +117,7 @@ $PageData{'nodes'}=$PageElement;
 
 $XSLT = new XSLT();
 echo $XSLT->Process($_CFG['XSL_PATH'].$_PAGE.'.xsl',$PageData);
+
 $_hdebug = fopen("debug.html", "w+");
 fwrite ($_hdebug,sprintf('<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head><body><pre>%s<hr>%s<hr>%s</pre></body><html>',var_export($_FRONT_END,true),var_export($hDB1->querylog,true),var_export($PageData,true)));
 fclose($_hdebug);
