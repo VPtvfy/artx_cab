@@ -29,7 +29,7 @@ function(){
                                      event.preventDefault();
                                      });
 
-         $('body').on('click',"a[href='##']",
+         $('body').on('click',"a[href!='#']",
                       function(event){
                                      url=$(this).attr("href");
                                      $.ajax({data: url});

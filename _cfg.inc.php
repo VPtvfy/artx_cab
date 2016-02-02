@@ -125,10 +125,10 @@ select @key:=substr(@keylist,1,instr(concat(@keylist,'|'),'|')-1) keyword,
 delete from keywords where char_length(keyword)<3;
 create temporary table fresult
 as
-select max(if(char_length(:query_str)<3,1,relevance(upper(:query_str),concat_ws(' ',firm_name,item_name,address,phone)))) as relevance,               
+select max(if(char_length(:query_str)<3,1,relevance(ucase(:query_str),ucase(concat_ws(' ',firm_name,item_name,address,phone))))) as relevance,               
        firm_id
   from vfirm
-  left join keywords k on concat_ws(' ',firm_name,item_name,address,phone) like concat('%',k.keyword,'%')
+  left join keywords k on ucase(concat_ws(' ',firm_name,item_name,address,phone)) like concat('%',k.keyword,'%')
  where (town_id=:town or :town=0)
    and (item_id=:item or :item=0)
    and (char_length(:query_str)<3 or k.keyword is not null)

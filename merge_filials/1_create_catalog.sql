@@ -65,7 +65,7 @@ DROP TEMPORARY TABLE IF EXISTS artex_all._tree;
 DROP TABLE IF EXISTS artex_all._tree;
 CREATE TABLE artex_all._tree AS 
 SELECT n2.name `name`,n.name c1,n2.name c2, NULL c3, NULL c4
-  FROM `artx_categories` c
+  FROM artex_all.`artx_categories` c
   LEFT JOIN `artx_categories_lang` n ON c.id=n.id
   LEFT JOIN `artx_categories` c2  ON c.id=c2.parent_id
   LEFT JOIN `artx_categories_lang` n2 ON c2.id=n2.id  

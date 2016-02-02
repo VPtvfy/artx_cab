@@ -34,7 +34,7 @@ INSERT INTO spravo4nik.artx_categories
   ORDER BY IF(t.pid=0,t.id,t.pid),t.id;
   
 SET @ord:=0; 
-UPDATE spravo4nik.artx_categories SET order_no=@ord:=@ord+1  
+UPDATE spravo4nik.artx_categories SET order_no=@ord:=@ord+1;
 
 truncate table spravo4nik.artx_ads;
 insert into spravo4nik.artx_ads
@@ -65,7 +65,7 @@ select t.town_id*100000+f.firm_id id,
        'ru' language,
        0 no_rating,
        t.town_name city,
-       trim(concat(s.street_name,' ',building,' ',ifnull(bletter,''),' ',ifnull(office,''),' ',ifnull(oletter,''))) adress,
+       trim(concat(s.street_name,' ',if(s.street_name!='',concat(a.building,if (bletter!='','/',''),bletter),''),if(s.street_name!='',ifnull(concat('-',a.office,if (oletter!='','/',''),oletter),''),'')) adress,
        'ò' hdhex,
        '' _,
        '' email,
@@ -86,13 +86,36 @@ select t.town_id*100000+f.firm_id id,
   
   
   update spravo4nik.artx_ads f
-     set hdhex=(select concat('ò',t.code,p.phone_number) 
+     set hdhex=(select concat('7',t.code,p.phone_number) 
                   from artex_all.firm_phone p 
                   left join artex_all.firm_address a on p.address_id=a.address_id 
                   left join artex_all.street s on a.street_id=s.street_id 
                   left join artex_all.town t on s.town_id=t.town_id  
                  where p.address_id=f._1 
                  group by p.address_id);
+
+  update spravo4nik.artx_ads f
+     set doptel=(select concat('7',t.code,p.phone_number) 
+                  from artex_all.firm_phone p 
+                  left join artex_all.firm_address a on p.address_id=a.address_id 
+                  left join artex_all.street s on a.street_id=s.street_id 
+                  left join artex_all.town t on s.town_id=t.town_id  
+                 where p.address_id=f._1 
+                   and concat('7',t.code,p.phone_number)!=f._hdhex
+                 group by p.address_id);
+
+  update spravo4nik.artx_ads f
+     set doptel2=(select concat('7',t.code,p.phone_number) 
+                  from artex_all.firm_phone p 
+                  left join artex_all.firm_address a on p.address_id=a.address_id 
+                  left join artex_all.street s on a.street_id=s.street_id 
+                  left join artex_all.town t on s.town_id=t.town_id  
+                 where p.address_id=f._1 
+                   and concat('7',t.code,p.phone_number)!=f._hdhex
+                   and concat('7',t.code,p.phone_number)!=f.doptel
+                 group by p.address_id);
+
+
                  
 
 truncate table spravo4nik.artx_cat_ads;
